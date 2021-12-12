@@ -8,6 +8,10 @@ import { UsersModule } from '../users/users.module';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 
+// tuto
+// https://docs.nestjs.com/security/authentication#implement-protected-route-and-jwt-strategy-guards
+// Blacklist
+// https://auth0.com/blog/denylist-json-web-token-api-keys/
 @Module({
   imports: [
     UsersModule,
