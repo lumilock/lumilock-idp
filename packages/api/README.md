@@ -28,6 +28,21 @@
 
 ## tuto
 [tuto](https://medium.com/@gausmann.simon/nestjs-typeorm-and-postgresql-full-example-development-and-project-setup-working-with-database-c1a2b1b11b8f)
+
+### 1. Party time — Let’s start our API and see if it works.
+```
+npm run start:dev:db
+npm run start:dev
+```
+### 2. Creating a migration
+```
+npm run typeorm:migration:generate -- my_init
+```
+### 3. Run a migration
+```
+npm run typeorm:migration:run
+npm run start:dev:db:seed
+```
 ## Installation
 
 ```bash
