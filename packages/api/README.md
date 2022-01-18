@@ -31,48 +31,48 @@
 
 ### 1. Party time — Let’s start our API and see if it works.
 ```
-npm run start:dev:db
-npm run start:dev
+yarn run start:dev:db
+yarn run start:dev
 ```
 ### 2. Creating a migration
 ```
-npm run typeorm:migration:generate -- my_init
+yarn run typeorm:migration:generate -- my_init
 ```
 ### 3. Run a migration
 ```
-npm run typeorm:migration:run
-npm run start:dev:db:seed
+yarn run typeorm:migration:run
+yarn run start:dev:db:seed
 ```
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn run start
 
 # watch mode
-$ npm run start:dev
+$ yarn run start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ yarn run test
 
 # e2e tests
-$ npm run test:e2e
+$ yarn run test:e2e
 
 # test coverage
-$ npm run test:cov
+$ yarn run test:cov
 ```
 
 ## Support

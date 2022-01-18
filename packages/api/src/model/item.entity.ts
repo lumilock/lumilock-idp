@@ -1,6 +1,6 @@
 // item.entity.ts
 import { Entity, Column } from 'typeorm';
-import { BaseEntity } from './base.entity';
+import { BaseEntity } from './baseOld.entity';
 
 @Entity({ name: 'item' })
 export class Item extends BaseEntity {
