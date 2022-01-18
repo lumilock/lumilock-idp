@@ -4,7 +4,7 @@ import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../config/config.service';
 // import { User } from '../user.decorator';
 import { UsersService } from '../users/users.service';
-import { User } from '../model/user.entity';
+import { User } from '../model/users.entity';
 import { UsersDTO } from '../users/users.dto';
 
 async function run() {

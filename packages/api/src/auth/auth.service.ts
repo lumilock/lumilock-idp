@@ -10,8 +10,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // Function to validate if the user is auth
   async validateUser(identity: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(identity);
+    const user = await this.usersService.findByIdentity(identity);
     if (user && user.password === pass) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
@@ -20,10 +21,17 @@ export class AuthService {
     return null;
   }
 
+  // Login the user
   async login(user: any) {
-    const payload = { login: user.login, sub: user.userId };
+    const payload = { login: user.login, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  // profiles info of the auth
+  async profile(userId: string) {
+    const user = await this.usersService.findById(userId);
+    return user;
   }
 }
