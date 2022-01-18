@@ -3,9 +3,9 @@ import * as _ from 'lodash';
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../config/config.service';
 // import { User } from '../user.decorator';
-import { UsersService } from '../users/users.service';
-import { User } from '../model/user.entity';
-import { UsersDTO } from '../users/users.dto';
+import { ItemService } from '../item/item.service';
+import { Item } from '../model/item.entity';
+import { ItemDTO } from '../item/item.dto';
 
 async function run() {
   // const seedUser: User = { id: 'seed-user' };
@@ -23,22 +23,17 @@ async function run() {
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const usersService = new UsersService(connection.getRepository(User));
+  const itemService = new ItemService(connection.getRepository(Item));
 
   const work = _.range(1, 10)
     .map((n) =>
-      UsersDTO.from({
-        first_name: `first_name-${seedId}-${n}`,
-        last_name: `last_name-${seedId}-${n}`,
-        email: `${seedId}-${n}@test.fr`,
-        login: `${seedId}_${n}_${seedId}-${n}`,
-        password: '123456',
+      ItemDTO.from({
+        name: `seed${seedId}-${n}`,
+        description: 'created from seed',
       }),
     )
     .map((dto) =>
-      usersService
-        .create(dto)
-        .then((r) => (console.log('done ->', r.login), r)),
+      itemService.create(dto).then((r) => (console.log('done ->', r.name), r)),
     );
 
   return await Promise.all(work);

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID, IsEmail, MinLength } from 'class-validator';
 import { User } from '../model/user.entity';
 
-export class UserDTO implements Readonly<UserDTO> {
+export class UsersDTO implements Readonly<UsersDTO> {
   @ApiProperty({ required: true })
   @IsUUID()
   id: string;
@@ -33,8 +33,8 @@ export class UserDTO implements Readonly<UserDTO> {
   @MinLength(6)
   password: string;
 
-  public static from(dto: Partial<UserDTO>) {
-    const user = new UserDTO();
+  public static from(dto: Partial<UsersDTO>) {
+    const user = new UsersDTO();
     user.id = dto.id;
     user.login = dto.login;
     user.first_name = dto.first_name;
