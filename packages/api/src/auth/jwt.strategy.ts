@@ -6,11 +6,18 @@ import { jwtConstants } from './constants';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
-    });
+    super(
+      {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ignoreExpiration: false,
+        secretOrKey: jwtConstants.secret,
+      },
+      (payload, done) => {
+        console.log(payload, done);
+        // check revoke
+        done(null, true);
+      },
+    );
   }
 
   async validate(payload: any) {
