@@ -7,6 +7,7 @@ import { LocalStrategy } from './local.strategy';
 import { UsersModule } from '../users/users.module';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
+import { OidcStrategy } from './oidc.strategy';
 import { AuthController } from './auth.controller';
 
 // tuto
@@ -23,7 +24,7 @@ import { AuthController } from './auth.controller';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, OidcStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
