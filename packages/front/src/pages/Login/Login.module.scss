@@ -1,0 +1,9 @@
+@import "../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    width: 100%;
+    height: 100%;
+}

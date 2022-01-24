@@ -1,0 +1,62 @@
+$color-black: #09050D;
+$color-accent: #1321e7;
+$color-white: #FFFFFF;
+
+$color-primary: #212121;
+$color-primary-light: #484848;
+$color-primary-dark: #000000;
+
+$color-secondary: #6d9886;
+$color-secondary-light: #9cc9b6;
+$color-secondary-dark: #406a59;
+
+$color-tertiary: #D9CAB3;
+$color-tertiary-light: #fffde5;
+$color-tertiary-dark: #a79983;
+
+$color-alert: #f44336;
+$color-alert-light: #e57373;
+$color-alert-dark: #d32f2f;
+
+$color-warning: #ffa726;
+$color-warning-light: #ffb74d;
+$color-warning-dark: #f57c00;
+
+$color-info: #29b6f6;
+$color-info-light: #4fc3f7;
+$color-info-dark: #0288d1;
+
+$color-success: #66bb6a;
+$color-success-light: #81c784;
+$color-success-dark: #388e3c;
+
+$color-grey: #e4e4e4;
+$color-grey-light: #f6f6f6;
+$color-grey-dark: #838383;
+
+$color-text-primary: #212121;
+$color-text-secondary: #AAB4BE;
+$color-text-disabled: rgba(255, 255, 255, 0.5);
+$color-text-icon: rgba(255, 255, 255, 0.5);
+
+$transitionInOut: cubic-bezier(0.645, 0.045, 0.355, 1);
+$transitionIn: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+$transitionOut: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+$base-font-size: 16px;
+
+@function trim-unit($value) {
+    @return $value / ($value * 0 + 1);
+}
+
+@function rem-calc($value) {
+    @return $value / trim-unit($base-font-size) * 1rem;
+}
+
+@function spacing($value) {
+    @return $value * 8px;
+}
+
+@function spacing-rem($value) {
+    @return rem-calc($value * 8);
+}
