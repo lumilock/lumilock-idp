@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsObject,
+  IsOptional,
   IsString,
   IsUrl,
   ValidateNested,
@@ -43,13 +44,15 @@ export class AuthorizeDTO implements Readonly<AuthorizeDTO> {
   @ApiProperty({ required: true })
   redirect_uri: string;
 
+  @IsOptional()
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   state: string;
 
+  @IsOptional()
   @IsObject()
-  @ValidateNested({ each: true })
+  @ValidateNested()
   @Type(() => ClaimsDTO)
-  @ApiProperty()
-  claims: object;
+  @ApiProperty({ required: false })
+  claims: ClaimsDTO;
 }

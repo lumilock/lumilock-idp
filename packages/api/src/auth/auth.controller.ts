@@ -10,13 +10,14 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersDTO } from 'src/users/users.dto';
 import { AuthService } from './auth.service';
 import { AuthorizeDTO } from './authorize.dto';
-// import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { OidcAuthGuard } from './oidc.guard';
+import { oidcConstants } from './oidcConstants';
 
 @Controller('auth')
 export class AuthController {
@@ -49,13 +50,11 @@ export class AuthController {
     // 2. Vérifiez qu'un paramètre scope est présent et contient la valeur scope openid. (Si aucune valeur scope openid n'est présente, la demande peut toujours être une demande OAuth 2.0 valide, mais n'est pas une demande OpenID Connect.)
     // 3. Le serveur d'autorisation DOIT vérifier que tous les paramètres EXIGÉS sont présents et que leur utilisation est conforme à la présente spécification.
     @Query() query: AuthorizeDTO,
+    @Response() res,
   ): Promise<any> {
-    console.log('query : ', query);
-    if (query?.claims) {
-      return true;
-    }
+    console.log('query: ', query);
     /**
-     * TODO : 4 - Si sub (sujet) est demandée avec une valeur spécifique pour l'ID Token,
+     * TODO : 4 - Si sub (sujet) est dans claims avec une valeur spécifique pour l'ID Token,
      * le serveur d'autorisation DOIT uniquement envoyer une réponse positive si l'utilisateur final identifié
      * par la valeur sub a une session active avec le serveur d'autorisation ou a été authentifié en tant que un résultat de la demande.
      * Le serveur d'autorisation NE DOIT PAS répondre avec un ID Token ou un Access Token pour un autre utilisateur,
@@ -64,6 +63,14 @@ export class AuthController {
      * soit en demandant une valeur de réclamation spécifique comme décrit au paragraphe 5.5.1,
      * si le paramètre claims est pris en charge par la mise en œuvre.
      */
+    const { claims } = query;
+    if (claims?.sub) {
+      return true;
+    }
+    res.redirect(
+      HttpStatus.MOVED_PERMANENTLY,
+      `http://${oidcConstants.loginURL}`,
+    );
     return true;
   }
 }
