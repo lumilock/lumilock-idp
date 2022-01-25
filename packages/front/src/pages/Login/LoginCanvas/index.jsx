@@ -12,8 +12,8 @@ const COLORS = [
   '#DB7777', // red
   '#141720', // black
 ];
-const COLUMNS = 50; // number of columns
-const GAP = 10; // gap between shapes
+const COLUMNS = 8; // number of columns
+const GAP = 0; // gap between shapes
 const BG = '#FFFFFF'; // background color
 
 function LoginCanvas() {
@@ -195,6 +195,8 @@ function LoginCanvas() {
 
   const draw = useCallback(
     () => {
+      const bg = rand(0, 2);
+      // const stroke = rand(0, 2);
       // Columns
       Array.from({ length: COLUMNS }, (_, k) => k).forEach((cIndex) => {
         // Rows
@@ -202,16 +204,22 @@ function LoginCanvas() {
           // Peak a number between 0 and COLORS length - 1 to peak a random color
           const rColorIndex = rand(0, (COLORS.length - 1));
 
-          // Draw the shape
-          // context.fillStyle = `${COLORS[rColorIndex]}33`;
-          // context.fillRect(cIndex * columnSize + GAP / 2, rIndex * columnSize + GAP / 2, columnSize - GAP, columnSize - GAP);
+          // Background
+          if (bg === 1) {
+            // Draw the shape
+            context.fillStyle = `${COLORS[rColorIndex]}33`;
+            context.fillRect(cIndex * columnSize + GAP / 2, rIndex * columnSize + GAP / 2, columnSize - GAP, columnSize - GAP);
+          }
 
           context.fillStyle = COLORS[rColorIndex];
           const rShapeIndex = rand(0, (shapes.length - 1));
           shapes?.[rShapeIndex](cIndex * columnSize + GAP / 2, rIndex * columnSize + GAP / 2, COLORS[rColorIndex]);
 
-          // context.rect((cIndex * columnSize) + (GAP / 2), (rIndex * columnSize) + (GAP / 2), columnSize - GAP, columnSize - GAP);
-          // context.stroke();
+          // Stroke
+          // if (stroke === 1) {
+          //   context.rect((cIndex * columnSize) + (GAP / 2), (rIndex * columnSize) + (GAP / 2), columnSize - GAP, columnSize - GAP);
+          //   context.stroke();
+          // }
         });
       });
     }, [ROWS, columnSize, context, rand, shapes],

@@ -1,0 +1,64 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    .Form {
+        position: relative;
+        width: 100%;
+        display: grid;
+        padding: spacing-rem(2);
+        gap: spacing-rem(2);
+
+        .Subtitle {
+            color: var(--color-text-secondary);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+            display: block;
+            margin-bottom: spacing-rem(1);
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+}
+
+@media only screen and (min-width: 600px) {
+}
+    
+@media only screen and (min-width: 768px) {
+}
+    
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .Root {
+        .Form {
+            padding: spacing-rem(4);
+        }
+    }
+}
+    
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .Root {
+        .Form {
+            padding: spacing-rem(8);
+        }
+    }
+}
+    
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1400px) {
+    .Root {
+        .Form {
+            padding: spacing-rem(12);
+        }
+    }
+}
