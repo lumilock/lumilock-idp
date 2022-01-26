@@ -1,0 +1,77 @@
+@import "../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: spacing-rem(1);
+    padding: spacing-rem(2);
+    font-size: rem-calc(12);
+    border-radius: spacing-rem(1);
+    border: none;
+    line-height: 0;
+    min-height: rem-calc(32);
+
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+
+    &.Primary {
+        background-color: #{$color-primary}40;
+        color: #{$color-primary};
+
+        &:not(:disabled):hover {
+            background-color: #{$color-primary-light}40;
+        }
+
+        &:not(:disabled):active {
+            background-color: #{$color-primary-dark}40;
+        }
+
+        & > svg.Icon {
+            color: #{$color-primary};
+            fill: #{$color-primary};
+        }
+    }
+
+    &.Secondary {
+        background-color: #{$color-secondary}40;
+        color: #{$color-secondary};
+
+        &:not(:disabled):hover {
+            background-color: #{$color-secondary-dark}40;
+        }
+
+        &:not(:disabled):active {
+            background-color: #{$color-secondary-dark}40;
+        }
+
+        & > svg.Icon {
+            color: #{$color-secondary};
+            fill: #{$color-secondary};
+        }
+    }
+
+    &.White {
+        background-color: var(--color-white);
+        color: var(--color-text-primary);
+
+        &:not(:disabled):hover {
+            background-color: var(--color-grey-light);
+        }
+
+        &:not(:disabled):active {
+            background-color: var(--color-grey);
+        }
+
+        & > svg.Icon {
+            color: var(--color-text-primary);
+            fill: var(--color-text-primary);
+        }
+    }
+    &:disabled {
+        opacity: 0.5;
+        filter: grayscale(1);
+    }
+}

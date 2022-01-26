@@ -24,6 +24,11 @@
             display: block;
             margin-bottom: spacing-rem(1);
         }
+
+        .Link {
+            color: var(--color-text-primary);
+            vertical-align: middle;
+        }
     }
 }
 
