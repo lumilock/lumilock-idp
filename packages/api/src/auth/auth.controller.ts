@@ -13,6 +13,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersDTO } from 'src/users/users.dto';
+import * as querystring from 'query-string';
 import { AuthService } from './auth.service';
 import { AuthorizeDTO } from './authorize.dto';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -26,6 +27,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   public async login(@Request() req) {
+    console.log('req', req);
     return this.serv.login(req.user);
   }
 
@@ -52,7 +54,8 @@ export class AuthController {
     @Query() query: AuthorizeDTO,
     @Response() res,
   ): Promise<any> {
-    console.log('query: ', query);
+    const parsedQuery = JSON.parse(JSON.stringify(query));
+    console.log('query: ', parsedQuery);
     /**
      * TODO : 4 - Si sub (sujet) est dans claims avec une valeur spécifique pour l'ID Token,
      * le serveur d'autorisation DOIT uniquement envoyer une réponse positive si l'utilisateur final identifié
@@ -67,9 +70,11 @@ export class AuthController {
     if (claims?.sub) {
       return true;
     }
+    const redirectUrl = querystring.stringify(parsedQuery);
+    console.log(redirectUrl);
     res.redirect(
       HttpStatus.MOVED_PERMANENTLY,
-      `http://${oidcConstants.loginURL}`,
+      `${oidcConstants.loginURL}?${redirectUrl}`,
     );
     return true;
   }
