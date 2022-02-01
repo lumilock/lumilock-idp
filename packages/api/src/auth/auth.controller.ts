@@ -27,6 +27,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   public async login(@Request() req) {
+    // 1. login user
+    // 2. check if service is auth to client
+    // 2.1. if not return message to Obtains End-User Consent/Authorization
+    // 2.2. if yes check if state is present
+    // 3. return code&state
     console.log('req', req);
     return this.serv.login(req.user);
   }

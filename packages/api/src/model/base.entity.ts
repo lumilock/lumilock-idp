@@ -11,14 +11,14 @@ export abstract class BaseEntity {
   id: string;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @Column({ type: 'boolean', default: false })
-  isArchived: boolean;
+  is_archived: boolean;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  createDateTime: Date;
+  create_date_time: Date;
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  lastChangedDateTime: Date;
+  last_changed_date_time: Date;
 }

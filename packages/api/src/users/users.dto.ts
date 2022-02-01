@@ -66,7 +66,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
     user.email = this.email;
     user.profile_picture = this.profile_picture;
     user.password = this.password;
-    user.createDateTime = new Date();
+    user.create_date_time = new Date();
     return user;
   }
 }
