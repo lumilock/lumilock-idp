@@ -1,10 +1,13 @@
 // clients.entity.ts
 import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { Code } from './code.entity';
+import { Code } from './codes.entity';
 
 @Entity({ name: 'clients' })
 export class Client extends BaseEntity {
+  @Column({ type: 'varchar', length: 200 })
+  name: string;
+
   @Column({ type: 'varchar', length: 200 })
   secret: string;
 

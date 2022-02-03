@@ -24,15 +24,15 @@ import { oidcConstants } from './oidcConstants';
 export class AuthController {
   constructor(private serv: AuthService) {}
 
+  // 1. login user
   @UseGuards(LocalAuthGuard)
   @Post('login')
   public async login(@Request() req) {
-    // 1. login user
-    // 2. check if service is auth to client
+    // 2. check if client has user auth
     // 2.1. if not return message to Obtains End-User Consent/Authorization
     // 2.2. if yes check if state is present
     // 3. return code&state
-    console.log('req', req);
+    console.log('<login> req', req.query);
     return this.serv.login(req.user);
   }
 
@@ -60,7 +60,7 @@ export class AuthController {
     @Response() res,
   ): Promise<any> {
     const parsedQuery = JSON.parse(JSON.stringify(query));
-    console.log('query: ', parsedQuery);
+    console.log('<authorize> query: ', parsedQuery);
     /**
      * TODO : 4 - Si sub (sujet) est dans claims avec une valeur spécifique pour l'ID Token,
      * le serveur d'autorisation DOIT uniquement envoyer une réponse positive si l'utilisateur final identifié
@@ -76,7 +76,7 @@ export class AuthController {
       return true;
     }
     const redirectUrl = querystring.stringify(parsedQuery);
-    console.log(redirectUrl);
+    console.log('<authorize> redirectUrl', redirectUrl);
     res.redirect(
       HttpStatus.MOVED_PERMANENTLY,
       `${oidcConstants.loginURL}?${redirectUrl}`,

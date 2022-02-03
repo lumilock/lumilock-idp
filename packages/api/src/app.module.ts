@@ -6,6 +6,7 @@ import { configService } from './config/config.service';
 import { ItemModule } from './item/item.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './users/users.module';
     ItemModule,
     AuthModule,
     UsersModule,
+    ClientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import Button from '../../../components/Button';
 import { CheckboxControlled, InputControlled } from '../../../components/Form';
@@ -14,16 +14,31 @@ import styles from './LoginForm.module.scss';
 
 function LoginForm() {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
 
-  console.log(searchParams.entries().next(), location);
+  const getAllQuery = () => {
+    // save the iterator
+    const queryEntries = searchParams.entries();
+    // select first entry
+    let iterator = queryEntries.next();
+    // init return array
+    const querys = [];
+    // init max iter counter
+    let countOut = 0;
+    while (iterator.done === false && countOut < 50) {
+      querys.push(iterator.value);
+      iterator = queryEntries.next();
+      countOut += 1;
+    }
+    return querys;
+  };
+
   // React hook form
   const {
     handleSubmit, control,
   } = useForm({ resolver: yupResolver(validationSchema), defaultValues });
   // Function to submit values
   const onSubmit = async (data) => {
-    await Auth.login(data)
+    await Auth.login(data, getAllQuery())
       .then((res) => console.log('res:', res))
       .catch((err) => console.log('err:', err));
     console.log(data);

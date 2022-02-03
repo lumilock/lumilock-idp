@@ -2,10 +2,12 @@
 import * as _ from 'lodash';
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../config/config.service';
-// import { User } from '../user.decorator';
 import { UsersService } from '../users/users.service';
 import { User } from '../model/users.entity';
 import { UsersDTO } from '../users/users.dto';
+import { Client } from '../model/clients.entity';
+import { ClientsService } from '../clients/clients.service';
+import { ClientsDTO } from '../clients/clients.dto';
 
 async function run() {
   // const seedUser: User = { id: 'seed-user' };
@@ -24,6 +26,7 @@ async function run() {
 
   const connection = await createConnection(opt as ConnectionOptions);
   const usersService = new UsersService(connection.getRepository(User));
+  const clientsService = new ClientsService(connection.getRepository(Client));
 
   const work = _.range(1, 10)
     .map((n) =>
@@ -40,8 +43,28 @@ async function run() {
         .create(dto)
         .then((r) => (console.log('done ->', r.login), r)),
     );
+  const adminWork = usersService
+    .create(
+      UsersDTO.from({
+        first_name: 'admin',
+        last_name: 'admin',
+        email: 'admin@admin.fr',
+        login: 'admin.admin',
+        password: '123456',
+      }),
+    )
+    .then((r) => (console.log('done ->', r.login), r));
+  const clientWork = clientsService
+    .create(
+      ClientsDTO.from({
+        name: 'Audit lait cru',
+        secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
+        callback_url: 'http://localhost:3001/callback',
+      }),
+    )
+    .then((r) => (console.log('done ->', r.name, r.id), r));
 
-  return await Promise.all(work);
+  return await Promise.all([...work, adminWork, clientWork]);
 }
 
 run()

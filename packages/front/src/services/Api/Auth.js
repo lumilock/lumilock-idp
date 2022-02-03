@@ -4,8 +4,8 @@ import {
 } from './base';
 
 const Auth = {
-  login: (queryParams, cancel = {}) => {
-    const params = new URLSearchParams(Object.entries(queryParams));
+  login: (queryParams, defaultQueries, cancel = {}) => {
+    const params = new URLSearchParams([...Object.entries(queryParams), ...defaultQueries]);
     return post('/auth/login', null, { params }, cancel);
   },
 };
