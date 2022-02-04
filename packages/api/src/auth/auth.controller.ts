@@ -19,21 +19,61 @@ import { AuthorizeDTO } from './authorize.dto';
 import { LocalAuthGuard } from './local-auth.guard';
 import { OidcAuthGuard } from './oidc.guard';
 import { oidcConstants } from './oidcConstants';
+import { ClientsService } from '../clients/clients.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private serv: AuthService) {}
+  constructor(private serv: AuthService, private cliServ: ClientsService) {}
 
   // 1. login user
   @UseGuards(LocalAuthGuard)
   @Post('login')
   public async login(@Request() req) {
+    const { query, user } = req; // destructurate request params usefull
+    // const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present
+
     // 2. check if client has user auth
+    const consent = await this.serv.checkUserConsent(
+      user?.id, // id of the user we want to check
+      query?.client_id, // id of the client we want to check
+    );
+    console.log('<login> clientIds', query?.client_id, oidcConstants?.clientID);
+    // Checking if we trying to login in from a RP
+    if (query?.client_id !== oidcConstants?.clientID) {
+      console.log('<login> consent', consent, !query?.consent);
+      if (!consent && !query?.consent) {
+        // there is no consent in the db and not in query params
+        // so we will ask the consent to the user
+        const clientInfos = await this.cliServ.findById(query?.client_id);
+        console.log('<login> clientInfos', clientInfos);
+        return {
+          error: 'consent_required',
+          clientInfos: clientInfos,
+        };
+      } else if (!consent && query?.consent) {
+        // there is no consent in the db but there is in the query
+        // so we will set the consent in the db
+      }
+    }
+    // if (!query?.consent && !consent) {
+    //   const redirectUrl = querystring.stringify({
+    //     error: 'consent_required',
+    //     error_description: 'The Authorization Server requires End-User consent',
+    //     ...state, // will add state if exist
+    //   });
+    //   console.log('<login> redirectUrl', redirectUrl);
+    //   console.log(
+    //     '<login> redirectUrl',
+    //     `${query?.redirect_uri || oidcConstants.callbackURL}?${redirectUrl}`,
+    //   );
+    //   return null;
+    // }
+    console.log('<login> consent', consent);
     // 2.1. if not return message to Obtains End-User Consent/Authorization
     // 2.2. if yes check if state is present
     // 3. return code&state
-    console.log('<login> req', req.query);
-    return this.serv.login(req.user);
+    console.log('<login> req', query);
+    return this.serv.login(user);
   }
 
   @UseGuards(OidcAuthGuard)
@@ -43,10 +83,11 @@ export class AuthController {
     return await this.serv.profile(req?.user?.userId);
   }
 
-  @UseGuards(OidcAuthGuard)
+  // @UseGuards(OidcAuthGuard)
   @Get('callback')
-  public async callback(@Request() req, @Response() res) {
-    res.redirect('/');
+  public async callback() {
+    // res.redirect('/');
+    return true;
   }
 
   @Get('authorize')

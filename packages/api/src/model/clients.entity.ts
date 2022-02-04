@@ -2,6 +2,7 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Code } from './codes.entity';
+import { UsersClients } from './users_clients.entity';
 
 @Entity({ name: 'clients' })
 export class Client extends BaseEntity {
@@ -19,4 +20,7 @@ export class Client extends BaseEntity {
 
   @Column({ type: 'varchar', nullable: true, length: 300 })
   client_picture: string;
+
+  @OneToMany(() => UsersClients, (usersClients) => usersClients.client)
+  public usersClients: UsersClients[];
 }

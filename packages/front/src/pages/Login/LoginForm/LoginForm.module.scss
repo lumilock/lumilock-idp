@@ -9,25 +9,47 @@
     height: 100%;
 
     .Form {
-        position: relative;
+        position: absolute;
         width: 100%;
         display: grid;
-        padding: spacing-rem(2);
-        gap: spacing-rem(2);
-
-        .Subtitle {
-            color: var(--color-text-secondary);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
+        grid-template-columns: repeat(2, 100%);
+        fieldset {
+            position: relative;
             width: 100%;
-            display: block;
-            margin-bottom: spacing-rem(1);
-        }
+            display: grid;
+            padding: spacing-rem(2);
+            gap: spacing-rem(2);
+            transform: translateX(0%);
+            transition: 0.5s $transitionInOut;
+            &:not(.Active) {
+                opacity: 0;
+                pointer-events: none;
+            }
+            &:first-child:not(.Active) {
+                transform: translateX(-100%);
+            }
+            &:last-child.Active {
+                transform: translateX(-100%);
+            }
+            
+            & .Subtitle {
+                color: var(--color-text-secondary);
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: 100%;
+                display: block;
+                margin-bottom: spacing-rem(1);
+            }
 
-        .Link {
-            color: var(--color-text-primary);
-            vertical-align: middle;
+            &:last-child .Subtitle{
+                white-space: break-spaces;
+            }
+
+            .Link {
+                color: var(--color-text-primary);
+                vertical-align: middle;
+            }
         }
     }
 }

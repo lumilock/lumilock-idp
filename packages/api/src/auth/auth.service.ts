@@ -35,4 +35,10 @@ export class AuthService {
     const user = await this.usersService.findById(userId);
     return user;
   }
+
+  // Check if client have the consent of the user
+  async checkUserConsent(userId, clientId) {
+    const consent = await this.usersService.checkConsent(userId, clientId);
+    return consent;
+  }
 }

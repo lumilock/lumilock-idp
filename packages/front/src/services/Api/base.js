@@ -17,9 +17,16 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  // (response) => response,
+  (response) => {
+    // check redirection
+    if ([301, 302, 307, 308, 310].includes(response?.request?.status) && (window?.location?.href !== response?.request?.responseURL)) {
+      window.location.href = response?.request?.responseURL;
+      return null;
+    }
+    return response;
+  },
   async (error) => {
-    console.log('herer');
     if (axios.isCancel(error)) return Promise.reject(error.message);
     return Promise.reject(error);
   },

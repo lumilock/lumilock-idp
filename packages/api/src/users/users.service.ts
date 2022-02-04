@@ -28,6 +28,22 @@ export class UsersService {
     });
   }
 
+  // For a given user and a given client check the consent of the user
+  async checkConsent(userId: string, clientId: string): Promise<boolean> {
+    const users = await this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
+      .where('user.id = :id', { id: userId }) // filter by user id
+      .andWhere('uc.client_id = :clientId', {
+        clientId: clientId,
+      }) // filter by client id
+      .andWhere('uc.authorization = :consent', {
+        consent: true,
+      }) // filter by authorizations
+      .getOne();
+    return !!users?.usersClients?.[0]?.authorization; // return the authorization value or false else
+  }
+
   public async create(dto: UsersDTO): Promise<UsersDTO> {
     return this.repo.save(dto.toEntity()).then((e) => UsersDTO.fromEntity(e));
   }

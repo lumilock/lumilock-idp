@@ -9,6 +9,7 @@ import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { OidcStrategy } from './oidc.strategy';
 import { AuthController } from './auth.controller';
+import { ClientsModule } from '../clients/clients.module';
 
 // tuto
 // https://docs.nestjs.com/security/authentication#implement-protected-route-and-jwt-strategy-guards
@@ -22,6 +23,7 @@ import { AuthController } from './auth.controller';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    ClientsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, OidcStrategy],
