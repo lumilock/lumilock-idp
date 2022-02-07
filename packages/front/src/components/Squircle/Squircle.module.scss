@@ -1,0 +1,37 @@
+@import "../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    &.XS {
+        width: spacing-rem(1);
+        height: spacing-rem(1);
+    }
+    &.S {
+        width: spacing-rem(2);
+        height: spacing-rem(2);
+    }
+    &.M {
+        width: spacing-rem(3);
+        height: spacing-rem(3);
+    }
+    &.ML {
+        width: spacing-rem(4);
+        height: spacing-rem(4);
+    }
+    &.L {
+        width: spacing-rem(6);
+        height: spacing-rem(6);
+    }
+    &.XL {
+        width: spacing-rem(8);
+        height: spacing-rem(8);
+    }
+    &.XXL {
+        width: spacing-rem(16);
+        height: spacing-rem(16);
+    }
+    &.XXXL {
+        width: spacing-rem(64);
+        height: spacing-rem(64);
+    }
+}

@@ -16,9 +16,11 @@
         fieldset {
             position: relative;
             width: 100%;
+            border: none;
             display: grid;
             padding: spacing-rem(2);
-            gap: spacing-rem(2);
+            gap: spacing-rem(3);
+            align-content: center;
             transform: translateX(0%);
             transition: 0.5s $transitionInOut;
             &:not(.Active) {
@@ -49,6 +51,71 @@
             .Link {
                 color: var(--color-text-primary);
                 vertical-align: middle;
+                text-align: center;
+            }
+
+            & .AppSection {
+                position: relative;
+                background-color: var(--color-grey-light);
+                padding: spacing-rem(1);
+                border-radius: spacing-rem(2);
+                display: grid;
+                grid-template-columns: max-content 1fr;
+                align-items: center;
+                gap: spacing-rem(1);
+                & .Infos {
+                    position: relative;
+                    display: grid;
+                    grid-template-rows: repeat(2, max-content);
+                    align-items: center;
+                    height: max-content;
+
+                    & p {
+                        color: var(--color-text-secondary);
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        width: 100%;
+                        display: block;
+                    }
+                }
+            }
+
+            & .SharingSection {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: spacing-rem(1);
+
+                & .SharingItem {
+                    padding-left: spacing-rem(2);
+                    & li {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        gap: spacing-rem(1);
+                        color: var(--color-grey-dark);
+                        list-style: none;
+                    }
+                }
+            }
+
+            & .Disclaimer {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                & p:first-child {
+                    font-family: 'Lexend Regular';
+                }
+                & p:last-child {
+                    color: var(--color-grey-dark);
+                    font-family: 'Lexend light';
+                }
+            }
+            & .Actions {
+                position: relative;
+                display: flex;
+                justify-content: space-between;
             }
         }
     }

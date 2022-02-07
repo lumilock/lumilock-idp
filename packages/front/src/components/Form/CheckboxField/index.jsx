@@ -49,14 +49,16 @@ function CheckboxField({
 
   return (
     <div className={`${styles.Container} ${className || ''}`}>
-      <Icon
-        ionIcon={isChecked ? IoCheckbox : IoSquareOutline}
-        size="xSmall"
-        onClick={() => handleClick(isChecked)}
-        className={styles.CheckboxIcon}
-      />
-      <input onChange={handleChange} type="checkbox" name={name} id={name} className="body1" ref={inputRef} checked={isChecked} {...rest} />
-      <label htmlFor={name} className="subtitle1">{label}</label>
+      <div className={styles.Checkbox}>
+        <Icon
+          ionIcon={isChecked ? IoCheckbox : IoSquareOutline}
+          size="xSmall"
+          onClick={() => handleClick(isChecked)}
+          className={styles.CheckboxIcon}
+        />
+        <input onChange={handleChange} type="checkbox" name={name} id={name} className="body1" ref={inputRef} checked={isChecked} {...rest} />
+        <label htmlFor={name} className="subtitle1">{label}</label>
+      </div>
       <If condition={!!error}>
         <p className={`${styles.HelperText} body2`}>{error}</p>
       </If>

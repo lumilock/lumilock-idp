@@ -30,6 +30,7 @@ export class AuthController {
   @Post('login')
   public async login(@Request() req) {
     const { query, user } = req; // destructurate request params usefull
+    const queryConsent = query?.consent === 'true';
     // const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present
 
     // 2. check if client has user auth
@@ -40,8 +41,8 @@ export class AuthController {
     console.log('<login> clientIds', query?.client_id, oidcConstants?.clientID);
     // Checking if we trying to login in from a RP
     if (query?.client_id !== oidcConstants?.clientID) {
-      console.log('<login> consent', consent, !query?.consent);
-      if (!consent && !query?.consent) {
+      console.log('<login> consent', consent, queryConsent);
+      if (!consent && !queryConsent) {
         // there is no consent in the db and not in query params
         // so we will ask the consent to the user
         const clientInfos = await this.cliServ.findById(query?.client_id);
@@ -50,7 +51,7 @@ export class AuthController {
           error: 'consent_required',
           clientInfos: clientInfos,
         };
-      } else if (!consent && query?.consent) {
+      } else if (!consent && queryConsent) {
         // there is no consent in the db but there is in the query
         // so we will set the consent in the db
       }

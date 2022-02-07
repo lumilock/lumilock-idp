@@ -13,10 +13,10 @@ import If from '../If';
 import styles from './Button.module.scss';
 
 function Button({
-  startIcon, endIcon, onClick, color, children, className, loading, ...rest
+  startIcon, endIcon, onClick, color, children, className, loading, variant, ...rest
 }) {
   return (
-    <button type="button" onClick={onClick} disabled={loading ? 'disabled' : ''} className={`${styles.Base} ${styles[capitalize(color)]} ${className}`} {...rest}>
+    <button type="button" onClick={onClick} disabled={loading ? 'disabled' : ''} className={`${styles.Base} ${styles[capitalize(color)]} ${styles[capitalize(variant)]} ${className}`} {...rest}>
       <If condition={!!startIcon}>
         <Icon
           ionIcon={loading ? IoLogoIonic : startIcon}
@@ -46,6 +46,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
   color: PropTypes.oneOf(['primary', 'secondary', 'white']),
+  variant: PropTypes.oneOf(['standard', 'contained']),
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
@@ -56,6 +57,7 @@ Button.propTypes = {
 Button.defaultProps = {
   startIcon: undefined,
   endIcon: undefined,
+  variant: 'contained',
   color: 'primary',
   className: '',
   onClick: () => { },
