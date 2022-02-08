@@ -19,6 +19,7 @@
     & > label {
       font-size: rem-calc(13);
       width: 100%;
+      cursor: pointer;
     }
 
     & > input {
@@ -30,21 +31,21 @@
       display: block;
       background-color: none;
       pointer-events: none;
+      cursor: pointer;
 
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
     }
 
-    & > .CheckboxIcon:hover {
-      & > svg {
-        color: var(--color-primary-dark);
-        fill: var(--color-primary-dark);
-      }
+    & > svg.CheckboxIcon:hover {
+      color: var(--color-primary-dark);
+      fill: var(--color-primary-dark);
     }
     & > svg.CheckboxIcon {
       color: var(--color-primary);
       fill: var(--color-primary);
+      cursor: pointer;
     }
   }
 

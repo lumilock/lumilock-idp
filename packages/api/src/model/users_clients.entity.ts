@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  Unique,
 } from 'typeorm';
 import { Client } from './clients.entity';
 import { User } from './users.entity';
@@ -18,6 +19,7 @@ export enum UserRole {
 }
 
 @Entity({ name: 'users_clients' })
+@Unique(['userId', 'clientId'])
 export class UsersClients {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -35,9 +37,15 @@ export class UsersClients {
   @Column({ type: 'boolean', default: false })
   favorite: boolean;
 
+  @Column({ name: 'user_id', nullable: false })
+  userId: string;
+
   @ManyToOne(() => User, (user) => user.usersClients)
   @JoinColumn({ name: 'user_id' })
   public user!: User;
+
+  @Column({ name: 'client_id', nullable: false })
+  clientId: string;
 
   @ManyToOne(() => Client, (client) => client.usersClients)
   @JoinColumn({ name: 'client_id' })

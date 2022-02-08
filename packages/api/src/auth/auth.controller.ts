@@ -6,11 +6,11 @@ import {
   UseGuards,
   Request,
   Get,
-  Response,
   Query,
   UsePipes,
   ValidationPipe,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { UsersDTO } from 'src/users/users.dto';
 import * as querystring from 'query-string';
@@ -20,18 +20,25 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { OidcAuthGuard } from './oidc.guard';
 import { oidcConstants } from './oidcConstants';
 import { ClientsService } from '../clients/clients.service';
+import { UsersClientsService } from '../users-clients/users-clients.service';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private serv: AuthService, private cliServ: ClientsService) {}
+  constructor(
+    private serv: AuthService,
+    private cliServ: ClientsService,
+    private usrCliServ: UsersClientsService,
+  ) {}
 
   // 1. login user
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  public async login(@Request() req) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async login(@Request() req, @Res() res: Response) {
     const { query, user } = req; // destructurate request params usefull
     const queryConsent = query?.consent === 'true';
-    // const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present
+    const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present
 
     // 2. check if client has user auth
     const consent = await this.serv.checkUserConsent(
@@ -46,14 +53,36 @@ export class AuthController {
         // there is no consent in the db and not in query params
         // so we will ask the consent to the user
         const clientInfos = await this.cliServ.findById(query?.client_id);
+        // If the client doesn't exist
+        if (!clientInfos) {
+          const redirectUrl = querystring.stringify({
+            error: 'relying_party_not_know',
+            error_description:
+              'The Relying party is not authorize to access to our oidc',
+            ...state, // will add state if exist
+          });
+          console.log('<login> redirectUrl', redirectUrl);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const callbackURL = query?.redirect_uri || oidcConstants.callbackURL;
+          return res.redirect(
+            HttpStatus.MOVED_PERMANENTLY,
+            `${callbackURL}?${redirectUrl}`,
+          );
+        }
         console.log('<login> clientInfos', clientInfos);
-        return {
+        // Return what consent required message
+        return res.status(200).send({
           error: 'consent_required',
           clientInfos: clientInfos,
-        };
+        });
       } else if (!consent && queryConsent) {
         // there is no consent in the db but there is in the query
         // so we will set the consent in the db
+        await this.usrCliServ.patchOrCreateAuthorization(
+          user?.id, // id of the user we want to check
+          query?.client_id, // id of the client we want to check
+          queryConsent, // user consent value
+        );
       }
     }
     // if (!query?.consent && !consent) {
@@ -74,7 +103,8 @@ export class AuthController {
     // 2.2. if yes check if state is present
     // 3. return code&state
     console.log('<login> req', query);
-    return this.serv.login(user);
+    const login = await this.serv.login(user);
+    return res.status(200).send(login);
   }
 
   @UseGuards(OidcAuthGuard)
@@ -99,7 +129,7 @@ export class AuthController {
     // 2. Vérifiez qu'un paramètre scope est présent et contient la valeur scope openid. (Si aucune valeur scope openid n'est présente, la demande peut toujours être une demande OAuth 2.0 valide, mais n'est pas une demande OpenID Connect.)
     // 3. Le serveur d'autorisation DOIT vérifier que tous les paramètres EXIGÉS sont présents et que leur utilisation est conforme à la présente spécification.
     @Query() query: AuthorizeDTO,
-    @Response() res,
+    @Res() res: Response,
   ): Promise<any> {
     const parsedQuery = JSON.parse(JSON.stringify(query));
     console.log('<authorize> query: ', parsedQuery);

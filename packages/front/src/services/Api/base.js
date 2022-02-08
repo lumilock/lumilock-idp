@@ -20,7 +20,12 @@ apiClient.interceptors.response.use(
   // (response) => response,
   (response) => {
     // check redirection
-    if ([301, 302, 307, 308, 310].includes(response?.request?.status) && (window?.location?.href !== response?.request?.responseURL)) {
+    // eslint-disable-next-line no-console
+    console.log(response?.request?.status, response?.headers?.['content-type']);
+    if (
+      ([301, 302, 307, 308, 310].includes(response?.request?.status) || response?.headers?.['content-type'].includes('text/html;'))
+      && (window?.location?.href !== response?.request?.responseURL)
+    ) {
       window.location.href = response?.request?.responseURL;
       return null;
     }

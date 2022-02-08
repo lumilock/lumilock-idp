@@ -40,7 +40,7 @@ function LoginForm() {
 
   // React hook form
   const {
-    handleSubmit, control, setValue,
+    handleSubmit, control, setValue, formState: { isSubmitting },
   } = useForm({ resolver: yupResolver(validationSchema), defaultValues });
 
   /**
@@ -63,6 +63,16 @@ function LoginForm() {
       .catch((err) => console.log('err:', err));
   };
 
+  /**
+   * Function fired when
+   * user click on back button
+   */
+  const goBack = () => {
+    setDisplayConsent(false);
+    setValue('needConsent', false, { shouldValidate: true });
+    setValue('consent', false, { shouldValidate: true });
+  };
+
   return (
     <div className={styles.Root}>
       <form className={styles.Form} onSubmit={handleSubmit(onSubmit)}>
@@ -76,7 +86,7 @@ function LoginForm() {
           <InputControlled control={control} label="Identifiant" name="identity" type="text" placeholder="Entrez votre identifiant" />
           <InputControlled control={control} label="Mot de passe" name="password" type="password" placeholder="Entrez votre mot de passe" />
           <CheckboxControlled control={control} label="Rester connecter pendant 30j" name="remember" />
-          <Button color="secondary" type="submit">Se connecter</Button>
+          <Button color="secondary" loading={isSubmitting} type="submit">Se connecter</Button>
           <a href="/#" className={`${styles.Link} body2`}>Mot de passe oublier ?</a>
         </fieldset>
 
@@ -85,7 +95,7 @@ function LoginForm() {
           {/* Title section */}
           <div>
             <h4>Consent</h4>
-            <p className={`${styles.Subtitle} body1`}>An third party app required your consent</p>
+            <p className={`${styles.Subtitle} body1`}>A third party app required your consent</p>
           </div>
           {/* App section */}
           <div className={styles.AppSection}>
@@ -115,12 +125,9 @@ function LoginForm() {
             <p className="body2">You may be sharing sensitive info with this site or app. But you will can disable data sharing  in the settings of your profile</p>
           </div>
           <div className={styles.Actions}>
-            <Button color="secondary" variant="standard" type="button" onClick={() => { setDisplayConsent(false); setValue('needConsent', false, { shouldValidate: true }); }}>Back</Button>
-            <Button color="secondary" type="submit">Accepte</Button>
+            <Button color="secondary" loading={isSubmitting} variant="standard" type="button" onClick={goBack}>Back</Button>
+            <Button color="secondary" loading={isSubmitting} type="submit">Accepte</Button>
           </div>
-          {/* <pre>
-            {JSON.stringify(clientInfos, 2, 2)}
-          </pre> */}
         </fieldset>
 
       </form>

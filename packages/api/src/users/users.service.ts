@@ -44,6 +44,7 @@ export class UsersService {
     return !!users?.usersClients?.[0]?.authorization; // return the authorization value or false else
   }
 
+  // Store a new user
   public async create(dto: UsersDTO): Promise<UsersDTO> {
     return this.repo.save(dto.toEntity()).then((e) => UsersDTO.fromEntity(e));
   }
