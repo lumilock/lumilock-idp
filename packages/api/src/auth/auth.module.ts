@@ -11,6 +11,7 @@ import { OidcStrategy } from './oidc.strategy';
 import { AuthController } from './auth.controller';
 import { ClientsModule } from '../clients/clients.module';
 import { UsersClientsModule } from '../users-clients/users-clients.module';
+import { CodesModule } from '../codes/codes.module';
 
 // tuto
 // https://docs.nestjs.com/security/authentication#implement-protected-route-and-jwt-strategy-guards
@@ -26,6 +27,7 @@ import { UsersClientsModule } from '../users-clients/users-clients.module';
     }),
     ClientsModule,
     UsersClientsModule,
+    CodesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, OidcStrategy],

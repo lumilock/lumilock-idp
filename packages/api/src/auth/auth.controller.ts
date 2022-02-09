@@ -46,13 +46,13 @@ export class AuthController {
       query?.client_id, // id of the client we want to check
     );
     console.log('<login> clientIds', query?.client_id, oidcConstants?.clientID);
+    const clientInfos = await this.cliServ.findById(query?.client_id);
     // Checking if we trying to login in from a RP
     if (query?.client_id !== oidcConstants?.clientID) {
       console.log('<login> consent', consent, queryConsent);
       if (!consent && !queryConsent) {
         // there is no consent in the db and not in query params
         // so we will ask the consent to the user
-        const clientInfos = await this.cliServ.findById(query?.client_id);
         // If the client doesn't exist
         if (!clientInfos) {
           const redirectUrl = querystring.stringify({
@@ -103,6 +103,7 @@ export class AuthController {
     // 2.2. if yes check if state is present
     // 3. return code&state
     console.log('<login> req', query);
+    console.log(this.serv.authenticate(clientInfos));
     const login = await this.serv.login(user);
     return res.status(200).send(login);
   }
