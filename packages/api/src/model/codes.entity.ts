@@ -23,6 +23,9 @@ export class Code {
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
+  @Column({ name: 'client_id', nullable: false })
+  clientId: string;
+
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   create_date_time: Date;
 }

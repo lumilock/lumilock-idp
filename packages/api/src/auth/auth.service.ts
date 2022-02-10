@@ -38,8 +38,11 @@ export class AuthService {
     )}${getRandomString(5)}`;
     const input = hmac.sign(randomCode, jwtConstants.secretCodeGenerator);
 
-    // 2. saved it in db
-    this.codesService
+    // 2. removed all expires codes it in db
+    this.codesService.checkExpiration(client?.id);
+
+    // 3. saved it in db
+    await this.codesService
       .create(
         CodesDTO.from({
           code: input,
@@ -48,7 +51,7 @@ export class AuthService {
       )
       .then((r) => (console.log('done ->', r.code, r.client), r));
 
-    // 3. encode it before send it
+    // 4. encode it before send it
     const signature = hmac.sign(input, jwtConstants.secret);
     return signature;
   }

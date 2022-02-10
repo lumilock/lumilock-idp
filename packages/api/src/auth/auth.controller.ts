@@ -85,27 +85,30 @@ export class AuthController {
         );
       }
     }
-    // if (!query?.consent && !consent) {
-    //   const redirectUrl = querystring.stringify({
-    //     error: 'consent_required',
-    //     error_description: 'The Authorization Server requires End-User consent',
-    //     ...state, // will add state if exist
-    //   });
-    //   console.log('<login> redirectUrl', redirectUrl);
-    //   console.log(
-    //     '<login> redirectUrl',
-    //     `${query?.redirect_uri || oidcConstants.callbackURL}?${redirectUrl}`,
-    //   );
-    //   return null;
-    // }
     console.log('<login> consent', consent);
     // 2.1. if not return message to Obtains End-User Consent/Authorization
     // 2.2. if yes check if state is present
     // 3. return code&state
     console.log('<login> req', query);
-    console.log(this.serv.authenticate(clientInfos));
-    const login = await this.serv.login(user);
-    return res.status(200).send(login);
+    const code = await this.serv.authenticate(clientInfos);
+    console.log('<login> code', code);
+
+    const redirectUrl = querystring.stringify({
+      code, // RP authorization code
+      ...state, // will add state if exist
+    });
+    console.log('<login> redirectUrl', redirectUrl);
+    req.session.test = 'test';
+    req.session.save();
+    console.log('<login> req.session', req.session);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const callbackURL = query?.redirect_uri || oidcConstants.callbackURL;
+    return res.redirect(
+      HttpStatus.MOVED_PERMANENTLY,
+      `${callbackURL}?${redirectUrl}`,
+    );
+    // const login = await this.serv.login(user);
+    // return res.status(200).send(login);
   }
 
   @UseGuards(OidcAuthGuard)
@@ -113,6 +116,24 @@ export class AuthController {
   @Get('profile')
   public async getProfile(@Request() req): Promise<UsersDTO> {
     return await this.serv.profile(req?.user?.userId);
+  }
+
+  // @UseGuards(OidcAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @Get('token')
+  public async getToken(@Request() req): Promise<boolean> {
+    console.log('<getToken> req', req);
+    console.log('<getToken> here');
+    return true;
+  }
+
+  // @UseGuards(OidcAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @Get('userinfo')
+  public async getUserinfo(@Request() req): Promise<boolean> {
+    console.log('<getUserinfo> req', req);
+    console.log('<getUserinfo> here');
+    return true;
   }
 
   // @UseGuards(OidcAuthGuard)
@@ -134,6 +155,7 @@ export class AuthController {
   ): Promise<any> {
     const parsedQuery = JSON.parse(JSON.stringify(query));
     console.log('<authorize> query: ', parsedQuery);
+    console.log('<authorize> req.session: ', req.session);
     /**
      * TODO : 4 - Si sub (sujet) est dans claims avec une valeur spécifique pour l'ID Token,
      * le serveur d'autorisation DOIT uniquement envoyer une réponse positive si l'utilisateur final identifié
