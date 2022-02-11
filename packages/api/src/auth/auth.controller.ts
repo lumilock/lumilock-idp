@@ -11,8 +11,10 @@ import {
   ValidationPipe,
   HttpStatus,
   Res,
+  Body,
 } from '@nestjs/common';
-import { UsersDTO } from 'src/users/users.dto';
+import { Response } from 'express';
+import { UsersDTO } from '../users/users.dto';
 import * as querystring from 'query-string';
 import { AuthService } from './auth.service';
 import { AuthorizeDTO } from './authorize.dto';
@@ -21,7 +23,7 @@ import { OidcAuthGuard } from './oidc.guard';
 import { oidcConstants } from './oidcConstants';
 import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
-import { Response } from 'express';
+import { CodesService } from '../codes/codes.service';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,7 @@ export class AuthController {
     private serv: AuthService,
     private cliServ: ClientsService,
     private usrCliServ: UsersClientsService,
+    private codeServ: CodesService,
   ) {}
 
   // 1. login user
@@ -117,9 +120,29 @@ export class AuthController {
 
   // @UseGuards(OidcAuthGuard)
   // @UseGuards(JwtAuthGuard)
+  /**
+   * The Authorization Server MUST validate the Token Request as follows:
+   * 1. Authenticate the Client if it was issued Client Credentials or if it uses another Client Authentication method, per Section 9(https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication).
+   * 2. Ensure the Authorization Code was issued to the authenticated Client.
+   * 3. Verify that the Authorization Code is valid.
+   * 4. If possible, verify that the Authorization Code has not been previously used.
+   * 5. Ensure that the redirect_uri parameter value is identical to the redirect_uri parameter value that was included in the initial Authorization Request. If the redirect_uri parameter value is not present when there is only one registered redirect_uri value, the Authorization Server MAY return an error (since the Client should have included the parameter) or MAY proceed without an error (since OAuth 2.0 permits the parameter to be omitted in this case).
+   * 6. Verify that the Authorization Code used was issued in response to an OpenID Connect Authentication Request (so that an ID Token will be returned from the Token Endpoint).
+   * */
   @Post('token')
-  public async getToken(@Request() req): Promise<boolean> {
-    console.log('<getToken> req', req);
+  public async getToken(@Request() req, @Body() body): Promise<boolean> {
+    const { client_id, grant_type, code, redirect_uri } = body;
+    console.log(
+      '<getToken> (client_id, grant_type, code, redirect_uri)',
+      client_id,
+      grant_type,
+      code,
+      redirect_uri,
+    );
+    // TODO 1.
+    // 2. Ensure the Authorization Code was issued to the authenticated Client.
+    const valideCode = await this.codeServ.checkAssociation(client_id, code);
+    console.log('<getToken> valideCode : ', valideCode);
     console.log('<getToken> here');
     return true;
   }

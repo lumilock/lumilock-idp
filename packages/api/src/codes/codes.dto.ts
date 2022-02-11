@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 // import { Type } from 'class-transformer';
 import { IsUUID, IsString, ValidateNested, IsJSON } from 'class-validator';
 import { LightenClientsDTO } from 'src/clients/lightenClients.dto';
+import { Code } from '../model/codes.entity';
 import { ClientsDTO } from '../clients/clients.dto';
 
 export class CodesDTO implements Readonly<CodesDTO> {
@@ -28,11 +29,11 @@ export class CodesDTO implements Readonly<CodesDTO> {
     return code;
   }
 
-  public static fromEntity(entity: CodesDTO) {
+  public static fromEntity(entity: Code) {
     return this.from({
       id: entity.id,
       code: entity.code,
-      client: entity.client,
+      client: ClientsDTO.fromEntity(entity.client),
     });
   }
 

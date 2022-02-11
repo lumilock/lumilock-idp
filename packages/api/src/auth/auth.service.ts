@@ -52,7 +52,7 @@ export class AuthService {
       .then((r) => (console.log('done ->', r.code, r.client), r));
 
     // 4. encode it before send it
-    const signature = hmac.sign(input, jwtConstants.secret);
+    const signature = hmac.sign(input, jwtConstants.secretCodeGenerator);
     return signature;
   }
 
