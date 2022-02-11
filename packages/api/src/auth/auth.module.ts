@@ -12,6 +12,7 @@ import { AuthController } from './auth.controller';
 import { ClientsModule } from '../clients/clients.module';
 import { UsersClientsModule } from '../users-clients/users-clients.module';
 import { CodesModule } from '../codes/codes.module';
+import { LocalSerializer } from './local.serializer';
 
 // tuto
 // https://docs.nestjs.com/security/authentication#implement-protected-route-and-jwt-strategy-guards
@@ -20,7 +21,10 @@ import { CodesModule } from '../codes/codes.module';
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
+    PassportModule.register({
+      defaultStrategy: 'local',
+      session: true,
+    }),
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
@@ -30,7 +34,13 @@ import { CodesModule } from '../codes/codes.module';
     CodesModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, OidcStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    LocalSerializer,
+    JwtStrategy,
+    OidcStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -98,9 +98,6 @@ export class AuthController {
       ...state, // will add state if exist
     });
     console.log('<login> redirectUrl', redirectUrl);
-    req.session.test = 'test';
-    req.session.save();
-    console.log('<login> req.session', req.session);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const callbackURL = query?.redirect_uri || oidcConstants.callbackURL;
     return res.redirect(
@@ -120,7 +117,7 @@ export class AuthController {
 
   // @UseGuards(OidcAuthGuard)
   // @UseGuards(JwtAuthGuard)
-  @Get('token')
+  @Post('token')
   public async getToken(@Request() req): Promise<boolean> {
     console.log('<getToken> req', req);
     console.log('<getToken> here');

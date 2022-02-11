@@ -4,6 +4,10 @@ import { AppModule } from './app.module';
 import { configService } from './config/config.service';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import * as cookieParser from 'cookie-parser';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const MemoryStore = require('memorystore')(session);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,15 +17,19 @@ async function bootstrap() {
   app.use(
     session({
       secret: 'my-secret',
-      resave: true,
-      saveUninitialized: true,
+      resave: false,
+      saveUninitialized: false,
       rolling: true, // keep session alive
       cookie: {
         maxAge: 30 * 60 * 1000, // session expires in 1hr, refreshed by `rolling: true` option.
-        httpOnly: false, // so that cookie can't be accessed via client-side script
+        httpOnly: true, // so that cookie can't be accessed via client-side script
       },
+      store: new MemoryStore({
+        checkPeriod: 30 * 60 * 1000,
+      }),
     }),
   );
+  app.use(cookieParser());
   app.use(passport.initialize());
   app.use(passport.session());
 
