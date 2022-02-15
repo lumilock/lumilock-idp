@@ -21,19 +21,19 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
 
   @ApiProperty({ required: true })
   @IsString()
-  callback_url: string;
+  callbackUrl: string;
 
   @ApiProperty({ required: false })
   @IsString()
-  client_picture: string;
+  clientPicture: string;
 
   public static from(dto: Partial<ClientsDTO>) {
     const client = new ClientsDTO();
     client.id = dto.id;
     client.name = dto.name;
     client.secret = dto.secret;
-    client.callback_url = dto.callback_url;
-    client.client_picture = dto.client_picture;
+    client.callbackUrl = dto.callbackUrl;
+    client.clientPicture = dto.clientPicture;
     return client;
   }
 
@@ -42,8 +42,8 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
       id: entity.id,
       name: entity.name,
       secret: entity.secret,
-      callback_url: entity.callback_url,
-      client_picture: entity.client_picture,
+      callbackUrl: entity.callback_url,
+      clientPicture: entity.client_picture,
     });
   }
 
@@ -52,8 +52,8 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     client.id = this.id;
     client.name = this.name;
     client.secret = this.secret;
-    client.callback_url = this.callback_url;
-    client.client_picture = this.client_picture;
+    client.callback_url = this.callbackUrl;
+    client.client_picture = this.clientPicture;
     return client;
   }
 }

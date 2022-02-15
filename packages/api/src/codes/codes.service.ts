@@ -53,6 +53,11 @@ export class CodesService {
     )?.[0]; // get only one because it can't be more than one
   }
 
+  // remove a specific code
+  public async removeById(codeId: string): Promise<void> {
+    await this.repo.delete({ id: codeId });
+  }
+
   // Store a new code
   public async create(dto: CodesDTO): Promise<CodesDTO> {
     return this.repo.save(dto.toEntity()).then((e) => CodesDTO.fromEntity(e));

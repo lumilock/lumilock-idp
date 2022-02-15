@@ -125,12 +125,13 @@ export class AuthController {
    * 1. Authenticate the Client if it was issued Client Credentials or if it uses another Client Authentication method, per Section 9(https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication).
    * 2. Ensure the Authorization Code was issued to the authenticated Client.
    * 3. Verify that the Authorization Code is valid.
-   * 4. If possible, verify that the Authorization Code has not been previously used.
+   * 4.(move to end) If possible, verify that the Authorization Code has not been previously used.
    * 5. Ensure that the redirect_uri parameter value is identical to the redirect_uri parameter value that was included in the initial Authorization Request. If the redirect_uri parameter value is not present when there is only one registered redirect_uri value, the Authorization Server MAY return an error (since the Client should have included the parameter) or MAY proceed without an error (since OAuth 2.0 permits the parameter to be omitted in this case).
    * 6. Verify that the Authorization Code used was issued in response to an OpenID Connect Authentication Request (so that an ID Token will be returned from the Token Endpoint).
    * */
   @Post('token')
   public async getToken(@Request() req, @Body() body): Promise<boolean> {
+    console.log('req', req.headers);
     const { client_id, grant_type, code, redirect_uri } = body;
     console.log(
       '<getToken> (client_id, grant_type, code, redirect_uri)',
@@ -141,9 +142,40 @@ export class AuthController {
     );
     // TODO 1.
     // 2. Ensure the Authorization Code was issued to the authenticated Client.
+    // 3. Verify that the Authorization Code is valid.
     const valideCode = await this.codeServ.checkAssociation(client_id, code);
     console.log('<getToken> valideCode : ', valideCode);
-    console.log('<getToken> here');
+
+    if (!valideCode) {
+      throw new Error(
+        'Your authentification code is not valide, have been already used, or have expired.',
+      );
+    }
+    // 5. Ensure that the redirect_uri parameter value is identical to the redirect_uri parameter value that was included in the initial Authorization Request.
+    // If the redirect_uri parameter value is not present when there is only one registered redirect_uri value,
+    // the Authorization Server MAY return an error (since the Client should have included the parameter) or
+    // MAY proceed without an error (since OAuth 2.0 permits the parameter to be omitted in this case).
+    if (!redirect_uri || valideCode?.client?.callbackUrl !== redirect_uri) {
+      throw new Error(
+        'redirect_uri is missing or does not correspond to the client redirect uri',
+      );
+    }
+    // 6. Verify that the Authorization Code used was issued in response to an OpenID Connect Authentication Request (so that an ID Token will be returned from the Token Endpoint).
+    // TODO : improve this / maybe useless because code are only created "in response to an OpenID Connect Authentication Request"
+    if (grant_type !== 'authorization_code') {
+      throw new Error(
+        'The Authorization Code used need to be issued in response to an OpenID Connect Authentication Request',
+      );
+    }
+
+    // 4.(move to end) If possible, verify that the Authorization Code has not been previously used.
+    // we remove this code because it have been used
+    await this.codeServ.removeById(valideCode.id);
+    const tokens = this.serv.getToken();
+    console.log(tokens);
+    // if everything has been verifying with success we can generate an ID Token and redirect the user
+    // Cache-Control	no-store
+    // Pragma	no-cache
     return true;
   }
 

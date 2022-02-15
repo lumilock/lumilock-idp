@@ -8,4 +8,8 @@ export const oidcConstants = {
   clientSecret: 'my-clientSecret',
   callbackURL: 'http://localhost:3000/auth/callback',
   scope: 'openid profile',
+  tokenDuration: 3600, // seconds
+  accessTokenSecret: '3a5z6e4tr87fd6',
+  refreshTokenDuration: 86400 * 90, // seconds (1 days = 86400 seconds so * 90 = 90days in seconds, it is the resfresh token lifetime)
+  refreshTokenSecret: '1a2z3e4r5t6',
 };

@@ -7,7 +7,9 @@ import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
 import { LightenClientsDTO } from '../clients/lightenClients.dto';
 import { CodesDTO } from '../codes/codes.dto';
+import { bin2hex, randomBytes } from '../utils';
 import { jwtConstants } from './constants';
+import { oidcConstants } from './oidcConstants';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +56,58 @@ export class AuthService {
     // 4. encode it before send it
     const signature = hmac.sign(input, jwtConstants.secretCodeGenerator);
     return signature;
+  }
+
+  // Function to generate the token send to the client
+  // https://openid.net/specs/openid-connect-core-1_0.html#IDToken
+  public async getToken() {
+    // 1. Generate the access_token
+    const accessTokenPayload = {
+      iss: oidcConstants.issuer,
+      sub: 'user.id', // TODO
+      aud: 'client.uri', // TODO
+      client_id: 'client.id', // TODO
+      iat: Math.floor(Date.now() / 1000),
+      jti: Date.now() + '.' + bin2hex(randomBytes(20)), // unique id used to blacklist
+      scope: 'create',
+    };
+    const accessToken = this.jwtService.sign(accessTokenPayload, {
+      secret: oidcConstants.accessTokenSecret,
+      expiresIn: oidcConstants.tokenDuration + 's',
+    });
+
+    // 2. Generate the refresh_token
+    const refreshTokenPayload = {
+      iss: oidcConstants.issuer,
+      sub: 'user.id', // TODO
+      aud: 'client.uri', // TODO
+      client_id: 'client.id', // TODO
+      iat: Math.floor(Date.now() / 1000),
+      jti: Date.now() + '.' + bin2hex(randomBytes(20)), // unique id used to blacklist
+      scope: 'create',
+    };
+    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
+      secret: oidcConstants.refreshTokenSecret,
+      expiresIn: oidcConstants.refreshTokenDuration + 's',
+    });
+
+    // 3. Generate the id_token
+    const idTokenPayload = {
+      iss: oidcConstants.issuer,
+      sub: 'user.id', // TODO
+      aud: 'client.id', // TODO
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    return {
+      access_token: accessToken,
+      token_type: 'Bearer',
+      refresh_token: refreshToken,
+      expires_in: oidcConstants.tokenDuration,
+      id_token: this.jwtService.sign(idTokenPayload, {
+        expiresIn: oidcConstants.tokenDuration + 's',
+      }),
+    };
   }
 
   async login(user: any) {
