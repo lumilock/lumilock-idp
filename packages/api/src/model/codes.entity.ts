@@ -43,6 +43,10 @@ export class Code {
   @Column({ name: 'user_id', nullable: false })
   userId: string;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  create_date_time: Date;
+  @CreateDateColumn({
+    name: 'create_date_time',
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createDateTime: Date;
 }

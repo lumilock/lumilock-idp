@@ -20,7 +20,7 @@ export class CodesService {
     const dateTenMinAgo = new Date(unixTenMinAgo * 1000);
     await this.repo.delete({
       clientId,
-      create_date_time: LessThan(dateTenMinAgo),
+      createDateTime: LessThan(dateTenMinAgo),
     });
   }
 
@@ -45,7 +45,7 @@ export class CodesService {
     const allCodes = await this.repo
       .find({
         relations: ['client', 'user'],
-        where: [{ clientId }, { create_date_time: MoreThan(dateTenMinAgo) }],
+        where: [{ clientId }, { createDateTime: MoreThan(dateTenMinAgo) }],
       })
       .then((items) => items.map((e) => CodesDTO.fromEntity(e)));
     return allCodes?.filter((c: CodesDTO) =>

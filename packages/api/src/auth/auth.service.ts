@@ -11,6 +11,7 @@ import { bin2hex, randomBytes } from '../utils';
 import { jwtConstants } from './constants';
 import { oidcConstants } from './oidcConstants';
 import { LightenUsersDTO } from 'src/users/LightenUsers.dto';
+import { ClientsDTO } from '../clients/clients.dto';
 
 @Injectable()
 export class AuthService {
@@ -49,7 +50,7 @@ export class AuthService {
       .create(
         CodesDTO.from({
           code: input,
-          client,
+          client: ClientsDTO.from({ ...client, secret: '' }),
           user,
         }),
       )
@@ -63,13 +64,18 @@ export class AuthService {
   // Function to generate the token send to the client
   // https://openid.net/specs/openid-connect-core-1_0.html#IDToken
   public async getToken(code: CodesDTO) {
-    console.log('<getToken> : ', code);
+    const userId = code?.user?.id;
+    const clientId = code?.client?.id;
+    const authTime = code?.createDateTime;
+    const clientOrigin = new URL(code?.client?.callbackUrl)?.origin;
+    const clientSecret = code?.client?.secret;
+
     // 1. Generate the access_token
     const accessTokenPayload = {
       iss: oidcConstants.issuer,
-      sub: 'user.id', // TODO
-      aud: 'client.uri', // TODO
-      client_id: 'client.id', // TODO
+      sub: userId, // subject (The user ID)
+      aud: clientOrigin, // Audience (The identifier of the resource server)
+      client_id: clientId, // Client ID
       iat: Math.floor(Date.now() / 1000),
       jti: Date.now() + '.' + bin2hex(randomBytes(20)), // unique id used to blacklist
       scope: 'create',
@@ -82,9 +88,9 @@ export class AuthService {
     // 2. Generate the refresh_token
     const refreshTokenPayload = {
       iss: oidcConstants.issuer,
-      sub: 'user.id', // TODO
-      aud: 'client.uri', // TODO
-      client_id: 'client.id', // TODO
+      sub: userId, // subject (The user ID)
+      aud: clientOrigin, // Audience (The identifier of the resource server)
+      client_id: clientId, // Client ID
       iat: Math.floor(Date.now() / 1000),
       jti: Date.now() + '.' + bin2hex(randomBytes(20)), // unique id used to blacklist
       scope: 'create',
@@ -97,20 +103,22 @@ export class AuthService {
     // 3. Generate the id_token
     const idTokenPayload = {
       iss: oidcConstants.issuer,
-      sub: 'user.id', // TODO
-      aud: 'client.id', // TODO
+      sub: userId, // subject (The user ID)
+      aud: clientId, // Client ID
       iat: Math.floor(Date.now() / 1000),
     };
+    const idToken = this.jwtService.sign(idTokenPayload, {
+      secret: clientSecret,
+      expiresIn: oidcConstants.idTokenDuration + 's',
+    });
 
     return {
       access_token: accessToken,
       token_type: 'Bearer',
+      auth_time: Math.floor(new Date(authTime).getTime() / 1000),
       refresh_token: refreshToken,
-      expires_in: oidcConstants.tokenDuration,
-      id_token: this.jwtService.sign(idTokenPayload, {
-        secret: oidcConstants.idTokenSecret,
-        expiresIn: oidcConstants.idTokenDuration + 's',
-      }),
+      expires_in: oidcConstants.idTokenDuration,
+      id_token: idToken,
     };
   }
 

@@ -1,14 +1,13 @@
-// item.dto.ts
+// codes.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-// import { Type } from 'class-transformer';
 import {
   IsUUID,
   IsString,
   ValidateNested,
   IsJSON,
   IsEnum,
+  IsDate,
 } from 'class-validator';
-import { LightenClientsDTO } from 'src/clients/lightenClients.dto';
 import { Code, CodeScope } from '../model/codes.entity';
 import { ClientsDTO } from '../clients/clients.dto';
 import { LightenUsersDTO } from '../users/LightenUsers.dto';
@@ -29,12 +28,16 @@ export class CodesDTO implements Readonly<CodesDTO> {
   @IsJSON()
   @ValidateNested()
   @ApiProperty({ required: true })
-  client: ClientsDTO | LightenClientsDTO;
+  client: ClientsDTO;
 
   @IsJSON()
   @ValidateNested()
   @ApiProperty({ required: true })
   user: LightenUsersDTO;
+
+  @IsDate()
+  @ApiProperty({ required: false })
+  createDateTime: Date;
 
   public static from(dto: Partial<CodesDTO>) {
     const code = new CodesDTO();
@@ -43,6 +46,7 @@ export class CodesDTO implements Readonly<CodesDTO> {
     code.scope = dto.scope;
     code.client = dto.client;
     code.user = dto.user;
+    code.createDateTime = dto.createDateTime;
     return code;
   }
 
@@ -53,6 +57,7 @@ export class CodesDTO implements Readonly<CodesDTO> {
       scope: entity.scope,
       client: ClientsDTO.fromEntity(entity.client),
       user: LightenUsersDTO.fromEntity(entity.user),
+      createDateTime: entity.createDateTime,
     });
   }
 
@@ -63,6 +68,8 @@ export class CodesDTO implements Readonly<CodesDTO> {
     code.scope = this.scope;
     code.client = this.client;
     code.user = this.user;
+    code.user = this.user;
+    code.createDateTime = this.createDateTime;
     return code;
   }
 }

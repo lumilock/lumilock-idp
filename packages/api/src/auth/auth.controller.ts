@@ -131,7 +131,11 @@ export class AuthController {
    * 6. Verify that the Authorization Code used was issued in response to an OpenID Connect Authentication Request (so that an ID Token will be returned from the Token Endpoint).
    * */
   @Post('token')
-  public async getToken(@Request() req, @Body() body): Promise<boolean> {
+  public async getToken(
+    @Request() req,
+    @Body() body,
+    @Res() res: Response,
+  ): Promise<any | undefined> {
     console.log('req', req.headers);
     const { client_id, grant_type, code, redirect_uri } = body;
     console.log(
@@ -172,12 +176,14 @@ export class AuthController {
     // 4.(move to end) If possible, verify that the Authorization Code has not been previously used.
     // we remove this code because it have been used
     await this.codeServ.removeById(valideCode.id);
-    const tokens = this.serv.getToken(valideCode);
+    const tokens = await this.serv.getToken(valideCode);
     console.log(tokens);
+
     // if everything has been verifying with success we can generate an ID Token and redirect the user
-    // Cache-Control	no-store
-    // Pragma	no-cache
-    return true;
+    return res
+      .status(HttpStatus.OK)
+      .set({ 'Cache-Control': 'no-store', Pragma: 'no-cache' })
+      .json(tokens);
   }
 
   // @UseGuards(OidcAuthGuard)
