@@ -10,6 +10,7 @@ import { CodesDTO } from '../codes/codes.dto';
 import { bin2hex, randomBytes } from '../utils';
 import { jwtConstants } from './constants';
 import { oidcConstants } from './oidcConstants';
+import { LightenUsersDTO } from 'src/users/LightenUsers.dto';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,7 @@ export class AuthService {
 
   // generate authenticate jwa code
   // https://www.npmjs.com/package/jwa
-  async authenticate(client: LightenClientsDTO) {
+  async authenticate(client: LightenClientsDTO, user: LightenUsersDTO) {
     const hmac = jwa('HS256');
     // 1. generate a random code based on : (5 random char / timestamp / 5 random char)
     const randomCode = `${getRandomString(5)}${Math.floor(
@@ -49,9 +50,10 @@ export class AuthService {
         CodesDTO.from({
           code: input,
           client,
+          user,
         }),
       )
-      .then((r) => (console.log('done ->', r.code, r.client), r));
+      .then((r) => (console.log('done ->', r.code, r.client, r.user), r));
 
     // 4. encode it before send it
     const signature = hmac.sign(input, jwtConstants.secretCodeGenerator);
@@ -60,7 +62,8 @@ export class AuthService {
 
   // Function to generate the token send to the client
   // https://openid.net/specs/openid-connect-core-1_0.html#IDToken
-  public async getToken() {
+  public async getToken(code: CodesDTO) {
+    console.log('<getToken> : ', code);
     // 1. Generate the access_token
     const accessTokenPayload = {
       iss: oidcConstants.issuer,
@@ -105,7 +108,8 @@ export class AuthService {
       refresh_token: refreshToken,
       expires_in: oidcConstants.tokenDuration,
       id_token: this.jwtService.sign(idTokenPayload, {
-        expiresIn: oidcConstants.tokenDuration + 's',
+        secret: oidcConstants.idTokenSecret,
+        expiresIn: oidcConstants.idTokenDuration + 's',
       }),
     };
   }

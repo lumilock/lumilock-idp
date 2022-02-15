@@ -44,7 +44,7 @@ export class CodesService {
     // Retreave all non expires code for a specific client
     const allCodes = await this.repo
       .find({
-        relations: ['client'],
+        relations: ['client', 'user'],
         where: [{ clientId }, { create_date_time: MoreThan(dateTenMinAgo) }],
       })
       .then((items) => items.map((e) => CodesDTO.fromEntity(e)));

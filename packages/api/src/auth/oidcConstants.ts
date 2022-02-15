@@ -12,4 +12,6 @@ export const oidcConstants = {
   accessTokenSecret: '3a5z6e4tr87fd6',
   refreshTokenDuration: 86400 * 90, // seconds (1 days = 86400 seconds so * 90 = 90days in seconds, it is the resfresh token lifetime)
   refreshTokenSecret: '1a2z3e4r5t6',
+  idTokenDuration: 3600, // seconds
+  idTokenSecret: 'd4sf65fds45f6d4s6',
 };

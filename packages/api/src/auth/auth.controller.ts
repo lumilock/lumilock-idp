@@ -24,6 +24,7 @@ import { oidcConstants } from './oidcConstants';
 import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
+import { CodesDTO } from 'src/codes/codes.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -93,7 +94,7 @@ export class AuthController {
     // 2.2. if yes check if state is present
     // 3. return code&state
     console.log('<login> req', query);
-    const code = await this.serv.authenticate(clientInfos);
+    const code = await this.serv.authenticate(clientInfos, user);
     console.log('<login> code', code);
 
     const redirectUrl = querystring.stringify({
@@ -143,7 +144,8 @@ export class AuthController {
     // TODO 1.
     // 2. Ensure the Authorization Code was issued to the authenticated Client.
     // 3. Verify that the Authorization Code is valid.
-    const valideCode = await this.codeServ.checkAssociation(client_id, code);
+    const valideCode: CodesDTO | undefined =
+      await this.codeServ.checkAssociation(client_id, code);
     console.log('<getToken> valideCode : ', valideCode);
 
     if (!valideCode) {
@@ -161,8 +163,7 @@ export class AuthController {
       );
     }
     // 6. Verify that the Authorization Code used was issued in response to an OpenID Connect Authentication Request (so that an ID Token will be returned from the Token Endpoint).
-    // TODO : improve this / maybe useless because code are only created "in response to an OpenID Connect Authentication Request"
-    if (grant_type !== 'authorization_code') {
+    if (grant_type !== 'authorization_code' && valideCode?.scope === 'openid') {
       throw new Error(
         'The Authorization Code used need to be issued in response to an OpenID Connect Authentication Request',
       );
@@ -171,7 +172,7 @@ export class AuthController {
     // 4.(move to end) If possible, verify that the Authorization Code has not been previously used.
     // we remove this code because it have been used
     await this.codeServ.removeById(valideCode.id);
-    const tokens = this.serv.getToken();
+    const tokens = this.serv.getToken(valideCode);
     console.log(tokens);
     // if everything has been verifying with success we can generate an ID Token and redirect the user
     // Cache-Control	no-store

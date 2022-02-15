@@ -1,6 +1,7 @@
 // user.entity.ts
 import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { Code } from './codes.entity';
 import { UsersClients } from './users_clients.entity';
 
 @Entity({ name: 'users' })
@@ -22,6 +23,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 200 })
   public password: string;
+
+  @OneToMany(() => Code, (code) => code.user)
+  codes: Code[];
 
   @OneToMany(() => UsersClients, (usersClients) => usersClients.user)
   public usersClients: UsersClients[];
