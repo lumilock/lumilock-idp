@@ -13,9 +13,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         secretOrKey: jwtConstants.secret,
       },
       (payload, done) => {
-        console.log(payload, done);
+        console.log('<JwtStrategy> : ', payload, done);
         // check revoke
-        done(null, true);
+        done(null, payload);
       },
     );
   }

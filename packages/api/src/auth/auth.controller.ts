@@ -25,6 +25,7 @@ import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
 import { CodesDTO } from 'src/codes/codes.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -187,12 +188,15 @@ export class AuthController {
   }
 
   // @UseGuards(OidcAuthGuard)
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('userinfo')
-  public async getUserinfo(@Request() req): Promise<boolean> {
-    console.log('<getUserinfo> req', req);
+  public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {
+    console.log('<getUserinfo> req', req?.user);
+    console.log({ sub: req?.user?.sub, test: 'test' });
     console.log('<getUserinfo> here');
-    return true;
+    return res
+      .status(HttpStatus.OK)
+      .json({ sub: req?.user?.sub, test: 'test' });
   }
 
   // @UseGuards(OidcAuthGuard)
