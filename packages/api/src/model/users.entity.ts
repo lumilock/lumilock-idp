@@ -1,5 +1,5 @@
 // user.entity.ts
-import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { Address } from './addresses.entity';
 import { BaseEntity } from './base.entity';
 import { Code } from './codes.entity';
@@ -36,20 +36,20 @@ export class User extends BaseEntity {
   /**
    * The given or first name of the end-user
    */
-  @Column({ type: 'varchar', length: 100 })
-  public given_name: string;
+  @Column({ name: 'given_name', type: 'varchar', length: 100 })
+  public givenName: string;
 
   /**
    * The surname(s) or last name(s) of the end-user
    */
-  @Column({ type: 'varchar', length: 100 })
-  public family_name: string;
+  @Column({ name: 'family_name', type: 'varchar', length: 100 })
+  public familyName: string;
 
   /**
    * The middle name of the end-user
    */
-  @Column({ type: 'varchar', nullable: true, length: 100 })
-  public middle_name: string;
+  @Column({ name: 'middle_name', type: 'varchar', nullable: true, length: 100 })
+  public middleName: string;
 
   /**
    * The casual name of the end-user
@@ -60,8 +60,13 @@ export class User extends BaseEntity {
   /**
    * The username by which the end-user wants to be referred to at the client application.
    */
-  @Column({ type: 'varchar', nullable: true, length: 100 })
-  public preferred_username: string;
+  @Column({
+    name: 'preferred_username',
+    type: 'varchar',
+    nullable: true,
+    length: 100,
+  })
+  public preferredUsername: string;
 
   /**
    * The URL of the profile page for the end-user
@@ -90,8 +95,8 @@ export class User extends BaseEntity {
   /**
    * True if the end-user's email address has been verified, else false.
    */
-  @Column({ type: 'boolean', default: false })
-  public email_verified: boolean;
+  @Column({ name: 'email_verified', type: 'boolean', default: false })
+  public emailVerified: boolean;
 
   /**
    * The end-user's gender.
@@ -101,7 +106,7 @@ export class User extends BaseEntity {
     enum: UserGender,
     default: UserGender.OTHER,
   })
-  gender: UserGender;
+  public gender: UserGender;
 
   /**
    * The end-user's birthday, represented in ISO 8601:2004 YYYY-MM-DD format.
@@ -128,30 +133,23 @@ export class User extends BaseEntity {
    * The end-user's preferred telephone number, typically in E.164 format,
    * for example +1 (425) 555-1212 or +56 (2) 687 2400.
    */
-  @Column({ type: 'varchar', nullable: true, length: 50 })
-  public phone_number: string;
+  @Column({ name: 'phone_number', type: 'varchar', nullable: true, length: 50 })
+  public phoneNumber: string;
 
   /**
    * True if the end-user's telephone number has been verified, else false.
    */
-  @Column({ type: 'boolean', default: false })
-  public phone_number_verified: boolean;
+  @Column({ name: 'phone_number_verified', type: 'boolean', default: false })
+  public phoneNumberVerified: boolean;
 
   /**
-   * Id of the end-user's preferred postal address.
+   * An array of object describing the end-user's preferred postal address.
    */
-  @Column({ name: 'address_id', nullable: true })
-  addressId: string;
-
-  /**
-   * A JSON object describing the end-user's preferred postal address.
-   */
-  @OneToOne(() => Address, (address) => address.user)
-  @JoinColumn({ name: 'address_id' })
-  address: Address;
+  @OneToMany(() => Address, (address) => address.user)
+  public addresses: Address[];
 
   @OneToMany(() => Code, (code) => code.user)
-  codes: Code[];
+  public codes: Code[];
 
   @OneToMany(() => UsersClients, (usersClients) => usersClients.user)
   public usersClients: UsersClients[];

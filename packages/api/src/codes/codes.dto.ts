@@ -68,7 +68,6 @@ export class CodesDTO implements Readonly<CodesDTO> {
     code.scope = this.scope;
     code.client = this.client;
     code.user = this.user;
-    code.user = this.user;
     code.createDateTime = this.createDateTime;
     return code;
   }

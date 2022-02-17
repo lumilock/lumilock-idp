@@ -42,8 +42,8 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
       id: entity.id,
       name: entity.name,
       secret: entity.secret,
-      callbackUrl: entity.callback_url,
-      clientPicture: entity.client_picture,
+      callbackUrl: entity.callbackUrl,
+      clientPicture: entity.clientPicture,
     });
   }
 
@@ -52,8 +52,8 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     client.id = this.id;
     client.name = this.name;
     client.secret = this.secret;
-    client.callback_url = this.callbackUrl;
-    client.client_picture = this.clientPicture;
+    client.callbackUrl = this.callbackUrl;
+    client.clientPicture = this.clientPicture;
     return client;
   }
 }

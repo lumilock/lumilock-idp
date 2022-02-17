@@ -1,5 +1,5 @@
 // user.entity.ts
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { User } from './users.entity';
 
@@ -18,8 +18,8 @@ export class Address extends BaseEntity {
    * stree name, post office box, and other multi-line information.
    * Newlines can be represented either as a \r\n or as a \n.
    */
-  @Column({ type: 'varchar', length: 255 })
-  public street_address: string;
+  @Column({ name: 'street_address', type: 'varchar', length: 255 })
+  public streetAddress: string;
 
   /**
    * City or locality component
@@ -36,8 +36,8 @@ export class Address extends BaseEntity {
   /**
    * Zip code or postal code component.
    */
-  @Column({ type: 'varchar', length: 100 })
-  public postal_code: string;
+  @Column({ name: 'postal_code', type: 'varchar', length: 100 })
+  public postalCode: string;
 
   /**
    * Country name component.
@@ -45,10 +45,12 @@ export class Address extends BaseEntity {
   @Column({ type: 'varchar', length: 100 })
   public country: string;
 
-  @Column({ name: 'user_id', nullable: false })
-  userId: string;
-
-  @OneToOne(() => User, (user) => user.address)
+  @ManyToOne(() => User, (user) => user.codes, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  // @Column({ name: 'user_id', nullable: false })
+  // userId: string;
 }

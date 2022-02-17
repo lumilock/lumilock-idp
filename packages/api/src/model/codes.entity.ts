@@ -31,8 +31,8 @@ export class Code {
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
-  @Column({ name: 'client_id', nullable: false })
-  clientId: string;
+  // @Column({ name: 'client_id', nullable: false })
+  // clientId: string;
 
   @ManyToOne(() => User, (user) => user.codes, {
     onDelete: 'CASCADE',
@@ -40,8 +40,8 @@ export class Code {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ name: 'user_id', nullable: false })
-  userId: string;
+  // @Column({ name: 'user_id', nullable: false })
+  // userId: string;
 
   @CreateDateColumn({
     name: 'create_date_time',

@@ -12,14 +12,19 @@ export class Client extends BaseEntity {
   @Column({ type: 'varchar', length: 200 })
   secret: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  callback_url: string;
+  @Column({ name: 'callback_url', type: 'varchar', length: 255 })
+  callbackUrl: string;
 
   @OneToMany(() => Code, (code) => code.client)
   codes: Code[];
 
-  @Column({ type: 'varchar', nullable: true, length: 300 })
-  client_picture: string;
+  @Column({
+    name: 'client_picture',
+    type: 'varchar',
+    nullable: true,
+    length: 300,
+  })
+  clientPicture: string;
 
   @OneToMany(() => UsersClients, (usersClients) => usersClients.client)
   public usersClients: UsersClients[];

@@ -33,8 +33,8 @@ export class LightenClientsDTO implements Readonly<LightenClientsDTO> {
     return this.from({
       id: entity.id,
       name: entity.name,
-      callbackUrl: entity.callback_url,
-      clientPicture: entity.client_picture,
+      callbackUrl: entity.callbackUrl,
+      clientPicture: entity.clientPicture,
     });
   }
 
@@ -42,8 +42,8 @@ export class LightenClientsDTO implements Readonly<LightenClientsDTO> {
     const client = new Client();
     client.id = this.id;
     client.name = this.name;
-    client.callback_url = this.callbackUrl;
-    client.client_picture = this.clientPicture;
+    client.callbackUrl = this.callbackUrl;
+    client.clientPicture = this.clientPicture;
     return client;
   }
 }

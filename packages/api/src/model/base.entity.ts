@@ -10,15 +10,23 @@ export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'boolean', default: true })
-  is_active: boolean;
+  @Column({ name: 'is_archived', type: 'boolean', default: true })
+  isActive: boolean;
 
-  @Column({ type: 'boolean', default: false })
-  is_archived: boolean;
+  @Column({ name: 'is_archived', type: 'boolean', default: false })
+  isArchived: boolean;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  create_date_time: Date;
+  @CreateDateColumn({
+    name: 'create_date_time',
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createDateTime: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
-  last_changed_date_time: Date;
+  @UpdateDateColumn({
+    name: 'last_changed_date_time',
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  lastChangedDateTime: Date;
 }
