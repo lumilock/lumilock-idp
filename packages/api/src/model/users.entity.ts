@@ -112,7 +112,7 @@ export class User extends BaseEntity {
    * The end-user's birthday, represented in ISO 8601:2004 YYYY-MM-DD format.
    * The year may be 0000, indicating that it is omitted. To represent only the year, YYYY format is allowed.
    */
-  @Column({ type: 'date', nullable: true, default: '0000-00-00' })
+  @Column({ type: 'date', nullable: true })
   public birthdate: Date;
 
   /**

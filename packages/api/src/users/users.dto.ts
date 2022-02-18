@@ -10,14 +10,19 @@ import {
   IsDate,
   IsJSON,
   ValidateNested,
+  Matches,
+  IsOptional,
+  validateSync,
 } from 'class-validator';
 import { User, UserGender } from '../model/users.entity';
 import { AddressesDTO } from '../addresses/addresses.dto';
 import { CodesDTO } from 'src/codes/codes.dto';
 import { UsersClientsDTO } from 'src/users-clients/users-clients.dto';
+import noTilde from 'src/utils/noTilde';
 
 export class UsersDTO implements Readonly<UsersDTO> {
   @ApiProperty({ required: true })
+  @IsOptional() // optional when create a new one
   @IsUUID()
   id: string;
 
@@ -40,6 +45,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The full name of the end-user, with optional language tag
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   name: string;
 
@@ -48,6 +54,9 @@ export class UsersDTO implements Readonly<UsersDTO> {
    */
   @ApiProperty({ required: true })
   @IsString()
+  @Matches(/^[A-Za-zÀ-ÖØ-öø-ÿŸœ -]*$/i, {
+    message: 'special char are not allowed',
+  })
   givenName: string;
 
   /**
@@ -55,19 +64,27 @@ export class UsersDTO implements Readonly<UsersDTO> {
    */
   @ApiProperty({ required: true })
   @IsString()
+  @Matches(/^[A-Za-zÀ-ÖØ-öø-ÿŸœ -]*$/i, {
+    message: 'special char are not allowed',
+  })
   familyName: string;
 
   /**
    * The middle name of the end-user
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
+  @Matches(/^[A-Za-zÀ-ÖØ-öø-ÿŸœ -]*$/i, {
+    message: 'special char are not allowed',
+  })
   middleName: string;
 
   /**
    * The casual name of the end-user
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   nickname: string;
 
@@ -75,6 +92,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The username by which the end-user wants to be referred to at the client application.
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   preferredUsername: string;
 
@@ -82,6 +100,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The URL of the profile page for the end-user
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   profile: string;
 
@@ -89,6 +108,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The URL of the profile picture for the end-user
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   picture: string;
 
@@ -96,6 +116,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The URL of the end-user's web page or blog.
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   website: string;
 
@@ -103,6 +124,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The end-user's preferred email address.
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsEmail()
   email: string;
 
@@ -110,21 +132,24 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * True if the end-user's email address has been verified, else false.
    */
   @ApiProperty({ required: false, default: false })
+  @IsOptional()
   @IsBoolean()
   emailVerified: boolean;
 
   /**
    * The end-user's gender.
    */
-  @IsEnum(UserGender)
   @ApiProperty({ required: false, enum: UserGender, default: UserGender.OTHER })
+  @IsOptional()
+  @IsEnum(UserGender)
   gender: UserGender;
 
   /**
    * The end-user's birthday, represented in ISO 8601:2004 YYYY-MM-DD format.
    * The year may be 0000, indicating that it is omitted. To represent only the year, YYYY format is allowed.
    */
-  @ApiProperty({ required: false, default: '0000-00-00' })
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsDate()
   birthdate: Date;
 
@@ -132,6 +157,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * The end-user's time zone, e.g. Europe/Paris or America/Los_Angeles.
    */
   @ApiProperty({ required: false, default: 'UTC' })
+  @IsOptional()
   @IsString()
   zoneinfo: string;
 
@@ -141,6 +167,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * separated by a dash. For example, en-US or fr-CA.
    */
   @ApiProperty({ required: false, default: 'fr-FR' })
+  @IsOptional()
   @IsString()
   locale: string;
 
@@ -149,6 +176,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * for example +1 (425) 555-1212 or +56 (2) 687 2400.
    */
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   phoneNumber: string;
 
@@ -156,52 +184,71 @@ export class UsersDTO implements Readonly<UsersDTO> {
    * True if the end-user's telephone number has been verified, else false.
    */
   @ApiProperty({ required: false, default: false })
+  @IsOptional()
   @IsBoolean()
   phoneNumberVerified: boolean;
 
   /**
    * A JSON object describing the end-user's preferred postal address.
    */
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsJSON()
   @ValidateNested()
-  @ApiProperty({ required: false })
   addresses: AddressesDTO[];
 
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsJSON()
   @ValidateNested()
-  @ApiProperty({ required: false })
   codes: CodesDTO[];
 
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsJSON()
   @ValidateNested()
-  @ApiProperty({ required: false })
   usersClients: UsersClientsDTO[];
 
   // ******
   // Base
   // ******
-  @IsBoolean()
   @ApiProperty({ required: false })
+  @IsOptional()
+  @IsBoolean()
   isActive: boolean;
 
-  @IsBoolean()
   @ApiProperty({ required: false })
+  @IsOptional()
+  @IsBoolean()
   isArchived: boolean;
 
-  @IsDate()
   @ApiProperty({ required: false })
+  @IsOptional()
+  @IsDate()
   createDateTime: Date;
 
-  @IsDate()
   @ApiProperty({ required: false })
+  @IsOptional()
+  @IsDate()
   lastChangedDateTime: Date;
 
-  public static from(dto: Partial<UsersDTO>) {
+  public static from(dto: Partial<UsersDTO>, validate = false): UsersDTO {
     const user = new UsersDTO();
     user.id = dto.id;
-    user.login = dto.login;
+    user.login =
+      dto.login ??
+      noTilde(dto.login)
+        .toLowerCase()
+        .trim()
+        .replace(/ +(?= )/g, '')
+        .replace(/[\s.]/g, '-');
     user.password = dto.password;
-    user.name = dto.name;
+    user.name =
+      dto.name ||
+      `${dto.givenName} ${dto.middleName ?? ''} ${dto.familyName}`.replace(
+        / +(?= )/g,
+        '',
+      );
     user.givenName = dto.givenName;
     user.familyName = dto.familyName;
     user.middleName = dto.middleName;
@@ -223,6 +270,13 @@ export class UsersDTO implements Readonly<UsersDTO> {
     user.isArchived = dto.isArchived;
     user.createDateTime = dto.createDateTime;
     user.lastChangedDateTime = dto.lastChangedDateTime;
+
+    if (validate) {
+      const result = validateSync(user);
+      if (result.length > 0) {
+        throw new Error(JSON.stringify(result));
+      }
+    }
     return user;
   }
 
@@ -259,9 +313,20 @@ export class UsersDTO implements Readonly<UsersDTO> {
   public toEntity() {
     const user = new User();
     user.id = this.id;
-    user.login = this.login;
+    user.login =
+      this.login ||
+      noTilde(this.login)
+        .toLowerCase()
+        .trim()
+        .replace(/ +(?= )/g, '')
+        .replace(/[\s.]/g, '-');
     user.password = this.password;
-    user.name = this.name;
+    user.name =
+      this.name ||
+      `${this.givenName} ${this.middleName ?? ''} ${this.familyName}`.replace(
+        / +(?= )/g,
+        '',
+      );
     user.givenName = this.givenName;
     user.familyName = this.familyName;
     user.middleName = this.middleName;

@@ -90,7 +90,9 @@ export class AddressesDTO implements Readonly<AddressesDTO> {
   public static from(dto: Partial<AddressesDTO>) {
     const address = new AddressesDTO();
     address.id = dto.id;
-    address.formatted = dto.formatted;
+    address.formatted =
+      dto.formatted ||
+      `${dto.streetAddress} ${dto.postalCode} ${dto.locality}, ${dto.region}, ${dto.country}`;
     address.streetAddress = dto.streetAddress;
     address.locality = dto.locality;
     address.region = dto.region;
@@ -122,7 +124,7 @@ export class AddressesDTO implements Readonly<AddressesDTO> {
   }
 
   public static fromEntities(entities: Address[]): AddressesDTO[] {
-    return entities.map((entity) =>
+    return entities?.map((entity) =>
       this.from({
         id: entity.id,
         formatted: entity.formatted,

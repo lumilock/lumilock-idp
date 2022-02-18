@@ -8,6 +8,7 @@ import { UsersDTO } from '../users/users.dto';
 import { Client } from '../model/clients.entity';
 import { ClientsService } from '../clients/clients.service';
 import { ClientsDTO } from '../clients/clients.dto';
+import num2Char from 'src/utils/num2Char';
 
 async function run() {
   // const seedUser: User = { id: 'seed-user' };
@@ -29,29 +30,38 @@ async function run() {
   const clientsService = new ClientsService(connection.getRepository(Client));
 
   const work = _.range(1, 10)
-    .map((n) =>
-      UsersDTO.from({
-        first_name: `first_name-${seedId}-${n}`,
-        last_name: `last_name-${seedId}-${n}`,
-        email: `${seedId}-${n}@test.fr`,
-        login: `${seedId}_${n}_${seedId}-${n}`,
-        password: '123456',
-      }),
-    )
-    .map((dto) =>
+    .map((n) => {
+      const seedAlpha = num2Char(seedId);
+      const indexAlpha = num2Char(n);
+      const user = UsersDTO.from(
+        {
+          givenName: `first-name-${seedAlpha}-${indexAlpha}`,
+          familyName: `last-name-${seedAlpha}-${indexAlpha}`,
+          email: `${seedAlpha}-${indexAlpha}@test.fr`,
+          login: `${seedAlpha}-${indexAlpha}-${seedAlpha}-${indexAlpha}`,
+          password: '123456',
+        },
+        true,
+      );
+      return user;
+    })
+    .map((dto: UsersDTO) =>
       usersService
         .create(dto)
         .then((r) => (console.log('done ->', r.login), r)),
     );
   const adminWork = usersService
     .create(
-      UsersDTO.from({
-        first_name: 'admin',
-        last_name: 'admin',
-        email: 'admin@admin.fr',
-        login: 'admin.admin',
-        password: '123456',
-      }),
+      UsersDTO.from(
+        {
+          givenName: 'admin',
+          familyName: 'admin',
+          email: 'admin@admin.fr',
+          login: 'admin.admin',
+          password: '123456',
+        },
+        true,
+      ),
     )
     .then((r) => (console.log('done ->', r.login), r));
   const clientWork = clientsService
@@ -59,7 +69,7 @@ async function run() {
       ClientsDTO.from({
         name: 'Audit lait cru',
         secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
-        callback_url: 'http://localhost:3001/callback',
+        callbackUrl: 'http://localhost:3001/callback',
       }),
     )
     .then((r) => (console.log('done ->', r.name, r.id), r));
