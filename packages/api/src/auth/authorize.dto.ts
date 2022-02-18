@@ -33,32 +33,32 @@ export enum AuthorizeResponseType {
 }
 
 export class AuthorizeDTO implements Readonly<AuthorizeDTO> {
-  @IsEnum(AuthorizeScope)
   @ApiProperty({ required: true, enum: AuthorizeScope })
+  @IsEnum(AuthorizeScope)
   scope: string;
 
-  @IsEnum(AuthorizeResponseType)
   @ApiProperty({ required: true, enum: AuthorizeResponseType })
+  @IsEnum(AuthorizeResponseType)
   response_type: string;
 
-  @IsString()
   @ApiProperty({ required: true })
+  @IsString()
   client_id: string;
 
+  @ApiProperty({ required: true })
   @IsUrl({ require_tld: false })
   @IsString()
-  @ApiProperty({ required: true })
   redirect_uri: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  @ApiProperty({ required: false })
   state: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => ClaimsDTO)
-  @ApiProperty({ required: false })
   claims: ClaimsDTO;
 }

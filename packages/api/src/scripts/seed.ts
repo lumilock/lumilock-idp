@@ -1,14 +1,19 @@
 // scripts/seed.ts
 import * as _ from 'lodash';
 import { createConnection, ConnectionOptions } from 'typeorm';
+
 import { configService } from '../config/config.service';
-import { UsersService } from '../users/users.service';
+
 import { User } from '../model/users.entity';
-import { UsersDTO } from '../users/users.dto';
 import { Client } from '../model/clients.entity';
+
+import { UsersDTO } from '../users/users.dto';
+import { UsersService } from '../users/users.service';
+
 import { ClientsService } from '../clients/clients.service';
 import { ClientsDTO } from '../clients/clients.dto';
-import num2Char from 'src/utils/num2Char';
+
+import { num2Char } from '../utils';
 
 async function run() {
   // const seedUser: User = { id: 'seed-user' };
