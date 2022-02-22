@@ -47,7 +47,7 @@ export class CodesService {
         relations: ['client', 'user'],
         where: [{ clientId }, { createDateTime: MoreThan(dateTenMinAgo) }],
       })
-      .then((items) => items.map((e) => CodesDTO.fromEntity(e)));
+      .then((items) => items.map((e) => CodesDTO.fromEntity(e, false)));
     return allCodes?.filter((c: CodesDTO) =>
       hmac.verify(c.code, signature, jwtConstants.secretCodeGenerator),
     )?.[0]; // get only one because it can't be more than one

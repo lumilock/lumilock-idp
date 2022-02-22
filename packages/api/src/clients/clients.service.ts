@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from '../model/clients.entity';
 import { Repository } from 'typeorm';
 import { ClientsDTO } from './clients.dto';
-import { LightenClientsDTO } from './lightenClients.dto';
 
 @Injectable()
 export class ClientsService {
@@ -12,9 +11,9 @@ export class ClientsService {
   ) {}
 
   // Find client by id
-  async findById(id: string): Promise<LightenClientsDTO | undefined> {
+  async findById(id: string): Promise<ClientsDTO | undefined> {
     return this.repo.findOne(id).then((user) => {
-      return user ? LightenClientsDTO.fromEntity(user) : undefined;
+      return user ? ClientsDTO.fromEntity(user) : undefined;
     });
   }
 

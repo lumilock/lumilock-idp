@@ -5,12 +5,11 @@ import * as jwa from 'jwa';
 import { UsersService } from '../users/users.service';
 import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
-import { LightenClientsDTO } from '../clients/lightenClients.dto';
 import { CodesDTO } from '../codes/codes.dto';
 import { bin2hex, randomBytes } from '../utils';
 import { jwtConstants } from './constants';
 import { oidcConstants } from './oidcConstants';
-import { LightenUsersDTO } from 'src/users/LightenUsers.dto';
+import { UsersDTO } from 'src/users/users.dto';
 import { ClientsDTO } from '../clients/clients.dto';
 
 @Injectable()
@@ -34,7 +33,7 @@ export class AuthService {
 
   // generate authenticate jwa code
   // https://www.npmjs.com/package/jwa
-  async authenticate(client: LightenClientsDTO, user: LightenUsersDTO) {
+  async authenticate(client: ClientsDTO, user: UsersDTO) {
     const hmac = jwa('HS256');
     // 1. generate a random code based on : (5 random char / timestamp / 5 random char)
     const randomCode = `${getRandomString(5)}${Math.floor(
@@ -107,6 +106,7 @@ export class AuthService {
       aud: clientId, // Client ID
       iat: Math.floor(Date.now() / 1000),
     };
+    console.log('clientSecret', clientSecret);
     const idToken = this.jwtService.sign(idTokenPayload, {
       secret: clientSecret,
       expiresIn: oidcConstants.idTokenDuration + 's',

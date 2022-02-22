@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Code, CodeScope } from '../model/codes.entity';
 import { ClientsDTO } from '../clients/clients.dto';
-import { LightenUsersDTO } from '../users/LightenUsers.dto';
+import { UsersDTO } from '../users/users.dto';
 
 export class CodesDTO implements Readonly<CodesDTO> {
   @ApiProperty({ required: true })
@@ -33,7 +33,7 @@ export class CodesDTO implements Readonly<CodesDTO> {
   @IsJSON()
   @ValidateNested()
   @ApiProperty({ required: true })
-  user: LightenUsersDTO;
+  user: UsersDTO;
 
   @IsDate()
   @ApiProperty({ required: false })
@@ -50,13 +50,13 @@ export class CodesDTO implements Readonly<CodesDTO> {
     return code;
   }
 
-  public static fromEntity(entity: Code) {
+  public static fromEntity(entity: Code, lightenClient = true) {
     return this.from({
       id: entity.id,
       code: entity.code,
       scope: entity.scope,
-      client: ClientsDTO.fromEntity(entity.client),
-      user: LightenUsersDTO.fromEntity(entity.user),
+      client: ClientsDTO.fromEntity(entity.client, lightenClient),
+      user: UsersDTO.fromEntity(entity.user),
       createDateTime: entity.createDateTime,
     });
   }

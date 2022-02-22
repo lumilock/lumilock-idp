@@ -74,7 +74,7 @@ async function run() {
       ClientsDTO.from({
         name: 'Audit lait cru',
         secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
-        callbackUrl: 'http://localhost:3001/callback',
+        callbackUrl: 'http://localhost:8001/callback',
       }),
     )
     .then((r) => (console.log('done ->', r.name, r.id), r));
