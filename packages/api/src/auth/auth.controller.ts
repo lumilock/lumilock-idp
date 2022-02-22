@@ -169,7 +169,10 @@ export class AuthController {
     // If the redirect_uri parameter value is not present when there is only one registered redirect_uri value,
     // the Authorization Server MAY return an error (since the Client should have included the parameter) or
     // MAY proceed without an error (since OAuth 2.0 permits the parameter to be omitted in this case).
-    if (!redirect_uri || valideCode?.client?.callbackUrl !== redirect_uri) {
+    if (
+      !redirect_uri ||
+      !valideCode?.client?.redirectUris.includes(redirect_uri)
+    ) {
       throw new Error(
         'redirect_uri is missing or does not correspond to the client redirect uri',
       );

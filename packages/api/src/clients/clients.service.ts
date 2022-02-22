@@ -18,6 +18,8 @@ export class ClientsService {
   }
 
   public async create(dto: ClientsDTO): Promise<ClientsDTO> {
-    return this.repo.save(dto.toEntity()).then((e) => ClientsDTO.fromEntity(e));
+    return this.repo
+      .save(dto.toEntity(false))
+      .then((e) => ClientsDTO.fromEntity(e, false));
   }
 }

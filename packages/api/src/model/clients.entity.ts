@@ -4,27 +4,42 @@ import { BaseEntity } from './base.entity';
 import { Code } from './codes.entity';
 import { UsersClients } from './users_clients.entity';
 
+export enum ApplicationType {
+  WEB = 'web',
+  Native = 'native',
+}
+
+// https://openid.net/specs/openid-connect-registration-1_0.html
+// Client database
 @Entity({ name: 'clients' })
 export class Client extends BaseEntity {
-  @Column({ type: 'varchar', length: 200 })
-  name: string;
+  @Column({ name: 'client_name', type: 'varchar', length: 200 })
+  clientName: string;
 
   @Column({ type: 'varchar', length: 200 })
   secret: string;
 
-  @Column({ name: 'callback_url', type: 'varchar', length: 255 })
-  callbackUrl: string;
-
-  @OneToMany(() => Code, (code) => code.client)
-  codes: Code[];
+  @Column({ name: 'redirect_uris', type: 'simple-array' })
+  redirectUris: string[];
 
   @Column({
-    name: 'client_picture',
+    name: 'application_type',
+    type: 'enum',
+    enum: ApplicationType,
+    default: ApplicationType.WEB,
+  })
+  applicationType: ApplicationType;
+
+  @Column({
+    name: 'logo_uri',
     type: 'varchar',
     nullable: true,
     length: 300,
   })
-  clientPicture: string;
+  logoUri: string;
+
+  @OneToMany(() => Code, (code) => code.client)
+  codes: Code[];
 
   @OneToMany(() => UsersClients, (usersClients) => usersClients.client)
   public usersClients: UsersClients[];

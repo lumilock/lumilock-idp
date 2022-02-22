@@ -13,27 +13,27 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
 
   @ApiProperty({ required: true })
   @IsString()
-  name: string;
+  clientName: string;
 
   @ApiProperty({ required: true })
   @IsString()
   secret: string;
 
   @ApiProperty({ required: true })
-  @IsString()
-  callbackUrl: string;
+  @IsString({ each: true })
+  redirectUris: string[];
 
   @ApiProperty({ required: false })
   @IsString()
-  clientPicture: string;
+  logoUri: string;
 
   public static from(dto: Partial<ClientsDTO>, light = true) {
     const client = new ClientsDTO();
     client.id = dto.id;
-    client.name = dto.name;
+    client.clientName = dto.clientName;
     if (!light) client.secret = dto.secret;
-    client.callbackUrl = dto.callbackUrl;
-    client.clientPicture = dto.clientPicture;
+    client.redirectUris = dto.redirectUris;
+    client.logoUri = dto.logoUri;
     return client;
   }
 
@@ -41,10 +41,10 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     return this.from(
       {
         id: entity.id,
-        name: entity.name,
+        clientName: entity.clientName,
         ...(!light ? { secret: entity.secret } : {}),
-        callbackUrl: entity.callbackUrl,
-        clientPicture: entity.clientPicture,
+        redirectUris: entity.redirectUris,
+        logoUri: entity.logoUri,
       },
       light,
     );
@@ -53,10 +53,10 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
   public toEntity(light = true) {
     const client = new Client();
     client.id = this.id;
-    client.name = this.name;
+    client.clientName = this.clientName;
     if (!light) client.secret = this.secret;
-    client.callbackUrl = this.callbackUrl;
-    client.clientPicture = this.clientPicture;
+    client.redirectUris = this.redirectUris;
+    client.logoUri = this.logoUri;
     return client;
   }
 }

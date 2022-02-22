@@ -69,15 +69,19 @@ async function run() {
       ),
     )
     .then((r) => (console.log('done ->', r.login), r));
+
   const clientWork = clientsService
     .create(
-      ClientsDTO.from({
-        name: 'Audit lait cru',
-        secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
-        callbackUrl: 'http://localhost:8001/callback',
-      }),
+      ClientsDTO.from(
+        {
+          clientName: 'Audit lait cru',
+          secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
+          redirectUris: ['http://localhost:8001/callback'],
+        },
+        false,
+      ),
     )
-    .then((r) => (console.log('done ->', r.name, r.id), r));
+    .then((r) => (console.log('done ->', r.clientName, r.id), r));
 
   return await Promise.all([...work, adminWork, clientWork]);
 }

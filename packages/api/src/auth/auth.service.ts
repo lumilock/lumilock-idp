@@ -66,7 +66,7 @@ export class AuthService {
     const userId = code?.user?.id;
     const clientId = code?.client?.id;
     const authTime = code?.createDateTime;
-    const clientOrigin = new URL(code?.client?.callbackUrl)?.origin;
+    const clientOrigin = new URL(code?.client?.redirectUris?.[0])?.origin; // ? could be better ([0])
     const clientSecret = code?.client?.secret;
 
     // 1. Generate the access_token

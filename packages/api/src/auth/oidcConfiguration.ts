@@ -19,7 +19,7 @@ export const oidcConfiguration = {
     'none',
   ],
   subject_types_supported: ['public'],
-  id_token_signing_alg_values_supported: ['RS256'],
+  id_token_signing_alg_values_supported: ['HS256'], // old : ['RS256'],
   scopes_supported: ['openid', 'email', 'profile'],
   token_endpoint_auth_methods_supported: [
     'client_secret_post',
