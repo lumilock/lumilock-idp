@@ -76,7 +76,7 @@ async function run() {
         {
           clientName: 'Audit lait cru',
           secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
-          redirectUris: ['http://localhost:8001/callback'],
+          redirectUris: ['http://192.168.99.1:8001/callback'],
         },
         false,
       ),

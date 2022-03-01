@@ -85,6 +85,7 @@
       ]
     }
   },
+  "proxy": "https://192.168.99.1:3000",
   "browserslist": {
     "production": [
       ">0.2%",

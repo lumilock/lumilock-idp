@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -8,7 +8,6 @@ import { IoPeople } from 'react-icons/io5';
 import Button from '../../../components/Button';
 import { CheckboxControlled, InputControlled } from '../../../components/Form';
 import Squircle from '../../../components/Squircle';
-import { Auth } from '../../../services/Api';
 
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
@@ -18,8 +17,10 @@ import Icon from '../../../components/Icon';
 
 function LoginForm() {
   const [searchParams] = useSearchParams();
+  // eslint-disable-next-line no-unused-vars
   const [clientInfos, setClientInfos] = useState(null);
   const [displayConsent, setDisplayConsent] = useState(false);
+  const formRef = useRef();
 
   const getAllQuery = () => {
     // save the iterator
@@ -47,20 +48,27 @@ function LoginForm() {
    * Function to submit values
    * */
   const onSubmit = async (data) => {
+    // try to loggin in
     // exclude needConsent from query values
     const { needConsent, ...rest } = data;
-    // try to loggin in
-    await Auth.login(rest, getAllQuery())
-      .then((response) => response.data)
-      .then((response) => {
-        // if success but need consent for relaying party
-        if (response?.error === 'consent_required') {
-          setClientInfos(response?.clientInfos);
-          setDisplayConsent(true);
-          setValue('needConsent', true, { shouldValidate: true });
-        }
-      })
-      .catch((err) => console.log('err:', err));
+    // init query params
+    const params = new URLSearchParams([...Object.entries(rest), ...getAllQuery()]);
+    // update action path
+    formRef.current.action = `${process.env.REACT_APP_API_URL}/auth/login?${params.toString()}`;
+    // submit the form
+    formRef.current.submit();
+    return false;
+    // await Auth.login(rest, getAllQuery())
+    //   .then((response) => response.data)
+    //   .then((response) => {
+    //     // if success but need consent for relaying party
+    //     if (response?.error === 'consent_required') {
+    //       setClientInfos(response?.clientInfos);
+    //       setDisplayConsent(true);
+    //       setValue('needConsent', true, { shouldValidate: true });
+    //     }
+    //   })
+    //   .catch((err) => console.log('err:', err));
   };
 
   /**
@@ -75,7 +83,7 @@ function LoginForm() {
 
   return (
     <div className={styles.Root}>
-      <form className={styles.Form} onSubmit={handleSubmit(onSubmit)}>
+      <form ref={formRef} className={styles.Form} method="post" action="#" onSubmit={handleSubmit(onSubmit)}>
 
         {/* Login form */}
         <fieldset className={!displayConsent ? styles.Active : ''}>

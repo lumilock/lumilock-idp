@@ -19,6 +19,9 @@ export class Client extends BaseEntity {
   @Column({ type: 'varchar', length: 200 })
   secret: string;
 
+  @Column({ type: 'boolean', default: true })
+  hide: boolean;
+
   @Column({ name: 'redirect_uris', type: 'simple-array' })
   redirectUris: string[];
 

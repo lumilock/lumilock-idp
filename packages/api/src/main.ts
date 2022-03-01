@@ -1,37 +1,63 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-import { configService } from './config/config.service';
+import { ValidationPipe } from '@nestjs/common';
+import * as fs from 'fs';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
+import * as connectPg from 'connect-pg-simple';
+import * as pg from 'pg';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const MemoryStore = require('memorystore')(session);
+import { AppModule } from './app.module';
+import { configService } from './config/config.service';
+
+const pgSession = connectPg(session);
+
+const pgPool = new pg.Pool({
+  host: process.env.POSTGRES_HOST,
+  port: parseInt(process.env.POSTGRES_PORT, 10),
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
+});
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // loading ssl cert and key
+  const key = fs.readFileSync(
+    __dirname + '/cert/CA/localhost/localhost.decrypted.key',
+  );
+  const cert = fs.readFileSync(__dirname + '/cert/CA/localhost/localhost.crt');
+
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions: {
+      key: key,
+      cert: cert,
+    },
+  });
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
 
+  app.use(cookieParser());
   // session
   app.use(
     session({
+      name: 'LUMILOCK_IDP_SESSION_ID',
       secret: 'my-secret',
       resave: false,
       saveUninitialized: false,
       rolling: true, // keep session alive
       cookie: {
-        maxAge: 30 * 60 * 1000, // session expires in 1hr, refreshed by `rolling: true` option.
+        maxAge: 2 * 24 * 60 * 60 * 1000, // session expires in 1hr, refreshed by `rolling: true` option.
         httpOnly: true, // so that cookie can't be accessed via client-side script
+        secure: false,
       },
-      store: new MemoryStore({
-        checkPeriod: 30 * 60 * 1000,
+      store: new pgSession({
+        pool: pgPool, // Connection pool
+        tableName: 'user_sessions', // Use another table-name than the default "session" one
+        // Insert connect-pg-simple options here
       }),
     }),
   );
-  app.use(cookieParser());
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -49,3 +75,6 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+// https://gist.github.com/nzvtrk/ebf494441e36200312faf82ce89de9f2
+// https://github.com/axios/axios/issues/943

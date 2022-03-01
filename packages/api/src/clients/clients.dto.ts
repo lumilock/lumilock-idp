@@ -1,6 +1,6 @@
 // item.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsString, IsUUID } from 'class-validator';
 import { Client } from '../model/clients.entity';
 
 export class ClientsDTO implements Readonly<ClientsDTO> {
@@ -27,6 +27,10 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
   @IsString()
   logoUri: string;
 
+  @ApiProperty({ required: false, default: true })
+  @IsBoolean()
+  hide: boolean;
+
   public static from(dto: Partial<ClientsDTO>, light = true) {
     const client = new ClientsDTO();
     client.id = dto.id;
@@ -34,6 +38,7 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     if (!light) client.secret = dto.secret;
     client.redirectUris = dto.redirectUris;
     client.logoUri = dto.logoUri;
+    client.hide = dto.hide;
     return client;
   }
 
@@ -45,6 +50,7 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
         ...(!light ? { secret: entity.secret } : {}),
         redirectUris: entity.redirectUris,
         logoUri: entity.logoUri,
+        hide: entity.hide,
       },
       light,
     );
@@ -57,6 +63,7 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     if (!light) client.secret = this.secret;
     client.redirectUris = this.redirectUris;
     client.logoUri = this.logoUri;
+    client.hide = this.hide;
     return client;
   }
 }

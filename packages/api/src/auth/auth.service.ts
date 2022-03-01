@@ -104,6 +104,7 @@ export class AuthService {
       iss: oidcConstants.issuer,
       sub: userId, // subject (The user ID)
       aud: clientId, // Client ID
+      auth_time: Math.floor(new Date(authTime).getTime() / 1000),
       iat: Math.floor(Date.now() / 1000),
     };
     console.log('clientSecret', clientSecret);
@@ -115,7 +116,6 @@ export class AuthService {
     return {
       access_token: accessToken,
       token_type: 'Bearer',
-      auth_time: Math.floor(new Date(authTime).getTime() / 1000),
       refresh_token: refreshToken,
       expires_in: oidcConstants.idTokenDuration,
       id_token: idToken,

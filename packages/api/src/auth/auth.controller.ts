@@ -108,13 +108,18 @@ export class AuthController {
       ...state, // will add state if exist
     });
 
+    console.log('<login> sessionId', req?.session?.id);
+    req.session['test'] = 'test';
+    req.session.save(function (err) {
+      if (!err) {
+        console.log('<login> session saved', req?.session?.id, req?.session);
+      }
+    });
+    console.log('<login> headers : ', req.headers);
     console.log('<login> End redirect with code: <<<<<<<<<<<<<<<<<<<<<<<<<<<');
     console.log('');
     const callbackURL = query?.redirect_uri;
-    return res.redirect(
-      HttpStatus.MOVED_PERMANENTLY,
-      `${callbackURL}?${redirectUrl}`,
-    );
+    return res.redirect(HttpStatus.FOUND, `${callbackURL}?${redirectUrl}`);
   }
 
   @UseGuards(OidcAuthGuard)
@@ -191,10 +196,17 @@ export class AuthController {
     const tokens = await this.serv.getToken(valideCode);
     console.log('<token> tokens:', tokens);
 
+    console.log('<token> sessionId', req?.session?.id);
     console.log('<token> End redirect with tokens <<<<<<<<<<<<<<<<<<<<<<<<<<');
     console.log('');
     // if everything has been verifying with success we can generate an ID Token and redirect the user
     return res
+      .header({
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers':
+          'Origin, X-Requested-With, Content-Type, Accept',
+      })
       .status(HttpStatus.OK)
       .set({ 'Cache-Control': 'no-store', Pragma: 'no-cache' })
       .json(tokens);
@@ -205,11 +217,19 @@ export class AuthController {
   @Get('userinfo')
   public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {
     console.log('<getUserinfo> userInfo >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    req.session.visits = req.session.visits ? req.session.visits + 1 : 1;
     console.log('<getUserinfo> req', req?.user);
+    console.log('<getUserinfo> req', req?.session);
     console.log({ sub: req?.user?.sub, test: 'test' });
     console.log('<getUserinfo> here');
     console.log('<getUserinfo> End <<<<<<<<<<<<<<<<<<<<');
     return res
+      .header({
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers':
+          'Origin, X-Requested-With, Content-Type, Accept',
+      })
       .status(HttpStatus.OK)
       .json({ sub: req?.user?.sub, test: 'test' });
   }
@@ -242,6 +262,9 @@ export class AuthController {
   ): Promise<any> {
     console.log('<authorize> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     const parsedQuery = JSON.parse(JSON.stringify(query));
+    res.header('Access-Control-Allow-Credentials', 'true');
+    console.log('<authorize> req.session: ', req.session);
+    console.log('<authorize> req.session.id: ', req.session.id);
     console.log('<authorize> query: ', parsedQuery);
     console.log('<authorize> req.session: ', req.session);
     /**

@@ -6,6 +6,7 @@ import {
 const Auth = {
   login: (queryParams, defaultQueries, cancel = {}) => {
     const params = new URLSearchParams([...Object.entries(queryParams), ...defaultQueries]);
+    console.log(params.toString());
     return post('/auth/login', null, { params }, cancel);
   },
 };

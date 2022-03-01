@@ -3,6 +3,7 @@ import authHeader from './auth-header';
 
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
+  // withCredentials: true,
 });
 
 apiClient.interceptors.request.use(
@@ -26,8 +27,10 @@ apiClient.interceptors.response.use(
       ([301, 302, 307, 308, 310].includes(response?.request?.status) || response?.headers?.['content-type'].includes('text/html;'))
       && (window?.location?.href !== response?.request?.responseURL)
     ) {
-      window.location.href = response?.request?.responseURL;
-      return null;
+      console.log('response?.request?.headers', response);
+      // window.open(response?.request?.responseURL, '_self');
+      // window.location.href = response?.request?.responseURL;
+      // return null;
     }
     return response;
   },

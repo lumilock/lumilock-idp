@@ -38,6 +38,7 @@
     "@nestjs/typeorm": "^8.0.2",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "connect-pg-simple": "^7.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
     "express-session": "^1.17.2",

@@ -1,12 +1,12 @@
 export const oidcConstants = {
-  issuer: 'http://localhost:3000',
-  authorizationURL: 'http://localhost:3000/auth/authorize',
-  loginURL: 'http://localhost:3001/login',
-  tokenURL: 'http://localhost:3000/auth/token',
-  userInfoURL: 'http://localhost:3000/auth/userinfo',
+  issuer: 'https://192.168.99.1:3000',
+  authorizationURL: 'https://192.168.99.1:3000/auth/authorize',
+  loginURL: 'http://192.168.99.1:3001/login',
+  tokenURL: 'https://192.168.99.1:3000/auth/token',
+  userInfoURL: 'https://192.168.99.1:3000/auth/userinfo',
   clientID: 'my-clientId',
   clientSecret: 'my-clientSecret',
-  callbackURL: 'http://localhost:3000/auth/callback',
+  callbackURL: 'https://192.168.99.1:3000/auth/callback',
   scope: 'openid profile',
   tokenDuration: 3600, // seconds
   accessTokenSecret: '3a5z6e4tr87fd6',
