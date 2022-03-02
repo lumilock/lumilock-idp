@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, MoreThan, Repository } from 'typeorm';
 import * as jwa from 'jwa';
 import { Code } from '../model/codes.entity';
-import { jwtConstants } from '../auth/constants';
 import { CodesDTO } from './codes.dto';
+import { oidcConstants } from '../auth/oidcConstants';
 
 @Injectable()
 export class CodesService {
@@ -49,7 +49,7 @@ export class CodesService {
       })
       .then((items) => items.map((e) => CodesDTO.fromEntity(e, false)));
     return allCodes?.filter((c: CodesDTO) =>
-      hmac.verify(c.code, signature, jwtConstants.secretCodeGenerator),
+      hmac.verify(c.code, signature, oidcConstants.secretCodeGenerator),
     )?.[0]; // get only one because it can't be more than one
   }
 

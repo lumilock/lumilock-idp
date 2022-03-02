@@ -5,14 +5,13 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { UsersModule } from '../users/users.module';
-import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
-import { OidcStrategy } from './oidc.strategy';
 import { AuthController } from './auth.controller';
 import { ClientsModule } from '../clients/clients.module';
 import { UsersClientsModule } from '../users-clients/users-clients.module';
 import { CodesModule } from '../codes/codes.module';
 import { LocalSerializer } from './local.serializer';
+import { oidcConstants } from './oidcConstants';
 
 // tuto
 // https://docs.nestjs.com/security/authentication#implement-protected-route-and-jwt-strategy-guards
@@ -26,21 +25,15 @@ import { LocalSerializer } from './local.serializer';
       session: true,
     }),
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      secret: oidcConstants.tokenSecret,
+      signOptions: { expiresIn: `${oidcConstants.tokenDuration}s` },
     }),
     ClientsModule,
     UsersClientsModule,
     CodesModule,
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    LocalSerializer,
-    JwtStrategy,
-    OidcStrategy,
-  ],
+  providers: [AuthService, LocalStrategy, LocalSerializer, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

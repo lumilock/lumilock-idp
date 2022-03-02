@@ -42,12 +42,12 @@ async function bootstrap() {
   app.use(
     session({
       name: 'LUMILOCK_IDP_SESSION_ID',
-      secret: 'my-secret',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       rolling: true, // keep session alive
       cookie: {
-        maxAge: 2 * 24 * 60 * 60 * 1000, // session expires in 1hr, refreshed by `rolling: true` option.
+        maxAge: parseInt(process.env.TOKEN_DURATION, 10) * 1000, // session expires in 1hr, refreshed by `rolling: true` option.
         httpOnly: true, // so that cookie can't be accessed via client-side script
         secure: false,
       },
@@ -75,6 +75,3 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
-
-// https://gist.github.com/nzvtrk/ebf494441e36200312faf82ce89de9f2
-// https://github.com/axios/axios/issues/943

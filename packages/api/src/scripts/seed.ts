@@ -70,6 +70,19 @@ async function run() {
     )
     .then((r) => (console.log('done ->', r.login), r));
 
+  const clientAuth = clientsService
+    .create(
+      ClientsDTO.from(
+        {
+          clientName: 'Lumilock',
+          secret: process.env.OAUTH2_CLIENT_REGISTRATION_LOGIN_CLIENT_ID,
+          redirectUris: null,
+        },
+        false,
+      ),
+    )
+    .then((r) => (console.log('done ->', r.clientName, r.id), r));
+
   const clientWork = clientsService
     .create(
       ClientsDTO.from(
@@ -83,7 +96,7 @@ async function run() {
     )
     .then((r) => (console.log('done ->', r.clientName, r.id), r));
 
-  return await Promise.all([...work, adminWork, clientWork]);
+  return await Promise.all([...work, adminWork, clientAuth, clientWork]);
 }
 
 run()

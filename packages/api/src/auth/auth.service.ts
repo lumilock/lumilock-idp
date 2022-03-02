@@ -7,9 +7,8 @@ import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
 import { CodesDTO } from '../codes/codes.dto';
 import { bin2hex, randomBytes } from '../utils';
-import { jwtConstants } from './constants';
 import { oidcConstants } from './oidcConstants';
-import { UsersDTO } from 'src/users/users.dto';
+import { UsersDTO } from '../users/users.dto';
 import { ClientsDTO } from '../clients/clients.dto';
 
 @Injectable()
@@ -39,7 +38,7 @@ export class AuthService {
     const randomCode = `${getRandomString(5)}${Math.floor(
       Date.now() / 1000,
     )}${getRandomString(5)}`;
-    const input = hmac.sign(randomCode, jwtConstants.secretCodeGenerator);
+    const input = hmac.sign(randomCode, oidcConstants.secretCodeGenerator);
 
     // 2. removed all expires codes it in db
     this.codesService.checkExpiration(client?.id);
@@ -56,7 +55,7 @@ export class AuthService {
       .then((r) => (console.log('done ->', r.code, r.client, r.user), r));
 
     // 4. encode it before send it
-    const signature = hmac.sign(input, jwtConstants.secretCodeGenerator);
+    const signature = hmac.sign(input, oidcConstants.secretCodeGenerator);
     return signature;
   }
 
