@@ -10,7 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         ignoreExpiration: false,
-        secretOrKey: oidcConstants.tokenSecret,
+        secretOrKey: oidcConstants.accessTokenSecret,
       },
       (payload, done) => {
         // check revoke

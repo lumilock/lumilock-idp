@@ -44,102 +44,108 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   public async login(@Request() req, @Res() res: Response) {
-    console.log('<login> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    const { query, user } = req; // destructurate request params usefull
-    const { redirect_uri: queryRedirectUri, client_id: queryClientId } = query; // destructurate query params
-    const queryConsent = query?.consent === 'true'; // check if consent is present in query params
-    const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present, this var will be add in responses
+    try {
+      console.log('<login> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      const { query, user } = req; // destructurate request params usefull
+      console.log('user', user);
+      const { redirect_uri: queryRedirectUri, client_id: queryClientId } =
+        query; // destructurate query params
+      const queryConsent = query?.consent === 'true'; // check if consent is present in query params
+      const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present, this var will be add in responses
 
-    // if there is a client_id but not a redirect_uri we throw an error
-    if (!queryRedirectUri && !!queryClientId)
-      throw new Error('Missing "redirect_uri" query params');
+      // if there is a client_id but not a redirect_uri we throw an error
+      if (!queryRedirectUri && !!queryClientId)
+        throw new Error('Missing "redirect_uri" query params');
 
-    // if there is a redirect_uri but not a client_id redirect to callback with an error
-    if (!!queryRedirectUri && !queryClientId) {
-      // We redirect to the callback with an error
-      const redirectQParams = querystring.stringify({
-        error: 'invalid_request_object',
-        error_description: 'Missing "client_id" query params',
-        ...state, // will add state if exist
-      });
-
-      return res.redirect(
-        HttpStatus.FOUND,
-        `${queryRedirectUri}?${redirectQParams}`,
-      );
-    }
-
-    // if we have not previous error and we have redirect_uri query params
-    // a rp trying to login a end-user
-    if (queryRedirectUri) {
-      // Checking if client has user auth
-      const consent = await this.serv.checkUserConsent(
-        user?.id, // id of the user we want to check
-        queryClientId, // id of the client we want to check
-      );
-
-      // Retreave client infos
-      const clientInfos = await this.cliServ.findById(queryClientId);
-
-      if (!consent && !queryConsent) {
-        // there is no consent in the db and not in query params
-        // so we will ask the consent to the user
-        if (!clientInfos) {
-          // If the client doesn't exist
-          // We redirect to the callback with an error
-          const redirectParams = querystring.stringify({
-            error: 'relying_party_not_know',
-            error_description:
-              'The Relying party is not authorize to access to our oidc',
-            ...state, // will add state if exist
-          });
-
-          console.log('<login> End RP not know: <<<<<<<<<<<<<<<<<<<<<<<<<<<');
-          console.log('');
-          return res.redirect(
-            HttpStatus.FOUND,
-            `${queryRedirectUri}?${redirectParams}`,
-          );
-        }
-        // Else if the client exist we send client infos to ask consent to the end user
-        console.log('<login> clientInfos', clientInfos);
-
-        console.log('<login> End ask consent: <<<<<<<<<<<<<<<<<<<<<<<<<<<');
-        console.log('');
-        // TODO redirect consent page
-        return res.status(200).send({
-          error: 'consent_required',
-          clientInfos: clientInfos,
+      // if there is a redirect_uri but not a client_id redirect to callback with an error
+      if (!!queryRedirectUri && !queryClientId) {
+        // We redirect to the callback with an error
+        const redirectQParams = querystring.stringify({
+          error: 'invalid_request_object',
+          error_description: 'Missing "client_id" query params',
+          ...state, // will add state if exist
         });
-      } else if (!consent && queryConsent) {
-        // there is no consent in the db but there is in the query
-        // so we will set the consent in the db
-        await this.usrCliServ.patchOrCreateAuthorization(
-          user?.id, // id of the user we want to check
-          queryClientId, // id of the client we want to check
-          queryConsent, // user consent value
+
+        return res.redirect(
+          HttpStatus.FOUND,
+          `${queryRedirectUri}?${redirectQParams}`,
         );
       }
 
-      // after having the consent we will generate an authorization code for the RP
-      const code = await this.serv.authenticate(clientInfos, user);
-      console.log('<login> code', code);
-      // And then redirect the user to the callback with the code
-      const redirectParams = querystring.stringify({
-        code, // RP authorization code
-        ...state, // will add state if exist
-      });
-      console.log(
-        '<login> End redirect with code: <<<<<<<<<<<<<<<<<<<<<<<<<<<',
-      );
-      console.log('');
-      return res.redirect(
-        HttpStatus.FOUND,
-        `${queryRedirectUri}?${redirectParams}`,
-      );
+      // if we have not previous error and we have redirect_uri query params
+      // a rp trying to login a end-user
+      if (queryRedirectUri) {
+        // Checking if client has user auth
+        const consent = await this.serv.checkUserConsent(
+          user?.id, // id of the user we want to check
+          queryClientId, // id of the client we want to check
+        );
+
+        // Retreave client infos
+        const clientInfos = await this.cliServ.findById(queryClientId);
+
+        if (!consent && !queryConsent) {
+          // there is no consent in the db and not in query params
+          // so we will ask the consent to the user
+          if (!clientInfos) {
+            // If the client doesn't exist
+            // We redirect to the callback with an error
+            const redirectParams = querystring.stringify({
+              error: 'relying_party_not_know',
+              error_description:
+                'The Relying party is not authorize to access to our oidc',
+              ...state, // will add state if exist
+            });
+
+            console.log('<login> End RP not know: <<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            console.log('');
+            return res.redirect(
+              HttpStatus.FOUND,
+              `${queryRedirectUri}?${redirectParams}`,
+            );
+          }
+          // Else if the client exist we send client infos to ask consent to the end user
+          console.log('<login> clientInfos', clientInfos);
+
+          console.log('<login> End ask consent: <<<<<<<<<<<<<<<<<<<<<<<<<<<');
+          console.log('');
+          // TODO redirect consent page
+          return res.status(200).send({
+            error: 'consent_required',
+            clientInfos: clientInfos,
+          });
+        } else if (!consent && queryConsent) {
+          // there is no consent in the db but there is in the query
+          // so we will set the consent in the db
+          await this.usrCliServ.patchOrCreateAuthorization(
+            user?.id, // id of the user we want to check
+            queryClientId, // id of the client we want to check
+            queryConsent, // user consent value
+          );
+        }
+
+        // after having the consent we will generate an authorization code for the RP
+        const code = await this.serv.authenticate(clientInfos, user);
+        console.log('<login> code', code);
+        // And then redirect the user to the callback with the code
+        const redirectParams = querystring.stringify({
+          code, // RP authorization code
+          ...state, // will add state if exist
+        });
+        console.log(
+          '<login> End redirect with code: <<<<<<<<<<<<<<<<<<<<<<<<<<<',
+        );
+        console.log('');
+        return res.redirect(
+          HttpStatus.FOUND,
+          `${queryRedirectUri}?${redirectParams}`,
+        );
+      }
+      // The OAuth app trying to login a end-user
+      return res.redirect(HttpStatus.FOUND, oidcConstants.frontUrl);
+    } catch (error) {
+      console.log('<login> error', error);
     }
-    // The OAuth app trying to login a end-user
-    return res.redirect(HttpStatus.FOUND, oidcConstants.frontUrl);
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -221,12 +227,6 @@ export class AuthController {
     console.log('');
     // if everything has been verifying with success we can generate an ID Token and redirect the user
     return res
-      .header({
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers':
-          'Origin, X-Requested-With, Content-Type, Accept',
-      })
       .status(HttpStatus.OK)
       .set({ 'Cache-Control': 'no-store', Pragma: 'no-cache' })
       .json(tokens);
@@ -237,19 +237,12 @@ export class AuthController {
   @Get('userinfo')
   public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {
     console.log('<getUserinfo> userInfo >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    req.session.visits = req.session.visits ? req.session.visits + 1 : 1;
-    console.log('<getUserinfo> req', req?.user);
-    console.log('<getUserinfo> req', req?.session);
+    console.log('<getUserinfo> req?.user', req?.user);
+    console.log('<getUserinfo> req?.session', req?.session);
     console.log({ sub: req?.user?.sub, test: 'test' });
     console.log('<getUserinfo> here');
     console.log('<getUserinfo> End <<<<<<<<<<<<<<<<<<<<');
     return res
-      .header({
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers':
-          'Origin, X-Requested-With, Content-Type, Accept',
-      })
       .status(HttpStatus.OK)
       .json({ sub: req?.user?.sub, test: 'test' });
   }
@@ -282,7 +275,6 @@ export class AuthController {
   ): Promise<any> {
     console.log('<authorize> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     const parsedQuery = JSON.parse(JSON.stringify(query));
-    res.header('Access-Control-Allow-Credentials', 'true');
     console.log('<authorize> req.session: ', req.session);
     console.log('<authorize> req.session.id: ', req.session.id);
     console.log('<authorize> query: ', parsedQuery);

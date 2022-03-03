@@ -25,8 +25,8 @@ import { oidcConstants } from './oidcConstants';
       session: true,
     }),
     JwtModule.register({
-      secret: oidcConstants.tokenSecret,
-      signOptions: { expiresIn: `${oidcConstants.tokenDuration}s` },
+      secret: oidcConstants.accessTokenSecret,
+      signOptions: { expiresIn: `${oidcConstants.accessTokenDuration}s` },
     }),
     ClientsModule,
     UsersClientsModule,

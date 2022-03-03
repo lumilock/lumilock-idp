@@ -80,7 +80,7 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(accessTokenPayload, {
       secret: oidcConstants.accessTokenSecret,
-      expiresIn: oidcConstants.tokenDuration + 's',
+      expiresIn: oidcConstants.accessTokenDuration + 's',
     });
 
     // 2. Generate the refresh_token
