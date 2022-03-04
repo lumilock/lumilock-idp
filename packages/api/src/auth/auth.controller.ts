@@ -36,6 +36,7 @@ export class AuthController {
     private codeServ: CodesService,
   ) {}
 
+  // TODO add request axios that asked on specific route if user+ password as consent for spécific client_id, if yes classic form post
   /**
    * Authorization Server Authenticates End-User : https://openid.net/specs/openid-connect-core-1_0.html#Authenticates
    * Authorization Server Obtains End-User Consent/Authorization : https://openid.net/specs/openid-connect-core-1_0.html#Consent
