@@ -128,6 +128,16 @@ export class AuthController {
         // after having the consent we will generate an authorization code for the RP
         const code = await this.serv.authenticate(clientInfos, user);
         console.log('<login> code', code);
+        const clientIssuer = oidcConstants.issuer;
+        // Defining the sessionKey
+        const sessionKey = `oidc:${new URL(clientIssuer).hostname}`;
+        // Updating session from query
+        const sessionValue = {
+          ...(query?.state ? { state: query.state } : {}),
+          max_age: undefined,
+          // code_verifier: query?.code,
+          response_type: 'code',
+        };
         // And then redirect the user to the callback with the code
         const redirectParams = querystring.stringify({
           code, // RP authorization code
@@ -137,10 +147,9 @@ export class AuthController {
           '<login> End redirect with code: <<<<<<<<<<<<<<<<<<<<<<<<<<<',
         );
         console.log('');
-        return res.redirect(
-          HttpStatus.FOUND,
-          `${queryRedirectUri}?${redirectParams}`,
-        );
+        return res
+          .cookie(sessionKey, sessionValue)
+          .redirect(HttpStatus.FOUND, `${queryRedirectUri}?${redirectParams}`);
       }
       // The OAuth app trying to login a end-user
       return res.redirect(HttpStatus.FOUND, oidcConstants.frontUrl);
