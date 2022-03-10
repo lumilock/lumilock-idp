@@ -131,10 +131,12 @@ export class AuthController {
         const clientIssuer = oidcConstants.issuer;
         // Defining the sessionKey
         const sessionKey = `oidc:${new URL(clientIssuer).hostname}`;
+        console.log(sessionKey);
         // Updating session from query
         const sessionValue = {
           ...(query?.state ? { state: query.state } : {}),
           max_age: undefined,
+          httpOnly: true,
           // code_verifier: query?.code,
           response_type: 'code',
         };
