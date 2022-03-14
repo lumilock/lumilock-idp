@@ -54,13 +54,18 @@ function LoginForm() {
     // init query params
     const params = new URLSearchParams([...Object.entries(rest), ...getAllQuery()]);
     // update action path
-    formRef.current.action = `${process.env.REACT_APP_API_URL}/auth/login?${params.toString()}`;
+    formRef.current.action = `/auth/login?${params.toString()}`;
     // submit the form
     formRef.current.submit();
     return false;
     // await Auth.login(rest, getAllQuery())
-    //   .then((response) => response.data)
     //   .then((response) => {
+    //     console.log('res', response);
+    //     return response.data;
+    //   })
+    //   .then((response) => {
+    //     // eslint-disable-next-line no-console
+    //     console.log('response', response);
     //     // if success but need consent for relaying party
     //     if (response?.error === 'consent_required') {
     //       setClientInfos(response?.clientInfos);

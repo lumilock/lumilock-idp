@@ -35,7 +35,13 @@ async function bootstrap() {
     },
   });
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'PUT', 'POST', 'PATCH', 'OPTIONS', 'HEAD'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'Cache'],
+    exposedHeaders: ['*', 'Authorization'],
+  });
 
   app.use(cookieParser());
   // session

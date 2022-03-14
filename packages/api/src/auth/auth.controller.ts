@@ -44,7 +44,10 @@ export class AuthController {
    */
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  public async login(@Request() req, @Res() res: Response) {
+  public async login(
+    @Request() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
       console.log('<login> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       const { query, user } = req; // destructurate request params usefull
@@ -136,9 +139,16 @@ export class AuthController {
         const sessionValue = {
           ...(query?.state ? { state: query.state } : {}),
           max_age: undefined,
-          httpOnly: true,
           // code_verifier: query?.code,
           response_type: 'code',
+        };
+        const sessionOptions = {
+          secure: true,
+          path: '/',
+          httpOnly: true,
+          hostOnly: true,
+          sameSite: false,
+          expires: new Date(Date.now() + 9999999),
         };
         // And then redirect the user to the callback with the code
         const redirectParams = querystring.stringify({
@@ -148,9 +158,9 @@ export class AuthController {
         console.log(
           '<login> End redirect with code: <<<<<<<<<<<<<<<<<<<<<<<<<<<',
         );
-        console.log('');
+        console.log('', `${queryRedirectUri}?${redirectParams}`);
         return res
-          .cookie(sessionKey, sessionValue)
+          .cookie(sessionKey, sessionValue, sessionOptions)
           .redirect(HttpStatus.FOUND, `${queryRedirectUri}?${redirectParams}`);
       }
       // The OAuth app trying to login a end-user
@@ -251,12 +261,10 @@ export class AuthController {
     console.log('<getUserinfo> userInfo >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     console.log('<getUserinfo> req?.user', req?.user);
     console.log('<getUserinfo> req?.session', req?.session);
-    console.log({ sub: req?.user?.sub, test: 'test' });
+    console.log({ sub: req?.user?.sub });
     console.log('<getUserinfo> here');
     console.log('<getUserinfo> End <<<<<<<<<<<<<<<<<<<<');
-    return res
-      .status(HttpStatus.OK)
-      .json({ sub: req?.user?.sub, test: 'test' });
+    return res.status(HttpStatus.OK).json({ sub: req?.user?.sub });
   }
 
   // @UseGuards(OidcAuthGuard)

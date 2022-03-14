@@ -68,10 +68,13 @@ export class AuthService {
     const clientOrigin = new URL(code?.client?.redirectUris?.[0])?.origin; // ? could be better ([0])
     const clientSecret = code?.client?.secret;
 
+    // the subject is the userClient id
+    const sub = await this.usersService.getUserClientId(userId, clientId);
+
     // 1. Generate the access_token
     const accessTokenPayload = {
       iss: oidcConstants.issuer,
-      sub: userId, // subject (The user ID)
+      sub: sub, // subject (The user ID)
       aud: clientOrigin, // Audience (The identifier of the resource server)
       client_id: clientId, // Client ID
       iat: Math.floor(Date.now() / 1000),
@@ -86,7 +89,7 @@ export class AuthService {
     // 2. Generate the refresh_token
     const refreshTokenPayload = {
       iss: oidcConstants.issuer,
-      sub: userId, // subject (The user ID)
+      sub: sub, // subject (The user ID)
       aud: clientOrigin, // Audience (The identifier of the resource server)
       client_id: clientId, // Client ID
       iat: Math.floor(Date.now() / 1000),
@@ -101,7 +104,7 @@ export class AuthService {
     // 3. Generate the id_token
     const idTokenPayload = {
       iss: oidcConstants.issuer,
-      sub: userId, // subject (The user ID)
+      sub: sub, // subject (The user ID)
       aud: clientId, // Client ID
       auth_time: Math.floor(new Date(authTime).getTime() / 1000),
       iat: Math.floor(Date.now() / 1000),

@@ -3,7 +3,7 @@ import { Outlet, useRoutes } from 'react-router-dom';
 
 // Pages
 import {
-  Login, Home,
+  Login,
 } from '../../pages';
 
 function AppRoutes() {
@@ -12,7 +12,7 @@ function AppRoutes() {
       path: '/',
       element: <Outlet />,
       children: [
-        { index: true, element: <Home /> },
+        { index: true, element: <Login /> },
         {
           path: 'login',
           element: <Login />,
