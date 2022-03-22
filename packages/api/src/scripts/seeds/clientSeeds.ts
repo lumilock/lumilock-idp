@@ -29,7 +29,7 @@ async function clientSeeds(connection) {
         {
           clientName: 'Audit lait cru',
           secret: 'XZHJ_WS1pdAgkwW5U5zFQZZd',
-          redirectUris: ['http://192.168.99.1:8001/callback'],
+          redirectUris: ['http://192.168.99.1:8001/api/auth/callback'],
         },
         false,
       ),
