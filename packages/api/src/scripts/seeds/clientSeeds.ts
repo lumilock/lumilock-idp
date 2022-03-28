@@ -16,6 +16,7 @@ async function clientSeeds(connection) {
           clientName: 'Lumilock',
           secret: process.env.CLIENT_LAUNCHER_SECRET,
           redirectUris: [process.env.CLIENT_LAUNCHER_REDIRECT],
+          appUrl: process.env.OAUTH2_CLIENT_FRONT_OIDC_URI,
         },
         false,
       ),

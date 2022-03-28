@@ -19,6 +19,10 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
   @IsString()
   secret: string;
 
+  @ApiProperty({ required: false })
+  @IsString()
+  appUrl: string;
+
   @ApiProperty({ required: true })
   @IsString({ each: true })
   redirectUris: string[];
@@ -36,6 +40,7 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     client.id = dto.id;
     client.clientName = dto.clientName;
     if (!light) client.secret = dto.secret;
+    client.appUrl = dto.appUrl;
     client.redirectUris = dto.redirectUris;
     client.logoUri = dto.logoUri;
     client.hide = dto.hide;
@@ -48,6 +53,7 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
         id: entity.id,
         clientName: entity.clientName,
         ...(!light ? { secret: entity.secret } : {}),
+        appUrl: entity.appUrl,
         redirectUris: entity.redirectUris,
         logoUri: entity.logoUri,
         hide: entity.hide,
@@ -61,6 +67,7 @@ export class ClientsDTO implements Readonly<ClientsDTO> {
     client.id = this.id;
     client.clientName = this.clientName;
     if (!light) client.secret = this.secret;
+    client.appUrl = this.appUrl;
     client.redirectUris = this.redirectUris;
     client.logoUri = this.logoUri;
     client.hide = this.hide;

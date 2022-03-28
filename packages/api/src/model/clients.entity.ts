@@ -19,6 +19,9 @@ export class Client extends BaseEntity {
   @Column({ type: 'varchar', length: 200 })
   secret: string;
 
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  appUrl: string;
+
   @Column({ type: 'boolean', default: true })
   hide: boolean;
 
