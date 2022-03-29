@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsBoolean, IsUUID, IsString } from 'class-validator';
 import { UserRole, UsersClients } from '../model/users_clients.entity';
 
-export class UsersClientsDTO implements Readonly<UsersClientsDTO> {
+export class SubjectClientDTO implements Readonly<SubjectClientDTO> {
   @ApiProperty({ required: true })
   @IsUUID()
   id: string;
@@ -26,20 +26,15 @@ export class UsersClientsDTO implements Readonly<UsersClientsDTO> {
 
   @ApiProperty({ required: true })
   @IsUUID()
-  user_id: string;
-
-  @ApiProperty({ required: true })
-  @IsUUID()
   client_id: string;
 
-  public static from(dto: Partial<UsersClientsDTO>) {
-    const userClient = new UsersClientsDTO();
+  public static from(dto: Partial<SubjectClientDTO>) {
+    const userClient = new SubjectClientDTO();
     userClient.id = dto.id;
     userClient.role = dto.role;
     userClient.authorization = dto.authorization;
     userClient.favorite = dto.favorite;
     userClient.permissions = dto.permissions;
-    userClient.user_id = dto.user_id;
     userClient.client_id = dto.client_id;
     return userClient;
   }
@@ -51,12 +46,11 @@ export class UsersClientsDTO implements Readonly<UsersClientsDTO> {
       authorization: entity.authorization,
       favorite: entity.favorite,
       permissions: entity.permissions,
-      user_id: entity.userId,
       client_id: entity.clientId,
     });
   }
 
-  public static fromEntities(entities: UsersClients[]): UsersClientsDTO[] {
+  public static fromEntities(entities: UsersClients[]): SubjectClientDTO[] {
     return entities?.map((entity) =>
       this.from({
         id: entity.id,
@@ -64,7 +58,6 @@ export class UsersClientsDTO implements Readonly<UsersClientsDTO> {
         authorization: entity.authorization,
         favorite: entity.favorite,
         permissions: entity.permissions,
-        user_id: entity.userId,
         client_id: entity.clientId,
       }),
     );
@@ -77,7 +70,6 @@ export class UsersClientsDTO implements Readonly<UsersClientsDTO> {
     userClient.authorization = this.authorization;
     userClient.favorite = this.favorite;
     userClient.permissions = this.permissions;
-    userClient.userId = this.user_id;
     userClient.clientId = this.client_id;
     return userClient;
   }

@@ -17,10 +17,10 @@ import {
 import { User, UserGender } from '../model/users.entity';
 import { AddressesDTO } from '../addresses/addresses.dto';
 import { CodesDTO } from '../codes/codes.dto';
-import { UsersClientsDTO } from '../users-clients/users-clients.dto';
+import { SubjectClientDTO } from '../users-clients/subject-client.dto';
 import noTilde from '../utils/noTilde';
 
-export class UsersDTO implements Readonly<UsersDTO> {
+export class SubjectDTO implements Readonly<SubjectDTO> {
   @ApiProperty({ required: true })
   @IsOptional() // optional when create a new one
   @IsUUID()
@@ -203,11 +203,12 @@ export class UsersDTO implements Readonly<UsersDTO> {
   @ValidateNested()
   codes: CodesDTO[];
 
+  // The current client which ask the subject profile
   @ApiProperty({ required: false })
   @IsOptional()
   @IsJSON()
   @ValidateNested()
-  usersClients: UsersClientsDTO[];
+  subjectClient: SubjectClientDTO;
 
   // ******
   // Base
@@ -232,8 +233,8 @@ export class UsersDTO implements Readonly<UsersDTO> {
   @IsDate()
   lastChangedDateTime: Date;
 
-  public static from(dto: Partial<UsersDTO>, validate = false): UsersDTO {
-    const user = new UsersDTO();
+  public static from(dto: Partial<SubjectDTO>, validate = false): SubjectDTO {
+    const user = new SubjectDTO();
     user.id = dto.id;
     user.login =
       dto.login ??
@@ -266,7 +267,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
     user.phoneNumber = dto.phoneNumber;
     user.phoneNumberVerified = dto.phoneNumberVerified;
     user.addresses = dto.addresses;
-    user.usersClients = dto.usersClients;
+    user.subjectClient = dto.subjectClient;
     user.isActive = dto.isActive;
     user.isArchived = dto.isArchived;
     user.createDateTime = dto.createDateTime;
@@ -304,7 +305,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
       phoneNumber: entity.phoneNumber,
       phoneNumberVerified: entity.phoneNumberVerified,
       addresses: AddressesDTO.fromEntities(entity.addresses),
-      usersClients: UsersClientsDTO.fromEntities(entity.usersClients),
+      subjectClient: SubjectClientDTO.fromEntity(entity.usersClients[0]),
       isActive: entity.isActive,
       isArchived: entity.isArchived,
       createDateTime: entity.createDateTime,

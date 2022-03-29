@@ -2,11 +2,9 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 
 import { configService } from '../config/config.service';
-import { clientSeeds, userSeeds } from './seeds';
+import { clientSeeds, usersClientsSeeds, userSeeds } from './seeds';
 
 async function run() {
-  // const seedUser: User = { id: 'seed-user' };
-
   const opt = {
     ...configService.getTypeOrmConfig(),
     debug: true,
@@ -15,10 +13,11 @@ async function run() {
   const connection = await createConnection(opt as ConnectionOptions);
 
   // All seed
-  const usrSeeds = userSeeds(connection);
-  const cltSeeds = clientSeeds(connection);
+  const usrSeeds = await userSeeds(connection);
+  const cltSeeds = await clientSeeds(connection);
+  await usersClientsSeeds(connection, usrSeeds[0].id, cltSeeds[0].id);
 
-  return await Promise.all([usrSeeds, cltSeeds]);
+  // return await Promise.all([usrSeeds, cltSeeds]);
 }
 
 run()

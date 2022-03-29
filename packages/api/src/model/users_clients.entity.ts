@@ -13,6 +13,7 @@ import { Client } from './clients.entity';
 import { User } from './users.entity';
 
 export enum UserRole {
+  NONE = 'none', // users has no access to the client
   ADMIN = 'admin',
   USER = 'user',
   GUEST = 'guest',
@@ -36,6 +37,10 @@ export class UsersClients {
 
   @Column({ type: 'boolean', default: false })
   favorite: boolean;
+
+  // Users permission one the current client
+  @Column({ name: 'permissions', type: 'simple-array' })
+  permissions: string[];
 
   @Column({ name: 'user_id', nullable: false })
   userId: string;

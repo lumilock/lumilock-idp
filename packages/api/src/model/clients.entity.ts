@@ -28,6 +28,10 @@ export class Client extends BaseEntity {
   @Column({ name: 'redirect_uris', type: 'simple-array' })
   redirectUris: string[];
 
+  // Clients permissions available in client for the users
+  @Column({ name: 'permissions', type: 'simple-array' })
+  permissions: string[];
+
   @Column({
     name: 'application_type',
     type: 'enum',
