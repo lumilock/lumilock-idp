@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { User } from '../model/users.entity';
+import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './users.dto';
 
 @Injectable()
@@ -26,6 +28,25 @@ export class UsersService {
     return this.repo.findOne(id).then((user) => {
       return user ? UsersDTO.fromEntity(user) : undefined;
     });
+  }
+
+  // Find user by subject id and clientId
+  async findBySub(
+    subId: string,
+    clientId: string,
+  ): Promise<SubjectDTO | undefined> {
+    const user = await this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
+      .leftJoinAndSelect('user.addresses', 'ad') // select the relation addresses and add alias
+      .where('uc.id = :id', { id: subId }) // filter by user id
+      .andWhere('uc.client_id = :clientId', {
+        clientId: clientId,
+      })
+      .getOne();
+    return user
+      ? SubjectDTO.fromEntity({ ...user, id: subId }, false)
+      : undefined;
   }
 
   // For a given user and a given client check the consent of the user

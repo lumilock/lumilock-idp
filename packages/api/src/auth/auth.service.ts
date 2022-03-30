@@ -10,6 +10,7 @@ import { bin2hex, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/users.dto';
 import { ClientsDTO } from '../clients/clients.dto';
+import { SubjectDTO } from 'src/users/subject.dto';
 
 @Injectable()
 export class AuthService {
@@ -133,9 +134,12 @@ export class AuthService {
   }
 
   // profiles info of the auth
-  async profile(userId: string) {
-    const user = await this.usersService.findById(userId);
-    return user;
+  async profile(
+    userSub: string,
+    clientId: string,
+  ): Promise<SubjectDTO | undefined> {
+    if (!userSub || !clientId) return undefined;
+    return this.usersService.findBySub(userSub, clientId);
   }
 
   // Check if client have the consent of the user

@@ -14,7 +14,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { UsersDTO } from '../users/users.dto';
+// import { UsersDTO } from '../users/users.dto';
 import * as querystring from 'query-string';
 import { AuthService } from './auth.service';
 import { AuthorizeDTO } from './authorize.dto';
@@ -23,9 +23,9 @@ import { oidcConstants } from './oidcConstants';
 import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
-import { CodesDTO } from 'src/codes/codes.dto';
+import { CodesDTO } from '../codes/codes.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
+// import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -170,12 +170,12 @@ export class AuthController {
     }
   }
 
-  @UseGuards(AuthenticatedGuard)
-  // @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  public async getProfile(@Request() req): Promise<UsersDTO> {
-    return await this.serv.profile(req?.user?.userId);
-  }
+  // @UseGuards(AuthenticatedGuard)
+  // // @UseGuards(JwtAuthGuard)
+  // @Get('profile')
+  // public async getProfile(@Request() req): Promise<UsersDTO> {
+  //   return await this.serv.profileById(req?.user?.userId);
+  // }
 
   // @UseGuards(OidcAuthGuard)
   // @UseGuards(JwtAuthGuard)
@@ -254,17 +254,19 @@ export class AuthController {
       .json(tokens);
   }
 
-  // @UseGuards(OidcAuthGuard)
   @UseGuards(JwtAuthGuard)
   @Get('userinfo')
   public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {
     console.log('<getUserinfo> userInfo >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     console.log('<getUserinfo> req?.user', req?.user);
     console.log('<getUserinfo> req?.session', req?.session);
-    console.log({ sub: req?.user?.sub });
-    console.log('<getUserinfo> here');
+    const { id, ...profile } = await this.serv.profile(
+      req?.user?.sub,
+      req?.user?.client_id,
+    );
+    console.log({ sub: id, ...profile });
     console.log('<getUserinfo> End <<<<<<<<<<<<<<<<<<<<');
-    return res.status(HttpStatus.OK).json({ sub: req?.user?.sub });
+    return res.status(HttpStatus.OK).json({ sub: id, ...profile });
   }
 
   // @UseGuards(OidcAuthGuard)
