@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { Transport } from '@nestjs/microservices';
+
 import * as fs from 'fs';
 import * as session from 'express-session';
 import * as passport from 'passport';
@@ -34,6 +36,14 @@ async function bootstrap() {
       cert: cert,
     },
   });
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: {
+      host: '192.168.99.1',
+      port: 3011,
+    },
+  });
+
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: '*',
@@ -78,6 +88,7 @@ async function bootstrap() {
 
     SwaggerModule.setup('docs', app, document);
   }
+  await app.startAllMicroservices();
   await app.listen(3000);
 }
 bootstrap();

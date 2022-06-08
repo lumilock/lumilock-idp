@@ -83,4 +83,11 @@ export class UsersService {
   public async create(dto: UsersDTO): Promise<UsersDTO> {
     return this.repo.save(dto.toEntity()).then((e) => UsersDTO.fromEntity(e));
   }
+
+  // Find all users
+  async getAll(): Promise<UsersDTO[] | undefined> {
+    return this.repo.find().then((user) => {
+      return user ? user.map((u) => UsersDTO.fromEntity(u)) : undefined;
+    });
+  }
 }

@@ -39,7 +39,7 @@ export class UsersClients {
   favorite: boolean;
 
   // Users permission one the current client
-  @Column({ name: 'permissions', type: 'simple-array' })
+  @Column({ name: 'permissions', type: 'simple-array', nullable: false })
   permissions: string[];
 
   @Column({ name: 'user_id', nullable: false })

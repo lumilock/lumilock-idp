@@ -36,7 +36,7 @@
     "redux-devtools-extension": "^2.13.9"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "npx eslint --ignore-pattern '**/node_modules/*' --ignore-pattern '**/*.test.js' --fix ./src --ext .js --ext .jsx",
