@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as format from 'pg-format';
 
 import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './users.dto';
+import { upsertUsers } from './queries';
 
 @Injectable()
 export class UsersService {
@@ -89,5 +91,36 @@ export class UsersService {
     return this.repo.find().then((user) => {
       return user ? user.map((u) => UsersDTO.fromEntity(u)) : undefined;
     });
+  }
+
+  // Find all users
+  async disableBySubIds(
+    // TODO
+    subsId: string[],
+    clientId: string,
+  ): Promise<UsersDTO[] | undefined> {
+    const users = await this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
+      .leftJoinAndSelect('user.addresses', 'ad') // select the relation addresses and add alias
+      .where('uc.id IN (:id)', { ids: subsId }) // filter by user ids
+      .andWhere('uc.client_id = :clientId', {
+        clientId: clientId,
+      })
+      .getRawMany();
+    return users;
+  }
+
+  // Find all users
+  async upsertBySubIds(
+    // TODO
+    users: any[],
+    addresses: any[],
+    clientId: string,
+  ): Promise<UsersDTO[] | undefined> {
+    console.log(addresses);
+    const sql = format(upsertUsers, users, addresses, clientId);
+    console.log(sql);
+    return [];
   }
 }
