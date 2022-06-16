@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import * as format from 'pg-format';
 
 import { User } from '../model/users.entity';
@@ -12,6 +12,8 @@ import { upsertUsers } from './queries';
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly repo: Repository<User>,
+    @InjectEntityManager()
+    private readonly entityManager: EntityManager,
   ) {}
 
   // Find user by identity
@@ -118,9 +120,11 @@ export class UsersService {
     addresses: any[],
     clientId: string,
   ): Promise<UsersDTO[] | undefined> {
-    console.log(addresses);
+    // Generate the sql query
     const sql = format(upsertUsers, users, addresses, clientId);
     console.log(sql);
-    return [];
+    const usersData = await this.entityManager.query(sql);
+    console.log(usersData);
+    return usersData;
   }
 }

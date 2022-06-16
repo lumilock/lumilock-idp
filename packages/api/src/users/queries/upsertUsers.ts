@@ -46,7 +46,7 @@ export default `
       phone_number_verified,
       is_active,
       is_archived
-    )
+    ) WHERE unique_id IS NOT NULL
   ),
   left_side_addresses AS (
     -- Left side (comming data that represente the new addresses state of the db)
@@ -75,17 +75,40 @@ export default `
       user_id,
       is_active,
       is_archived
-    )
+    ) WHERE unique_id IS NOT NULL
   ),
   right_side_users AS (
     -- Right side (db data)
     SELECT uc.id as subject_id, u.* FROM users u
     LEFT JOIN users_clients uc ON u.id = uc.user_id
-    WHERE uc.client_id = %3$L AND u.id in (SELECT lsu.id from left_side_users lsu WHERE lsu.id IS NOT null) -- we only want affect data that comes from parameters
+    WHERE uc.client_id = %3$L::uuid  AND u.id in (SELECT lsu.id from left_side_users lsu WHERE lsu.id IS NOT null) -- we only want affect data that comes from parameters
   ),
   to_insert_users_v1 AS (
     -- Part that is only on the left side (incoming data we want to insert)
-    SELECT ls.* FROM left_side_users ls
+    SELECT
+      ls.rn,
+      NULLIF(ls.unique_id, '$undefined$') as unique_id,
+      ls.id,
+      NULLIF(ls.password, '$undefined$') as password,
+      NULLIF(ls.given_name, '$undefined$') as given_name,
+      NULLIF(ls.family_name, '$undefined$') as family_name,
+      NULLIF(ls.middle_name, '$undefined$') as middle_name,
+      NULLIF(ls.nickname, '$undefined$') as nickname,
+      NULLIF(ls.preferred_username, '$undefined$') as preferred_username,
+      NULLIF(ls.profile, '$undefined$') as profile,
+      NULLIF(ls.picture, '$undefined$') as picture,
+      NULLIF(ls.website, '$undefined$') as website,
+      NULLIF(ls.email, '$undefined$') as email,
+      NULLIF(ls.email_verified, '$undefined$') as email_verified,
+      NULLIF(ls.gender, '$undefined$') as gender,
+      NULLIF(ls.birthdate, '$undefined$') as birthdate,
+      NULLIF(ls.zoneinfo, '$undefined$') as zoneinfo,
+      NULLIF(ls.locale, '$undefined$') as locale,
+      NULLIF(ls.phone_number, '$undefined$') as phone_number,
+      NULLIF(ls.phone_number_verified, '$undefined$') as phone_number_verified,
+      NULLIF(ls.is_active, '$undefined$') as is_active,
+      NULLIF(ls.is_archived, '$undefined$') as is_archived
+    FROM left_side_users ls
     LEFT JOIN right_side_users rs ON ls.id = rs.subject_id
     WHERE rs.subject_id IS NULL -- so here we only get rows where rs.id is NULL because it's data we want to insert
     ORDER BY ls.unique_id ASC
@@ -185,29 +208,29 @@ export default `
   users_ins AS (
     INSERT INTO users (
 				login,
-                password,
+        password,
 				name,
-                given_name,
-                family_name,
-                middle_name,
-                nickname,
-                preferred_username,
-                profile,
-                picture,
-                website,
-                email,
-                email_verified,
-                gender,
-                birthdate,
-                zoneinfo,
-                locale,
-                phone_number,
-                phone_number_verified,
-                is_active,
-                is_archived
+        given_name,
+        family_name,
+        middle_name,
+        nickname,
+        preferred_username,
+        profile,
+        picture,
+        website,
+        email,
+        email_verified,
+        gender,
+        birthdate,
+        zoneinfo,
+        locale,
+        phone_number,
+        phone_number_verified,
+        is_active,
+        is_archived
         )
     SELECT
-	  login,
+      login,
       COALESCE(password, login) AS password,
       REPLACE(CONCAT(given_name, ' ', middle_name, ' ', family_name), '  ', ' ') AS name,
       given_name,
@@ -229,19 +252,49 @@ export default `
       is_active::boolean,
       is_archived::boolean
     FROM to_insert_users ti ORDER BY ti.unique_id ASC
-    RETURNING id, 'INSERTED' AS "action", 'users' AS "table"
+    RETURNING *, 'INSERTED' AS "action", 'users' AS "table"
   ),
   users_inserted AS (
-    SELECT i.id, i.action, i.table, j.unique_id
+    SELECT i.*, j.unique_id
     FROM (SELECT *, row_number() OVER () AS rn FROM users_ins) i
     JOIN to_insert_users j USING (rn)
   ),
+  users_clients_ins AS (
+  	INSERT INTO users_clients (user_id, client_id, permissions)
+		SELECT ui.id AS user_id, %3$L::uuid AS client_id, '' as permissions
+		FROM users_inserted ui ORDER BY ui.unique_id ASC
+    RETURNING id, user_id, 'INSERTED' AS "action", 'users_clients' AS "table"
+  ),
+  users_clients_inserted AS (
+    SELECT
+      uc.id,
+      u.login,
+      u.name,
+      u.given_name,
+      u.family_name,
+      u.middle_name,
+      u.nickname,
+      u.preferred_username,
+      u.profile,
+      u.picture,
+      u.website,
+      u.email,
+      u.email_verified,
+      u.gender,
+      u.birthdate,
+      u.zoneinfo,
+      u.locale,
+      u.phone_number,
+      u.phone_number_verified,
+      u.is_active,
+      u.is_archived,
+      u.unique_id,
+      u.action
+    FROM users_inserted u
+    JOIN users_clients_ins uc ON u.id = uc.user_id
+  ),
   results AS (
-    SELECT id::varchar, "action", "table" FROM users_updated
-    UNION
-    SELECT id::varchar, "action", "table" FROM users_deleted
-    UNION
-    SELECT id::varchar, "action", "table" FROM users_inserted
+    SELECT * FROM users_clients_inserted
   ) SELECT * FROM results
 `;
 
