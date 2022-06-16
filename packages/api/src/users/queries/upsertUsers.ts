@@ -261,8 +261,12 @@ export default `
   ),
   users_clients_ins AS (
   	INSERT INTO users_clients (user_id, client_id, permissions)
-		SELECT ui.id AS user_id, %3$L::uuid AS client_id, '' as permissions
-		FROM users_inserted ui ORDER BY ui.unique_id ASC
+		SELECT ui.id AS user_id, %3$L::uuid AS client_id, '' as permissions FROM users_inserted ui ORDER BY ui.unique_id ASC
+    RETURNING id, user_id, 'INSERTED' AS "action", 'users_clients' AS "table"
+  ),
+  users_clients_ins2 AS (
+  	INSERT INTO users_clients (user_id, client_id, permissions, "authorization")
+    SELECT ui.id AS user_id, %4$L::uuid AS client_id, '' AS permissions, true AS "authorization" FROM users_inserted ui ORDER BY ui.unique_id ASC
     RETURNING id, user_id, 'INSERTED' AS "action", 'users_clients' AS "table"
   ),
   users_clients_inserted AS (

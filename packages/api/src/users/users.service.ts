@@ -3,6 +3,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import * as format from 'pg-format';
 
+import { oidcConstants } from '../auth/oidcConstants';
 import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './users.dto';
@@ -121,7 +122,13 @@ export class UsersService {
     clientId: string,
   ): Promise<UsersDTO[] | undefined> {
     // Generate the sql query
-    const sql = format(upsertUsers, users, addresses, clientId);
+    const sql = format(
+      upsertUsers,
+      users,
+      addresses,
+      clientId,
+      oidcConstants.clientLauncherSecret,
+    );
     console.log(sql);
     const usersData = await this.entityManager.query(sql);
     console.log(usersData);
