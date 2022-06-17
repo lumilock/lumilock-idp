@@ -39,7 +39,6 @@ export class UsersController {
       addresses,
       clientId,
     );
-    console.log('users', users);
     return users;
   }
 
