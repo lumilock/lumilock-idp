@@ -18,7 +18,6 @@ export class UsersController {
     clientId: string;
   }) {
     const users = await this.serv.disableBySubIds(ids, clientId);
-    console.log('users', users);
     return users;
   }
 

@@ -7,7 +7,7 @@ import { oidcConstants } from '../auth/oidcConstants';
 import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './users.dto';
-import { upsertUsers } from './queries';
+import { disableUsers, upsertUsers } from './queries';
 
 @Injectable()
 export class UsersService {
@@ -96,25 +96,19 @@ export class UsersService {
     });
   }
 
-  // Find all users
+  // Disabled all users link to the subject_id and the client_id
   async disableBySubIds(
     // TODO
     subsId: string[],
     clientId: string,
-  ): Promise<UsersDTO[] | undefined> {
-    const users = await this.repo
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
-      .leftJoinAndSelect('user.addresses', 'ad') // select the relation addresses and add alias
-      .where('uc.id IN (:id)', { ids: subsId }) // filter by user ids
-      .andWhere('uc.client_id = :clientId', {
-        clientId: clientId,
-      })
-      .getRawMany();
-    return users;
+  ): Promise<number> {
+    // Generate the sql query
+    const sql = format(disableUsers, subsId, clientId);
+    const usersData = await this.entityManager.query(sql);
+    return usersData?.length || 0;
   }
 
-  // Find all users
+  // Upsert all users link to the subject_id and the client_id
   async upsertBySubIds(
     // TODO
     users: any[],
@@ -127,8 +121,9 @@ export class UsersService {
       users,
       addresses,
       clientId,
-      oidcConstants.clientLauncherSecret,
+      oidcConstants.clientLauncherId,
     );
+
     const usersData = await this.entityManager.query(sql);
     return usersData;
   }
