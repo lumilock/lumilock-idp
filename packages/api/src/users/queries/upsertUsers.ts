@@ -171,6 +171,7 @@ export default `
   users_upd AS (
     UPDATE users
     SET password = COALESCE(NULLIF(tuu.password, '$undefined$'), users.password),
+      name = COALESCE(NULLIF(REPLACE(CONCAT(tuu.given_name, ' ', tuu.middle_name, ' ', tuu.family_name), '  ', ' '), users.given_name), users.given_name),
       given_name = COALESCE(NULLIF(tuu.given_name, '$undefined$'), users.given_name),
       family_name = COALESCE(NULLIF(tuu.family_name, '$undefined$'), users.family_name),
       middle_name = COALESCE(NULLIF(tuu.middle_name, '$undefined$'), users.middle_name),
@@ -319,6 +320,7 @@ export default `
       u.action
     FROM users_updated u
     JOIN users_clients uc ON u.id = uc.user_id
+    WHERE uc.client_id = %3$L
   ),
   results AS (
     SELECT * FROM users_clients_inserted

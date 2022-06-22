@@ -6,7 +6,7 @@ export default `
     SELECT u.* FROM users u
     LEFT JOIN users_clients uc ON uc.user_id = u.id
     WHERE uc.id IN (%1$L)
-    AND uc.client_id = %2$L'::uuid
+    AND uc.client_id = %2$L::uuid
   ) AS u
   WHERE u.id = users.id
   AND (
