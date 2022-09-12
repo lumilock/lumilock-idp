@@ -2,12 +2,12 @@ import 'dotenv/config';
 
 export const oidcConstants = {
   issuer: process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER,
-  authorizationURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/auth/authorize`,
+  authorizationURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/api/auth/authorize`,
   frontUrl: process.env.OAUTH2_CLIENT_FRONT_OIDC_URI,
   loginURL: `${process.env.OAUTH2_CLIENT_FRONT_OIDC_URI}/login`,
-  tokenURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/auth/token`,
-  userInfoURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/auth/userinfo`,
-  callbackURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/auth/callback`,
+  tokenURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/api/auth/token`,
+  userInfoURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/api/auth/userinfo`,
+  callbackURL: `${process.env.OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER}/api/auth/callback`,
   scope: 'openid profile',
   accessTokenDuration: process.env.ACCESS_TOKEN_DURATION || 3600, // seconds
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,

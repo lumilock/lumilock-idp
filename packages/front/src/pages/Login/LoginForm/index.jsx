@@ -12,8 +12,9 @@ import Squircle from '../../../components/Squircle';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 
-import styles from './LoginForm.module.scss';
+import { Auth } from '../../../services/Api';
 import Icon from '../../../components/Icon';
+import styles from './LoginForm.module.scss';
 
 function LoginForm() {
   const [searchParams] = useSearchParams();
@@ -51,29 +52,36 @@ function LoginForm() {
     // try to loggin in
     // exclude needConsent from query values
     const { needConsent, ...rest } = data;
-    // init query params
-    const params = new URLSearchParams([...Object.entries(rest), ...getAllQuery()]);
-    // update action path
-    formRef.current.action = `/auth/login?${params.toString()}`;
-    // submit the form
-    formRef.current.submit();
-    return false;
-    // await Auth.login(rest, getAllQuery())
-    //   .then((response) => {
-    //     console.log('res', response);
-    //     return response.data;
-    //   })
-    //   .then((response) => {
-    //     // eslint-disable-next-line no-console
-    //     console.log('response', response);
-    //     // if success but need consent for relaying party
-    //     if (response?.error === 'consent_required') {
-    //       setClientInfos(response?.clientInfos);
-    //       setDisplayConsent(true);
-    //       setValue('needConsent', true, { shouldValidate: true });
-    //     }
-    //   })
-    //   .catch((err) => console.log('err:', err));
+    // // init query params
+    // const params = new URLSearchParams([...Object.entries(rest), ...getAllQuery()]);
+    // // update action path
+    // formRef.current.action = `/auth/login?${params.toString()}`;
+    // // submit the form
+    // formRef.current.submit();
+    // return false;
+    await Auth.login(rest, getAllQuery())
+      .then((response) => {
+        console.log('response', response);
+        console.log('response.headers', response.headers);
+        if (response.redirected && response.url) {
+          // data.redirect contains the string URL to redirect to
+          // window.location.href = response.url;
+          console.log(response.url);
+        }
+        // window.history.back();
+        return response.data;
+      })
+      .then((response) => {
+        // eslint-disable-next-line no-console
+        console.log('response', response);
+        // if success but need consent for relaying party
+        if (response?.error === 'consent_required') {
+          setClientInfos(response?.clientInfos);
+          setDisplayConsent(true);
+          setValue('needConsent', true, { shouldValidate: true });
+        }
+      })
+      .catch((err) => console.log('err:', err));
   };
 
   /**

@@ -9,19 +9,29 @@ const Auth = {
 
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
-    headers.append('Origin', 'http://192.168.99.1:3001');
+    // headers.append('Access-Control-Allow-Credentials', '*');
     headers.append('Cache', 'no-cache');
 
     const search = new URLSearchParams([...Object.entries(queryParams), ...defaultQueries]);
     // eslint-disable-next-line no-console
-    console.log(`/auth/login?${search}`);
-    return fetch(`/auth/login?${search}`, {
+    console.log(`/api/auth/login?${search.toString()}`);
+    return fetch(`/api/auth/login?${search.toString()}`, {
       method: 'POST',
       headers,
       mode: 'cors',
       credentials: 'include',
-      body: {},
+      redirect: 'follow',
+      body: null,
     });
+
+    // return post(`/api/auth/login?${search.toString()}`, {}, {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Accept: 'application/json',
+    //   },
+    //   crossdomain: true,
+    //   withCredentials: true,
+    // });
   },
   // loginOld: (queryParams, defaultQueries, cancel = {}) => {
   //   const params = new URLSearchParams([...Object.entries(queryParams), ...defaultQueries]);

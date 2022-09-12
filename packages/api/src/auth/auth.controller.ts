@@ -46,7 +46,7 @@ export class AuthController {
   @Post('login')
   public async login(
     @Request() req,
-    @Res({ passthrough: true }) res: Response,
+    @Res() res: Response, // { passthrough: true }
   ) {
     try {
       console.log('<login> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -143,7 +143,7 @@ export class AuthController {
           response_type: 'code',
         };
         const sessionOptions = {
-          secure: true,
+          secure: false, // TODO true when it will be secure
           path: '/',
           httpOnly: true,
           hostOnly: true,
@@ -160,7 +160,15 @@ export class AuthController {
         );
         console.log('', `${queryRedirectUri}?${redirectParams}`);
         return res
-          .cookie(sessionKey, sessionValue, sessionOptions)
+          .cookie(sessionKey, sessionValue, sessionOptions) // TODO check session id
+          .set({
+            'Cache-Control': 'no-store',
+            Pragma: 'no-cache',
+            'Access-Control-Allow-Origin': ['http://192.168.99.1:3001'],
+            'Access-Control-Allow-Credentials': true,
+            // Origin: ['https://192.168.99.1:3000'],
+            // Referer: ['https://192.168.99.1:3000'],
+          })
           .redirect(HttpStatus.FOUND, `${queryRedirectUri}?${redirectParams}`);
       }
       // The OAuth app trying to login a end-user

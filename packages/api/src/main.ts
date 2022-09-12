@@ -52,6 +52,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'Cache'],
     exposedHeaders: ['*', 'Authorization'],
   });
+  app.setGlobalPrefix('api');
 
   app.use(cookieParser());
   // session
