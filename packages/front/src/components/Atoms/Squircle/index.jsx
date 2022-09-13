@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import generateUUID from '../../services/Tools/generateUUID';
+import generateUUID from '../../../services/Tools/generateUUID';
 
-import noAppImage from '../../assets/images/noAppImage.png';
+import noAppImage from '../../../assets/images/noAppImage.png';
 import styles from './Squircle.module.scss';
 
 function Squircle({ image, className, size }) {

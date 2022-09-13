@@ -5,15 +5,15 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 
 import { IoPeople } from 'react-icons/io5';
-import Button from '../../../components/Button';
-import { CheckboxControlled, InputControlled } from '../../../components/Form';
-import Squircle from '../../../components/Squircle';
+import Button from '../../../components/Atoms/Button';
+import { CheckboxControlled, InputControlled } from '../../../components/Atoms/Form';
+import Squircle from '../../../components/Atoms/Squircle';
 
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 
 import { Auth } from '../../../services/Api';
-import Icon from '../../../components/Icon';
+import Icon from '../../../components/Atoms/Icon';
 import styles from './LoginForm.module.scss';
 
 function LoginForm() {

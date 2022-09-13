@@ -1,0 +1,63 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #EAECE7;
+    clip-path: url(#svgPath);
+
+    & svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    
+
+    & .Group,
+    & .Group2 {
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        filter: url("#fancyGoo") url("#blurFilter") url("#noiseFilter");
+    }
+    & .Group {
+
+        &:global(.group1) {
+            z-index: 2;
+            & .Circle {
+                background:#101524;
+            }
+        }
+
+        &:global(.group2) {
+            z-index: 1;
+            & .Circle {
+                background:#3D69BB;
+                transform: scale(1.25);
+            }
+        }
+
+        &:global(.group3) {
+            z-index: 0;
+            & .Circle {
+                background: #78A4DA;
+                transform: scale(2.5);
+            }
+        }
+
+        & .Circle {
+            width:100px;
+            height:100px;
+            position:absolute;
+            border-radius: 50%;
+            isolation: isolate;
+            &:last-child {
+                left: 110px;
+            }
+        }
+    }
+}

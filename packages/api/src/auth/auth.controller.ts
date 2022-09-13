@@ -46,7 +46,7 @@ export class AuthController {
   @Post('login')
   public async login(
     @Request() req,
-    @Res() res: Response, // { passthrough: true }
+    @Res({ passthrough: true }) res: Response, // { passthrough: true }
   ) {
     try {
       console.log('<login> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -164,7 +164,7 @@ export class AuthController {
           .set({
             'Cache-Control': 'no-store',
             Pragma: 'no-cache',
-            'Access-Control-Allow-Origin': ['http://192.168.99.1:3001'],
+            'Access-Control-Allow-Origin': ['https://192.168.99.1:3001'],
             'Access-Control-Allow-Credentials': true,
             // Origin: ['https://192.168.99.1:3000'],
             // Referer: ['https://192.168.99.1:3000'],

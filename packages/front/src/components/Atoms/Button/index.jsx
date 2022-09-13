@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { IoLogoIonic } from 'react-icons/io5';
 
 // services
-import capitalize from '../../services/Tools/capitalize';
+import capitalize from '../../../services/Tools/capitalize';
 
 // Components
 import Icon from '../Icon';

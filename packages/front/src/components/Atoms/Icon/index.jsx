@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // servcies
-import capitalize from '../../services/Tools/capitalize';
+import capitalize from '../../../services/Tools/capitalize';
 
 import styles from './Icon.module.scss';
 
