@@ -2,7 +2,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 
-import Alert from '../Alert';
+import styles from './ErrorBoundary.module.scss';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -28,9 +28,9 @@ export default class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <Alert severity="error" title="Error">
+        <div className={`${styles?.Base} body2`}>
           {this?.state?.error?.toString() ?? 'Something went wrong!'}
-        </Alert>
+        </div>
       );
     }
 

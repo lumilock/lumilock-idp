@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import If from '../If';
+import If from '../../Atoms/If';
 
 import styles from './Alert.module.scss';
 

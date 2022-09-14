@@ -1,0 +1,24 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: max-content;
+    border: rem-calc(1) solid black;
+
+    transition: transform .5s ease-in-out;
+    transform: translateX(0%);
+
+    &.Active {
+        background-color: red;
+    }
+
+    &.EnterRight:not(.Active) {
+        transform: translateX(100%);
+        background-color: blue;
+    }
+    &.EnterLeft:not(.Active) {
+        background-color: yellow;
+    }
+}

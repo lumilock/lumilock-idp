@@ -1,0 +1,10 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: max-content;
+    border: rem-calc(1) solid black;
+    
+}

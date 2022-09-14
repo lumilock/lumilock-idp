@@ -1,10 +1,6 @@
 import React from 'react';
 
-import { AnimatedBackground } from '../../components';
-
-// import LoginForm from './LoginForm';
-// import LoginCanvas from './LoginCanvas';
-
+import { AnimatedBackground, ErrorBoundary, LoginForms } from '../../components';
 import styles from './Login.module.scss';
 
 /**
@@ -13,12 +9,16 @@ import styles from './Login.module.scss';
 function Login() {
   return (
     <div className={styles.Root}>
-      <div className={styles.Form} />
-      <div className={styles.Background}>
-        <AnimatedBackground ballsNumber={10} />
+      <div className={styles.Form}>
+        <ErrorBoundary>
+          <LoginForms />
+        </ErrorBoundary>
       </div>
-      {/* <LoginForm /> */}
-      {/* <LoginCanvas /> */}
+      <div className={styles.Background}>
+        <ErrorBoundary>
+          <AnimatedBackground ballsNumber={8} />
+        </ErrorBoundary>
+      </div>
     </div>
   );
 }

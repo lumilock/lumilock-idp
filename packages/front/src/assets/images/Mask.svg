@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512"><defs><clipPath id="b"><rect width="512" height="512"/></clipPath></defs><g id="a" clip-path="url(#b)"><rect width="512" height="512" fill="#fff"/><path d="M0,128C0,0,0,0,128,0S256,0,256,128s0,128-128,128S0,256,0,128"/><path d="M0,128C0,0,0,0,128,0S256,0,256,128s0,128-128,128S0,256,0,128" transform="translate(256 256)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(256)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(256 128)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(384 128)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(384)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(0 256)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(0 384)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(128 384)"/><path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(128 256)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="clip-Mask">
+      <rect width="512" height="512"/>
+    </clipPath>
+  </defs>
+  <g id="Mask" clip-path="url(#clip-Mask)">
+    <rect width="512" height="512" fill="#fff"/>
+    <g id="Mask-2" data-name="Mask">
+      <path id="Tracé_277" data-name="Tracé 277" d="M0,128C0,0,0,0,128,0S256,0,256,128s0,128-128,128S0,256,0,128"/>
+      <path id="Tracé_286" data-name="Tracé 286" d="M0,128C0,0,0,0,128,0S256,0,256,128s0,128-128,128S0,256,0,128" transform="translate(256 256)"/>
+      <path id="Tracé_278" data-name="Tracé 278" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(256)"/>
+      <path id="Tracé_279" data-name="Tracé 279" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(256 128)"/>
+      <path id="Tracé_280" data-name="Tracé 280" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(384 128)"/>
+      <path id="Tracé_281" data-name="Tracé 281" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(384)"/>
+      <path id="Tracé_284" data-name="Tracé 284" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(0 256)"/>
+      <path id="Tracé_282" data-name="Tracé 282" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(0 384)"/>
+      <path id="Tracé_283" data-name="Tracé 283" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(128 384)"/>
+      <path id="Tracé_285" data-name="Tracé 285" d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(128 256)"/>
+    </g>
+  </g>
+</svg>

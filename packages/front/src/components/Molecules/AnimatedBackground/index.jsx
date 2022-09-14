@@ -3,15 +3,57 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 
+import If, { Then, Else } from '../../Atoms/If';
 import { ownerWindow, debounce, randomIntFromInterval } from '../../../services/Tools';
 import { useEffectOnce } from '../../../services/Hooks';
 import styles from './AnimatedBackground.module.scss';
+
+function TileMask({
+  columnIndex, rowIndex, rowLength, winHeight,
+}) {
+  const isSmall = randomIntFromInterval(0, 1);
+  // calculate mask tiles positions
+  const transform = useCallback(
+    (x, y, scale = 2) => `translate(${256 * x}, ${(256 * y) - (((rowLength * 256) - winHeight) / 2)}) scale(${scale})`,
+    [rowLength, winHeight],
+  );
+
+  return (
+    <If condition={!!isSmall}>
+      <Then>
+        <path d="M0,64C0,0,0,0,64,0S128,0,128,64s0,64-64,64S0,128,0,64" transform={transform(columnIndex, rowIndex, 1)} />
+        <path d="M0,64C0,0,0,0,64,0S128,0,128,64s0,64-64,64S0,128,0,64" transform={transform(columnIndex + 0.5, rowIndex, 1)} />
+        <path d="M0,64C0,0,0,0,64,0S128,0,128,64s0,64-64,64S0,128,0,64" transform={transform(columnIndex, rowIndex + 0.5, 1)} />
+        <path d="M0,64C0,0,0,0,64,0S128,0,128,64s0,64-64,64S0,128,0,64" transform={transform(columnIndex + 0.5, rowIndex + 0.5, 1)} />
+      </Then>
+      <Else>
+        <path d="M0,64C0,0,0,0,64,0S128,0,128,64s0,64-64,64S0,128,0,64" transform={transform(columnIndex, rowIndex)} />
+      </Else>
+    </If>
+  );
+}
+
+TileMask.propTypes = {
+  columnIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  rowLength: PropTypes.number,
+  winHeight: PropTypes.number,
+};
+
+TileMask.defaultProps = {
+  columnIndex: 0,
+  rowIndex: 0,
+  rowLength: 0,
+  winHeight: 0,
+};
 
 function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
   const ref = useRef(null);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const [interval, setInterval] = useState(null);
   const ballsArray = useMemo(() => Array.from({ length: ballsNumber }, (_v, k) => k), [ballsNumber]);
+  const gridColumns = useMemo(() => Array.from({ length: Math.ceil((windowSize?.width || 0) / 256) }, (_v, k) => k), [windowSize?.width]);
+  const gridRows = useMemo(() => Array.from({ length: Math.ceil((windowSize?.height || 0) / 256) }, (_v, k) => k), [windowSize?.height]);
 
   const move = useCallback(
     (el, x, y, size) => {
@@ -93,7 +135,7 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
   useEffect(() => {
     const handleResize = debounce(() => {
       const container = ref?.current;
-      setWindowSize({ width: container?.offsetWidth, height: (container?.offsetWidth || 0) / 4 });
+      setWindowSize({ width: container?.offsetWidth, height: (container?.offsetHeight || 0) });
     });
 
     const win = ownerWindow(ref.current);
@@ -104,6 +146,12 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
       win.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // calculate mask tiles positions
+  const tileKey = useCallback(
+    (x, y) => `${x}-${y}`,
+    [],
+  );
 
   useEffectOnce(() => {
     init();
@@ -147,27 +195,21 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
         <defs>
           <clipPath id="svgPath">
-            <path d="M0,128C0,0,0,0,128,0S256,0,256,128s0,128-128,128S0,256,0,128" />
-            <path d="M0,128C0,0,0,0,128,0S256,0,256,128s0,128-128,128S0,256,0,128" transform="translate(256 256)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(256)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(256 128)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(384 128)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(384)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(0 256)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(0 384)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(128 384)" />
-            <path d="M0,64C0,0,0,0,64,0s64,0,64,64,0,64-64,64S0,128,0,64" transform="translate(128 256)" />
+            {gridColumns?.map((cI) => (
+              <React.Fragment key={cI}>
+                {gridRows?.map((rI) => (
+                  <TileMask
+                    key={tileKey(cI, rI)}
+                    columnIndex={cI}
+                    rowIndex={rI}
+                    rowLength={gridRows?.length || 0}
+                    winHeight={windowSize?.height || 0}
+                  />
+                ))}
+              </React.Fragment>
+            ))}
           </clipPath>
         </defs>
-        {/* <defs>
-          <pattern id="star" viewBox="0,0,10,10" width="10%" height="10%">
-            <polygon points="0,0 2,5 0,10 5,8 10,10 8,5 10,0 5,2" />
-          </pattern>
-        </defs>
-        <rect fill="url(#star)" x="0" y="0" stroke="#000000" width={windowSize?.width} height={windowSize?.height} />
-        <clipPath id="theSVGPath">
-          <rect x="0" y="0" stroke="#000000" width="500" height="500" />
-        </clipPath> */}
         <defs>
           <filter id="fancyGoo">
             <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
