@@ -24,7 +24,7 @@ import Else from './Else';
  *  </Else>
  * https://tech.trell.co/cleaner-way-to-write-conditionals-in-jsx-b13fb60b5792
  */
-const If = ({ condition, children }) => {
+function If({ condition, children }) {
   if (Array.isArray(children) && children.length === 2) {
     const then = children[0];
     const otherWise = children[1];
@@ -39,7 +39,7 @@ const If = ({ condition, children }) => {
     return children;
   }
   return null;
-};
+}
 
 /**
  * All possibles errors for our custom propTypes validator
@@ -87,6 +87,7 @@ If.propTypes = {
 };
 
 If.defaultProps = {
+  children: undefined,
   condition: false,
 };
 

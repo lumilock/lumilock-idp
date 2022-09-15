@@ -1,16 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
  * Component call in the Choose component if any condition is statisfied
  */
-const OtherWise = (props) => (
-  <>
-    {/* disabled because we have hiddens props like condition */}
-    {/* eslint-disable-next-line react/destructuring-assignment */}
-    {props.children}
-  </>
-);
+function OtherWise({ children }) {
+  return [children];
+}
 
 OtherWise.propTypes = {
   children: PropTypes.oneOfType([

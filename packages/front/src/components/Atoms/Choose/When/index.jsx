@@ -1,16 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
  * Component call in the Choose component if current condition is statisfied
  */
-const When = (props) => (
-  <>
-    {/* disabled because we have hiddens props like condition */}
-    {/* eslint-disable-next-line react/destructuring-assignment */}
-    {props.children}
-  </>
-);
+function When({ children }) {
+  return [children];
+}
 
 When.propTypes = {
   children: PropTypes.oneOfType([

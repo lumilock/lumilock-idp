@@ -1,14 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
  * Component call in the if compoenent if the condition is false
  */
-const Else = ({ children }) => (
-  <>
-    {children}
-  </>
-);
+function Else({ children }) {
+  return [children];
+}
 
 Else.propTypes = {
   children: PropTypes.oneOfType([

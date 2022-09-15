@@ -1,14 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
  * Component call in the if compoenent if the condition is true
  */
-const Then = ({ children }) => (
-  <>
-    {children}
-  </>
-);
+function Then({ children }) {
+  return [children];
+}
 
 Then.propTypes = {
   children: PropTypes.oneOfType([

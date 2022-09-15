@@ -2,9 +2,7 @@ import React from 'react';
 import { Outlet, useRoutes } from 'react-router-dom';
 
 // Pages
-import {
-  Login,
-} from '../../pages';
+const Login = React.lazy(() => import('../pages/Login'));
 
 function AppRoutes() {
   const routes = [
