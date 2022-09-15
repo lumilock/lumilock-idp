@@ -36,5 +36,9 @@
                 margin-bottom: spacing-rem(3);
             }
         }
+
+        & .Link {
+            color: var(--color-black);
+        }
     }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 // servcies
@@ -6,12 +6,16 @@ import capitalize from '../../../services/Tools/capitalize';
 
 import styles from './Icon.module.scss';
 
+const sizesTypes = ['tiny', 'small', 'medium', 'large'];
+
 function Icon({
   ionIcon: Component, size, className, ...rest
 }) {
+  const customSize = useMemo(() => (!sizesTypes.includes(size) ? { size } : {}), [size]);
   return (
     <Component
-      className={`${styles.Base} ${styles[capitalize(size, false)]} ${className || ''}`}
+      className={`${styles.Base}${sizesTypes.includes(size) ? ` ${styles[capitalize(size, false)]}` : ''}${className ? ` ${className}` : ''}`}
+      {...customSize}
       {...rest}
     />
   );
@@ -20,7 +24,10 @@ function Icon({
 Icon.propTypes = {
   className: PropTypes.string,
   ionIcon: PropTypes.func.isRequired,
-  size: PropTypes.oneOf(['xSmall', 'small', 'medium', 'large']),
+  size: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.oneOf(sizesTypes),
+  ]),
 };
 
 Icon.defaultProps = {

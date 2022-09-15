@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { IoIosArrowRoundForward } from 'react-icons/io';
 import { Button } from '../../Molecules';
 import { InputControlled } from '../../Atoms/Form';
 import Logo from '../../../assets/images/Logo.svg';
@@ -46,7 +47,14 @@ function LoginForm() {
           type="password"
           placeholder="Entrez votre mot de passe"
         />
-        <Button color="secondary" loading={isSubmitting} type="submit">Se connecter</Button>
+        <Button
+          color="black"
+          loading={isSubmitting}
+          type="submit"
+          endIcon={IoIosArrowRoundForward}
+        >
+          Se connecter
+        </Button>
         <a href="/#" className={`${styles.Link} body2`}>Mot de passe oublier ?</a>
 
       </form>

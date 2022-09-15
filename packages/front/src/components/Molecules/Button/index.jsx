@@ -16,13 +16,18 @@ function Button({
   startIcon, endIcon, onClick, color, children, className, loading, variant, ...rest
 }) {
   return (
-    <button type="button" onClick={onClick} disabled={loading ? 'disabled' : ''} className={`${styles.Base} ${styles[capitalize(color)]} ${styles[capitalize(variant)]} ${className}`} {...rest}>
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={loading ? 'disabled' : ''}
+      className={`${styles.Base} ${styles[capitalize(color)]} ${styles[capitalize(variant)]} ${className}`}
+      {...rest}
+    >
       <If condition={!!startIcon}>
         <Icon
           ionIcon={loading ? IoLogoIonic : startIcon}
           title=""
-          size="xSmall"
-          rotate={loading}
+          size="tiny"
           className={styles.Icon}
         />
       </If>
@@ -31,8 +36,7 @@ function Button({
         <Icon
           ionIcon={loading ? IoLogoIonic : endIcon}
           title=""
-          size="xSmall"
-          rotate={loading}
+          size="tiny"
           className={styles.Icon}
         />
       </If>
@@ -45,7 +49,7 @@ Button.propTypes = {
   endIcon: PropTypes.func,
   onClick: PropTypes.func,
   className: PropTypes.string,
-  color: PropTypes.oneOf(['primary', 'secondary', 'white']),
+  color: PropTypes.oneOf(['primary', 'secondary', 'white', 'black']),
   variant: PropTypes.oneOf(['standard', 'contained']),
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -60,7 +64,7 @@ Button.defaultProps = {
   variant: 'contained',
   color: 'primary',
   className: '',
-  onClick: () => { },
+  onClick: () => {},
   loading: false,
 };
 

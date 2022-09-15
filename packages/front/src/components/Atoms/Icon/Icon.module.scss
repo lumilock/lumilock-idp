@@ -1,28 +1,32 @@
 @import "../../../assets/styles/toolkit.scss";
 
 .Base {
-    position: inherit;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    &.XSmall, &.XSmall > svg {
-      height: spacing-rem(2);
-      width: spacing-rem(2);
-    }
+  &.Tiny,
+  &.Tiny>svg {
+    height: spacing-rem(2);
+    width: spacing-rem(2);
+  }
 
-    &.Small, &.Small > svg {
-      height: spacing-rem(3);
-      width: spacing-rem(3);
-    }
+  &.Small,
+  &.Small>svg {
+    height: spacing-rem(3);
+    width: spacing-rem(3);
+  }
 
-    &.Medium, &.Medium > svg {
-      height: spacing-rem(6);
-      width: spacing-rem(6);
-    }
+  &.Medium,
+  &.Medium>svg {
+    height: spacing-rem(6);
+    width: spacing-rem(6);
+  }
 
-    &.Large, &.Large > svg {
-      height: spacing-rem(8);
-      width: spacing-rem(8);
-    }
+  &.Large,
+  &.Large>svg {
+    height: spacing-rem(8);
+    width: spacing-rem(8);
+  }
 }
