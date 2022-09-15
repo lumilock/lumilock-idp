@@ -1,24 +1,127 @@
 @import "../../../../assets/styles/toolkit.scss";
 
 .Base {
-    position: absolute;
-    display: flex;
-    width: 100%;
-    height: max-content;
-    border: rem-calc(1) solid black;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transform: translateX(0%);
 
-    transition: transform .5s ease-in-out;
-    transform: translateX(0%);
+  // &.Active {}
 
-    &.Active {
-        background-color: red;
+  // &.Slide {}
+
+  // &.SlideActive {}
+
+  // &.SlideDone {}
+
+  // &.SlideEnter {}
+
+  &.SlideEnterActive {
+    &.Right {
+      animation-duration: 0.5s;
+      animation-name: fadeInRight;
+      animation-fill-mode: forwards;
+      animation-timing-function: $transitionInOut;
     }
 
-    &.EnterRight:not(.Active) {
-        transform: translateX(100%);
-        background-color: blue;
+    &.Left {
+      animation-duration: 0.5s;
+      animation-name: fadeInLeft;
+      animation-fill-mode: forwards;
+      animation-timing-function: $transitionInOut;
     }
-    &.EnterLeft:not(.Active) {
-        background-color: yellow;
+  }
+
+  &.SlideEnterDone {
+    &.Right {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
     }
+
+    &.Left {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  // &.SlideExit {}
+
+  &.SlideExiteActive {
+    &.Right {
+      animation-duration: 0.5s;
+      animation-name: fadeOutRight;
+      animation-fill-mode: forwards;
+      animation-timing-function: $transitionInOut;
+    }
+
+    &.Left {
+      animation-duration: 0.5s;
+      animation-name: fadeOutLeft;
+      animation-fill-mode: forwards;
+      animation-timing-function: $transitionInOut;
+    }
+  }
+
+  &.SlideExitDone {
+    &.Right {
+      opacity: 0;
+      transform: translate3d(100%, 0, 0);
+    }
+
+    &.Left {
+      opacity: 0;
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+}
+
+
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
 }

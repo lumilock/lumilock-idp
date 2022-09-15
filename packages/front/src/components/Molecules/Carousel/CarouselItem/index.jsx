@@ -1,24 +1,47 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition } from 'react-transition-group';
 
+// import { usePrevious } from '../../../../services/Hooks';
 import styles from './CarouselItem.module.scss';
+import { pascalCase } from '../../../../services/Tools';
 
 const CarouselItem = React.forwardRef(({
   index, selected, enter, leave, children,
-}, ref) => (
-  <div
-    className={`${[
-      styles?.Base,
-      selected ? styles.Active : '',
-      enter === 'right' ? styles.EnterRight : styles.EnterLeft,
-      leave === 'left' ? styles.LeaveLeft : styles.LeaveRight,
-    ].join(' ').trim()}`}
-    ref={ref}
-  >
-    {index}
-    {children}
-  </div>
-));
+}, ref) => {
+  const nodeRef = useRef(ref);
+
+  return (
+    <CSSTransition
+      in={selected}
+      timeout={500}
+      unmountOnExit
+      classNames={{
+        appear: styles.Slide,
+        appearActive: styles.SlideActive,
+        appearDone: styles.SlideDone,
+        enter: styles.SlideEnter,
+        enterActive: `${[styles.SlideEnterActive, styles?.[pascalCase(enter)]].join(' ').trim()}`,
+        enterDone: `${[styles.SlideEnterDone, styles?.[pascalCase(enter)]].join(' ').trim()}`,
+        exit: styles.SlideExit,
+        exitActive: `${[styles.SlideExiteActive, styles?.[pascalCase(leave)]].join(' ').trim()}`,
+        exitDone: `${[styles.SlideExitDone, styles?.[pascalCase(leave)]].join(' ').trim()}`,
+      }}
+      nodeRef={nodeRef}
+    >
+      <div
+        key={index}
+        className={`${[
+          styles?.Base,
+          selected ? styles.Active : '',
+        ].join(' ').trim()}`}
+        ref={nodeRef}
+      >
+        {children}
+      </div>
+    </CSSTransition>
+  );
+});
 
 CarouselItem.propTypes = {
   /**

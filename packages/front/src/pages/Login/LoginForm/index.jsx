@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 
 import { IoPeople } from 'react-icons/io5';
-import Button from '../../../components/Atoms/Button';
+import Button from '../../../components/Molecules/Button';
 import { CheckboxControlled, InputControlled } from '../../../components/Atoms/Form';
 import Squircle from '../../../components/Atoms/Squircle';
 
