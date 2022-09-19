@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,10 +14,11 @@ import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import Logo from '../../../assets/images/Logo.svg';
 import styles from './LoginForm.module.scss';
+import { getAllQuery } from '../../../services/Tools';
 
 function LoginForm({ setConsent }) {
   // Router
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   // React hook form
   const {
     handleSubmit, control, formState: { isSubmitting },
@@ -25,26 +26,17 @@ function LoginForm({ setConsent }) {
   // States
   const [errorMsg, setErrorMsg] = useState('');
 
-  /**
-   * Method to retreave all searchParams from the current address
-   * @returns {string[]} all searchParams from the current address
-   */
-  const getAllQuery = () => {
-    // save the iterator
-    const queryEntries = searchParams.entries();
-    // select first entry
-    let iterator = queryEntries.next();
-    // init return array
-    const querys = [];
-    // init max iter counter
-    let countOut = 0;
-    while (iterator.done === false && countOut < 50) {
-      querys.push(iterator.value);
-      iterator = queryEntries.next();
-      countOut += 1;
-    }
-    return querys;
-  };
+  const navigateToReset = useCallback(
+    (e) => {
+      const paramsEntries = getAllQuery(searchParams);
+      const params = Object?.fromEntries(paramsEntries) || {};
+
+      setSearchParams({ ...params, reset: true });
+      e.preventDefault();
+      return false;
+    },
+    [searchParams, setSearchParams],
+  );
 
   const onSubmit = async (data) => {
     // try to loggin in
@@ -65,8 +57,6 @@ function LoginForm({ setConsent }) {
       })
       .then((response) => {
         setErrorMsg('');
-        // eslint-disable-next-line no-console
-        console.log('response', response);
         // if success but need consent for relaying party
         if (response?.error === 'consent_required') {
           setConsent({ ...data, consent: false, clientInfos: response?.clientInfos });
@@ -76,7 +66,7 @@ function LoginForm({ setConsent }) {
         if (err?.message === 'UNAUTHORIZED') {
           setErrorMsg('Veuillez vous assurer de ne pas avoir fait d\'erreurs dans votre identifiant ou votre mot de passe.');
         }
-        if (process?.env?.NODE_ENV === 'development') {
+        if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error('ERROR: [onSubmit - Auth.login]', err);
         }
@@ -118,7 +108,7 @@ function LoginForm({ setConsent }) {
         >
           Se connecter
         </Button>
-        <a href="/#" className={`${styles.Link} body2`}>Mot de passe oublier ?</a>
+        <a href="?reset=true" className={`${styles.Link} body2`} onClick={navigateToReset}>Mot de passe oublier ?</a>
 
       </form>
     </div>

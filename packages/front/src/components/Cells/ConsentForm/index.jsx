@@ -84,7 +84,7 @@ function ConsentForm({ values, setConsent }) {
       .then((response) => {
         setErrorMsg('');
         goBack();
-        if (process?.env?.NODE_ENV === 'development') {
+        if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error('SUCCESS: [onSubmit - Auth.login]', response);
         }
@@ -93,7 +93,7 @@ function ConsentForm({ values, setConsent }) {
         if (err?.message === 'UNAUTHORIZED') {
           setErrorMsg('Veuillez vous assurer de ne pas avoir fait d\'erreurs dans votre identifiant ou votre mot de passe.');
         }
-        if (process?.env?.NODE_ENV === 'development') {
+        if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error('ERROR: [onSubmit - Auth.login]', err);
         }

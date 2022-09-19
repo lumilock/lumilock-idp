@@ -1,10 +1,16 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import * as process from 'process';
+
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 
 import './assets/styles/fonts.scss';
 import './assets/styles/stylesheet.scss';
+
+if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
+  window.process = process;
+}
 
 const container = document.getElementById('root');
 const root = createRoot(container);

@@ -34,11 +34,14 @@
 
             & img {
                 margin-bottom: spacing-rem(3);
+                width: rem-calc(64);
+                height: rem-calc(64);
             }
         }
 
         & .Link {
             color: var(--color-black);
+            text-align: center;
         }
     }
 }
