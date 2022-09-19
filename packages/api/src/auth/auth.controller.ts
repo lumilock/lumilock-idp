@@ -54,9 +54,11 @@ export class AuthController {
       console.log('user', user);
       const { redirect_uri: queryRedirectUri, client_id: queryClientId } =
         query; // destructurate query params
+      console.log('query', query);
       const queryConsent = query?.consent === 'true'; // check if consent is present in query params
       const state = query?.state ? { state: query?.state } : {}; // checking if state query params is present, this var will be add in responses
-
+      console.log('queryRedirectUri', queryRedirectUri);
+      console.log('queryClientId', queryClientId);
       // if there is a client_id but not a redirect_uri we throw an error
       if (!queryRedirectUri && !!queryClientId)
         throw new Error('Missing "redirect_uri" query params');
@@ -114,10 +116,11 @@ export class AuthController {
           console.log('<login> End ask consent: <<<<<<<<<<<<<<<<<<<<<<<<<<<');
           console.log('');
           // TODO redirect consent page
-          return res.status(200).send({
+          res.status(200).send({
             error: 'consent_required',
             clientInfos: clientInfos,
           });
+          return;
         } else if (!consent && queryConsent) {
           // there is no consent in the db but there is in the query
           // so we will set the consent in the db

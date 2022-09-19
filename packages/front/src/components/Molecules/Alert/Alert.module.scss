@@ -8,24 +8,36 @@
     height: max-content;
     padding: spacing-rem(1);
 
-    &.default {
+    &.Default {
         background-color: var(--color-grey-light);
         color: var(--color-grey-dark);
     }
-    &.error {
+
+    &.Error {
         background-color: var(--color-alert-light);
-        color: var(--color-alert-dark);
+        color: var(--color-alert-text);
     }
-    &.info {
+
+    &.Info {
         background-color: var(--color-info-light);
         color: var(--color-info-dark);
     }
-    &.warning {
+
+    &.Warning {
         background-color: var(--color-warning-light);
         color: var(--color-warning-dark);
     }
-    &.success {
+
+    &.Success {
         background-color: var(--color-success-light);
         color: var(--color-success-dark);
+    }
+
+    &.Squared {
+        border-radius: 0;
+    }
+
+    &.Rounded {
+        border-radius: spacing-rem(1);
     }
 }

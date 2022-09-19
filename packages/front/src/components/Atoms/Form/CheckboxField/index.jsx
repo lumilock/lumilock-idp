@@ -52,7 +52,7 @@ function CheckboxField({
       <div className={styles.Checkbox}>
         <Icon
           ionIcon={isChecked ? IoCheckbox : IoSquareOutline}
-          size="xSmall"
+          size="tiny"
           onClick={() => handleClick(isChecked)}
           className={styles.CheckboxIcon}
         />
@@ -102,7 +102,7 @@ CheckboxField.defaultProps = {
   error: '',
   className: '',
   checked: false,
-  onChange: () => { },
+  onChange: () => {},
 };
 
 export default React.memo(CheckboxField);

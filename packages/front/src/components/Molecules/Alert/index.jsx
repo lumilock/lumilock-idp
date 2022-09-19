@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { capitalize } from '../../../services/Tools';
 import If from '../../Atoms/If';
-
 import styles from './Alert.module.scss';
 
 /**
  * Component that manage alert component message en severity
  */
-function Alert({ severity, title, children }) {
+function Alert({
+  severity, variant, title, children,
+}) {
   return (
-    <div className={`${styles.Root} ${styles[severity]}`}>
+    <div className={`${styles.Root} ${styles[capitalize(severity)]} ${styles[capitalize(variant)]}`}>
       <If condition={!!title}>
         <p className="subtitle2">{title}</p>
       </If>
@@ -26,10 +28,12 @@ Alert.propTypes = {
   ]),
   title: PropTypes.string,
   severity: PropTypes.oneOf(['error', 'info', 'success', 'warning', 'default']),
+  variant: PropTypes.oneOf(['squared', 'rounded']),
 };
 
 Alert.defaultProps = {
   severity: 'default',
+  variant: 'squared',
   title: '',
   children: undefined,
 };

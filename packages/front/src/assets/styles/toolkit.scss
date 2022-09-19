@@ -39,8 +39,7 @@ $color-grey-dark: #838383;
 
 $color-divider: #00000040;
 $color-text-primary: #212121;
-$color-text-secondary: #AAB4BE;
-$color-text-secondary: #AAB4BE;
+$color-text-secondary: #89929c;
 $color-text-disabled: rgba(255, 255, 255, 0.5);
 $color-text-icon: rgba(255, 255, 255, 0.5);
 
@@ -51,11 +50,11 @@ $transitionOut: cubic-bezier(0.215, 0.61, 0.355, 1);
 $base-font-size: 16px;
 
 @function trim-unit($value) {
-    @return  math.div($value, ($value * 0 + 1));
+    @return math.div($value, ($value * 0 + 1));
 }
 
 @function rem-calc($value) {
-    @return  math.div($value, trim-unit($base-font-size)) * 1rem;
+    @return math.div($value, trim-unit($base-font-size)) * 1rem;
 }
 
 @function spacing($value) {
