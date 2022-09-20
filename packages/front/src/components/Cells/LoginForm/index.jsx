@@ -38,9 +38,13 @@ function LoginForm({ setConsent }) {
     [searchParams, setSearchParams],
   );
 
+  /**
+   * Method used to send form information to the login api route
+   * @param {object} data on fields values
+   */
   const onSubmit = async (data) => {
     // try to loggin in
-    await Auth.login(data, getAllQuery())
+    await Auth.login(data, getAllQuery(searchParams))
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
           if (response.redirected && response.url) {
@@ -88,14 +92,14 @@ function LoginForm({ setConsent }) {
         {/* Fields */}
         <InputControlled
           control={control}
-          label="Identifiant"
+          label="Identifiant*"
           name="identity"
           type="text"
           placeholder="Entrez votre identifiant"
         />
         <InputControlled
           control={control}
-          label="Mot de passe"
+          label="Mot de passe*"
           name="password"
           type="password"
           placeholder="Entrez votre mot de passe"
@@ -109,7 +113,6 @@ function LoginForm({ setConsent }) {
           Se connecter
         </Button>
         <a href="?reset=true" className={`${styles.Link} body2`} onClick={navigateToReset}>Mot de passe oublier ?</a>
-
       </form>
     </div>
   );

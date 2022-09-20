@@ -31,6 +31,38 @@ export class AuthService {
     return null;
   }
 
+  /**
+   * Method used to retreave the email of a user by its identity
+   * Mainly used to reset a password
+   * @param {string} identity user identity (email or login)
+   * @returns {object} email or error
+   */
+  async getEmail(
+    identity: string,
+  ): Promise<{ status: string; message: string }> {
+    const user = await this.usersService.findByIdentity(identity);
+    // Checking if a user has been found
+    if (!user?.id) {
+      return {
+        status: 'NOT_FOUND',
+        message: 'No user associated to this identity',
+      };
+    }
+    // Response if the user has an email
+    const emailResponse = {
+      status: 'FOUND',
+      message: user?.email,
+    };
+    // Response if the user hasn't an email
+    const noEmailResponse = {
+      status: 'NO_EMAIL',
+      message: 'Any email is associated to this user',
+    };
+
+    // checking if this user has an associated email
+    return user?.email ? emailResponse : noEmailResponse;
+  }
+
   // generate authenticate jwa code
   // https://www.npmjs.com/package/jwa
   async authenticate(client: ClientsDTO, user: UsersDTO) {

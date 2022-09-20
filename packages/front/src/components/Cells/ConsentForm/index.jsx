@@ -15,6 +15,7 @@ import defaultValues from './defaultValues';
 import Logo from '../../../assets/images/Logo.svg';
 
 import styles from './ConsentForm.module.scss';
+import { getAllQuery } from '../../../services/Tools';
 
 function ConsentForm({ values, setConsent }) {
   // Router
@@ -26,27 +27,6 @@ function ConsentForm({ values, setConsent }) {
   const clientInfos = watch('clientInfos');
   // States
   const [errorMsg, setErrorMsg] = useState('');
-
-  /**
-   * Method to retreave all searchParams from the current address
-   * @returns {string[]} all searchParams from the current address
-   */
-  const getAllQuery = () => {
-    // save the iterator
-    const queryEntries = searchParams.entries();
-    // select first entry
-    let iterator = queryEntries.next();
-    // init return array
-    const querys = [];
-    // init max iter counter
-    let countOut = 0;
-    while (iterator.done === false && countOut < 50) {
-      querys.push(iterator.value);
-      iterator = queryEntries.next();
-      countOut += 1;
-    }
-    return querys;
-  };
 
   /**
    * Method used to leave the consent Form
@@ -66,7 +46,7 @@ function ConsentForm({ values, setConsent }) {
     const { identity, password, consent } = data;
 
     // try to loggin in with consent
-    await Auth.login({ identity, password, consent }, getAllQuery())
+    await Auth.login({ identity, password, consent }, getAllQuery(searchParams))
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
           if (response.redirected && response.url) {

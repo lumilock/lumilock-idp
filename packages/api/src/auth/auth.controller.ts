@@ -265,6 +265,27 @@ export class AuthController {
       .json(tokens);
   }
 
+  @Post('reset-password')
+  public async resetPassword(
+    @Request() req,
+    @Body() body,
+    @Res() res: Response,
+  ): Promise<any | undefined> {
+    const { identity }: { identity: string } = body;
+
+    const profileEmail = await this.serv.getEmail(identity);
+
+    // Success case only return the email and the status
+    if (profileEmail?.status === 'FOUND') {
+      return res.status(HttpStatus.OK).json(profileEmail?.message);
+    } else if (profileEmail?.status === 'NOT_FOUND') {
+      // Error case when no user exist
+      return res.status(HttpStatus.BAD_REQUEST).json(profileEmail?.message);
+    }
+    // All other errors case returning the error message
+    return res.status(HttpStatus.NO_CONTENT).json(profileEmail?.message);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('userinfo')
   public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {

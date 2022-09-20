@@ -16,6 +16,14 @@ const Auth = {
       body: null,
     });
   },
+  reset: (params) => fetch('/api/auth/reset-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(params),
+  }),
 };
 
 export default Auth;
