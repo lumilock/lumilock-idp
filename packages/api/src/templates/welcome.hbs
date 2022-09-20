@@ -1,0 +1,157 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lexend">
+  <style>
+    :root {
+      --color-black: #101524;
+    }
+
+    *,
+    *:after,
+    *:before {
+      padding: 0;
+      margin: 0;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      background-color: #f3f4f6;
+      position: relative;
+      display: block;
+      gap: 24px;
+      width: 100%;
+      height: 100%;
+      margin: auto;
+      padding: 32px;
+    }
+
+    .card {
+      position: relative;
+      display: block;
+      margin: auto;
+      background-color: white;
+      border-radius: 4px;
+      width: 512px;
+      padding: 24px 32px;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      position: relative;
+      display: block;
+      margin-bottom: 32px;
+    }
+
+    .logo>img {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .logo>h4 {
+      height: 48px;
+      line-height: 48px;
+      font-family: 'Lexend', serif;
+      padding-left: 4px;
+      font-weight: bold;
+      color: #101524 !important;
+      display: inline-block;
+      vertical-align: bottom;
+      top: 0;
+    }
+
+    .title {
+      position: relative;
+      display: block;
+      color: #101524 !important;
+      margin-bottom: 32px;
+    }
+
+    .title>h2 {
+      font-family: 'Lexend', serif;
+      font-weight: bold;
+      color: #101524 !important;
+      margin-bottom: 4px;
+    }
+
+    .title>p {
+      font-family: 'Lexend', serif;
+      font-weight: 200;
+      color: #101524 !important;
+      opacity: .8;
+    }
+
+    .actions {
+      position: relative;
+      display: block;
+      margin: auto;
+    }
+
+    .actions>a {
+      position: relative;
+      display: block;
+      text-align: center;
+      background-color: #101524 !important;
+      color: white;
+      font-family: 'Lexend', serif;
+      font-weight: 500;
+      padding: 16px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .footer {
+      position: relative;
+      display: block;
+      font-family: 'Lexend', serif;
+      font-weight: 200;
+      color: #101524 !important;
+      opacity: .8;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .footer>p {
+      margin-bottom: 8px;
+    }
+
+    .footer>a {
+      color: #101524 !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="logo">
+        <img src="../Logo.svg" alt="">
+        <h4>Topline</h4>
+      </div>
+      <div class="title">
+        <h2>Changer votre mot de passe ?</h2>
+        <p>
+          {{code}} {{username}}
+          Vous avez fait une demande de réinitialisation de mot de passe
+          sur le site topline. Si ce n&apos;est pas le cas ignorez cet email.
+        </p>
+      </div>
+      <div class="actions">
+        <a href="#">Nouveau mot de passe</a>
+      </div>
+    </div>
+    <div class="footer">
+      <p>Envoyé grâce à Lumilock pour Topline</p>
+      <a href="https://192.168.99.1:3001/">https://192.168.99.1:3001/</a>
+    </div>
+  </div>
+</body>
+
+</html>

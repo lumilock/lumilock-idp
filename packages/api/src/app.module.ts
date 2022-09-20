@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configService } from './config/config.service';
@@ -13,7 +15,8 @@ import { CodesModule } from './codes/codes.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
-    ConfigModule.forRoot(), // so that we can pull in config
+    ConfigModule.forRoot(),
+    MailerModule.forRoot(configService.getMailerConfig()),
     AuthModule,
     UsersModule,
     ClientsModule,

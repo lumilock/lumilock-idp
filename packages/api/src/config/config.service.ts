@@ -1,5 +1,6 @@
 // src/config/config.service.ts
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -51,6 +52,46 @@ class ConfigService {
       },
 
       ssl: this.isProduction(),
+    };
+  }
+
+  // Function to configure the SMTP mail serveur
+  // here an exemple with GMAIL
+  public getMailerConfig() {
+    // https://alexb72.medium.com/how-to-send-emails-using-a-nodemailer-gmail-and-oauth2-fe19d66451f9
+    return {
+      transport: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          type: 'OAuth2',
+          user: this.getValue('SENDER_EMAIL_ADDRESS'),
+          clientId: this.getValue('MAILING_SERVICE_CLIENT_ID'),
+          clientSecret: this.getValue('MAILING_SERVICE_CLIENT_SECRET'),
+          refreshToken: this.getValue('MAILING_SERVICE_REFRESH_TOKEN'),
+          accessToken: this.getValue('MAILING_SERVICE_ACCESS_TOKEN'),
+          expires: new Date(this.getValue('MAILING_EXPIRES_IN')),
+        },
+      },
+      defaults: {
+        from: this.getValue('MAILING_DEFAULT_FROM'),
+      },
+      preview: true,
+      template: {
+        dir: __dirname + '/../templates',
+        adapter: new HandlebarsAdapter(/* helpers */ undefined, {
+          inlineCssEnabled: true,
+          /** See https://www.npmjs.com/package/inline-css#api */
+          inlineCssOptions: {
+            url: ' ',
+            preserveMediaQueries: true,
+          },
+        }),
+        options: {
+          strict: true,
+        },
+      },
     };
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { MailerService } from '@nestjs-modules/mailer';
 import * as jwa from 'jwa';
 
 import { UsersService } from '../users/users.service';
@@ -18,6 +19,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private codesService: CodesService,
+    private readonly mailerService: MailerService,
   ) {}
 
   // Function to validate if the user is auth
@@ -58,6 +60,21 @@ export class AuthService {
       status: 'NO_EMAIL',
       message: 'Any email is associated to this user',
     };
+
+    this.mailerService
+      .sendMail({
+        to: 'thibaud.perrin6@gmail.com',
+        // from: 'jean.perrin.topline@gmail.com',
+        subject: 'Testing Nest Mailermodule with template ✔',
+        template: 'welcome', // The `.pug`, `.ejs` or `.hbs` extension is appended automatically.
+        context: {
+          // Data to be sent to template engine.
+          code: 'cf1a3f828287',
+          username: 'john doe',
+        },
+      })
+      .then(console.log)
+      .catch(console.log);
 
     // checking if this user has an associated email
     return user?.email ? emailResponse : noEmailResponse;
