@@ -50,7 +50,7 @@ TileMask.defaultProps = {
 function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
   const ref = useRef(null);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-  const [interval, setInterval] = useState(null);
+  const [interval, setIntrvl] = useState(null);
   const ballsArray = useMemo(() => Array.from({ length: ballsNumber }, (_v, k) => k), [ballsNumber]);
   const gridColumns = useMemo(() => Array.from({ length: Math.ceil((windowSize?.width || 0) / 256) }, (_v, k) => k), [windowSize?.width]);
   const gridRows = useMemo(() => Array.from({ length: Math.ceil((windowSize?.height || 0) / 256) }, (_v, k) => k), [windowSize?.height]);
@@ -127,7 +127,7 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
       const id = window.setInterval(() => {
         setNewPositions();
       }, 5000 / 5);
-      setInterval(id);
+      setIntrvl(id);
     },
     [ballsNumber, maxSize, minSize, move, setNewPositions],
   );
@@ -172,7 +172,7 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
 
   useEffect(() => () => {
     window.clearInterval(interval);
-    setInterval(null);
+    setIntrvl(null);
   }, [interval, setNewPositions]);
 
   return (

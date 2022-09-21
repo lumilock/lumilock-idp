@@ -28,6 +28,34 @@ export class UsersService {
       });
   }
 
+  /**
+   * Find user by identity and update password
+   * @param {string} identity the email or login to identify the user
+   * @param {string} password the new password
+   * @returns {string} the email of the updated user
+   */
+  async ChangePwdByIdentity(
+    identity: string,
+    lastChangedDateTime: number,
+    password: string,
+  ): Promise<string> {
+    const uptd = await this.repo
+      .createQueryBuilder('user')
+      .update(User)
+      .set({ password }) // TODO hash
+      .where('email = :identity OR login = :identity', { identity })
+      // Used to check if data has already been updated
+      .andWhere('last_changed_date_time::timestamp(3) = :lcdt', {
+        lcdt: new Date(lastChangedDateTime)
+          .toISOString()
+          .slice(0, 23)
+          .replace('T', ' '),
+      })
+      .returning('email')
+      .execute();
+    return uptd?.raw?.[0]?.email || '';
+  }
+
   // Find user by id
   async findById(id: string): Promise<UsersDTO | undefined> {
     return this.repo.findOne(id).then((user) => {

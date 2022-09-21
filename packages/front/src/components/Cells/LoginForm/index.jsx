@@ -26,12 +26,12 @@ function LoginForm({ setConsent }) {
   // States
   const [errorMsg, setErrorMsg] = useState('');
 
-  const navigateToReset = useCallback(
-    (e) => {
+  const navigateTo = useCallback(
+    (e, page) => {
       const paramsEntries = getAllQuery(searchParams);
       const params = Object?.fromEntries(paramsEntries) || {};
 
-      setSearchParams({ ...params, reset: true });
+      setSearchParams({ ...params, page });
       e.preventDefault();
       return false;
     },
@@ -64,6 +64,7 @@ function LoginForm({ setConsent }) {
         // if success but need consent for relaying party
         if (response?.error === 'consent_required') {
           setConsent({ ...data, consent: false, clientInfos: response?.clientInfos });
+          navigateTo('consent');
         }
       })
       .catch((err) => {
@@ -112,7 +113,7 @@ function LoginForm({ setConsent }) {
         >
           Se connecter
         </Button>
-        <a href="?reset=true" className={`${styles.Link} body2`} onClick={navigateToReset}>Mot de passe oublier ?</a>
+        <a href="?reset=true" className={`${styles.Link} body2`} onClick={(e) => navigateTo(e, 'reset')}>Mot de passe oublier ?</a>
       </form>
     </div>
   );

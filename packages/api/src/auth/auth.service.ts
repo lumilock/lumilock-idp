@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
 import { CodesDTO } from '../codes/codes.dto';
-import { base64Encode, bin2hex, randomBytes } from '../utils';
+import { bin2hex, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/users.dto';
 import { ClientsDTO } from '../clients/clients.dto';
@@ -39,7 +39,7 @@ export class AuthService {
    * @param {string} identity user identity (email or login)
    * @returns {object} email or error
    */
-  async getEmail(
+  async sendResetEmail(
     identity: string,
   ): Promise<{ status: string; message: string }> {
     const user = await this.usersService.findByIdentity(identity);
@@ -56,13 +56,18 @@ export class AuthService {
     };
 
     if (user?.email) {
-      const payload = { identity: identity };
+      // We generate a token (3min) with the current identity inside
+      const payload = {
+        identity: identity, // To retreave the user
+        lastChangedDateTime: user?.lastChangedDateTime?.getTime(), // To block multi modifications
+      };
       const token = this.jwtService.sign(payload, {
-        expiresIn: 20 + 's',
+        expiresIn: 60 * 3 + 's',
       });
+      // sending the email<
       await this.mailerService
         .sendMail({
-          to: 'thibaud.perrin6@gmail.com',
+          to: user?.email,
           // from: 'jean.perrin.topline@gmail.com',
           subject: 'Demande de changement de mot de passe 🔒',
           template: 'resetPassword',
@@ -71,7 +76,7 @@ export class AuthService {
             src: 'https://www.mynetfair.com/_files/images/dynamic/products/tmp/200_200_customer_logos_100017583_1283951388_Jean_perrin.jpg', // TODO update with lumilock logo
             appName: process?.env?.APP_NAME || 'Lumilock',
             frontUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
-            token: `${process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI}?reset-password=true&token=${token}`,
+            token: `${process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI}?page=reset-password&token=${token}`,
           },
         })
         .then(() => {
@@ -81,8 +86,7 @@ export class AuthService {
             message: user?.email,
           };
         })
-        .catch((err) => {
-          console.log('error', err);
+        .catch(() => {
           response = {
             status: 'EMAIL_NOT_SEND',
             message: 'Unable to send email, an error has occurred.',
@@ -97,6 +101,58 @@ export class AuthService {
     }
 
     return response;
+  }
+
+  async changePassword(
+    password: string,
+    passwordConfirmed: string,
+    token: string,
+    geoString: string,
+    deviceString: string,
+  ): Promise<{ status: string; message: string }> {
+    try {
+      // Check the validity and decode the token
+      const valide = this.jwtService.verify(token);
+      if (valide && password === passwordConfirmed) {
+        if (valide?.identity) {
+          const updatedEmail = await this.usersService.ChangePwdByIdentity(
+            valide?.identity,
+            valide?.lastChangedDateTime,
+            password,
+          );
+          if (!updatedEmail) {
+            await this.mailerService.sendMail({
+              to: updatedEmail,
+              subject: 'Votre mot de passe à été changé 🎉',
+              template: 'resetPassword',
+              context: {
+                // Data to be sent to template engine.
+                src: 'https://www.mynetfair.com/_files/images/dynamic/products/tmp/200_200_customer_logos_100017583_1283951388_Jean_perrin.jpg', // TODO update with lumilock logo
+                appName: process?.env?.APP_NAME || 'Lumilock',
+                frontUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
+                token: `${process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI}?page=reset-password&token=${token}`,
+                location: geoString || 'Not found',
+                device: deviceString || 'Not found',
+              },
+            });
+            return {
+              status: 'SUCCESS',
+              message: 'The password has been changed',
+            };
+          }
+          return {
+            status: 'FAILED',
+            message: 'Impossible to update the password',
+          };
+        }
+      }
+    } catch (error) {
+      return {
+        status: 'FORBIDDEN',
+        message: 'The token is invalid or has expired',
+      };
+    }
+    return { status: 'BAD_REQUEST', message: 'An error occurred' };
   }
 
   // generate authenticate jwa code

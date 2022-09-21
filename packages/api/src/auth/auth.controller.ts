@@ -12,9 +12,13 @@ import {
   HttpStatus,
   Res,
   Body,
+  Headers,
+  Req,
 } from '@nestjs/common';
 import { Response } from 'express';
-// import { UsersDTO } from '../users/users.dto';
+import * as DeviceDetector from 'device-detector-js';
+import * as geoip from 'geoip-lite';
+
 import * as querystring from 'query-string';
 import { AuthService } from './auth.service';
 import { AuthorizeDTO } from './authorize.dto';
@@ -267,23 +271,71 @@ export class AuthController {
 
   @Post('reset-password')
   public async resetPassword(
-    @Request() req,
     @Body() body,
     @Res() res: Response,
   ): Promise<any | undefined> {
     const { identity }: { identity: string } = body;
 
-    const profileEmail = await this.serv.getEmail(identity);
+    const emailresponse = await this.serv.sendResetEmail(identity);
 
     // Success case only return the email and the status
-    if (profileEmail?.status === 'FOUND') {
-      return res.status(HttpStatus.OK).json(profileEmail?.message);
-    } else if (profileEmail?.status === 'NOT_FOUND') {
+    if (emailresponse?.status === 'FOUND') {
+      return res.status(HttpStatus.OK).json(emailresponse?.message);
+    } else if (emailresponse?.status === 'NOT_FOUND') {
       // Error case when no user exist
-      return res.status(HttpStatus.BAD_REQUEST).json(profileEmail?.message);
+      return res.status(HttpStatus.BAD_REQUEST).json(emailresponse?.message);
     }
     // All other errors case returning the error message
-    return res.status(HttpStatus.NO_CONTENT).json(profileEmail?.message);
+    return res.status(HttpStatus.NO_CONTENT).json(emailresponse?.message);
+  }
+
+  @Post('change-password')
+  public async changePassword(
+    @Req() req,
+    @Headers() headers,
+    @Body() body,
+    @Res() res: Response,
+  ): Promise<any | undefined> {
+    const {
+      password,
+      passwordConfirmed,
+      token,
+    }: { password: string; passwordConfirmed: string; token: string } = body;
+    // device and ip detector
+    const deviceDetector = new DeviceDetector();
+    const userAgent = headers['user-agent'];
+    const device = deviceDetector.parse(userAgent);
+    const geo = geoip.lookup(req.ip);
+    // formatting device and geo
+    const deviceString = [
+      device?.client?.name || '',
+      device?.os?.name || '',
+      device?.device?.type || '',
+      device?.device?.brand || '',
+      device?.device?.model || '',
+    ]
+      .join(' ')
+      .trim();
+    const geoString = [geo?.city || '', geo?.region || '', geo?.country || '']
+      .join(' ')
+      .trim();
+
+    const passwordResponse = await this.serv.changePassword(
+      password,
+      passwordConfirmed,
+      token,
+      geoString,
+      deviceString,
+    );
+    if (passwordResponse?.status === 'SUCCESS') {
+      return res.status(HttpStatus.OK).json(passwordResponse?.message);
+    } else if (passwordResponse?.status === 'FORBIDDEN') {
+      // Returning an error when the token is invalid or has expired
+      return res.status(HttpStatus.FORBIDDEN).json(passwordResponse?.message);
+    }
+
+    // All other errors case returning the error message
+    return res.status(HttpStatus.BAD_REQUEST).json(passwordResponse?.message);
   }
 
   @UseGuards(JwtAuthGuard)

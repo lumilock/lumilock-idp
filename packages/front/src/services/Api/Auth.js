@@ -24,6 +24,14 @@ const Auth = {
     },
     body: JSON.stringify(params),
   }),
+  changePassword: (params) => fetch('/api/auth/change-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(params),
+  }),
 };
 
 export default Auth;

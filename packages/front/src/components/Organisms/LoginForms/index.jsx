@@ -3,7 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 
 import { useEffectOnce, usePrevious, useUpdate } from '../../../services/Hooks';
 import { Carousel, CarouselItem } from '../../Molecules';
-import { ConsentForm, LoginForm, ResetPassword } from '../../Cells';
+import {
+  ConsentForm, LoginForm, PasswordForm, ResetPassword,
+} from '../../Cells';
 
 import styles from './LoginForms.module.scss';
 import { If } from '../../Atoms';
@@ -17,7 +19,7 @@ function LoginForms() {
   const [consent, setConsent] = useState({});
   const prevIndex = usePrevious(index);
 
-  const reset = searchParams.get('reset');
+  const page = searchParams.get('page');
 
   /**
    * Method that display the enter direction depending on previous and next index
@@ -35,21 +37,27 @@ function LoginForms() {
     [index, prevIndex],
   );
 
+  // Checking page
   useUpdate(() => {
-    if (consent?.clientInfos?.id) {
-      setIndex(1);
-    } else {
-      setIndex(0);
+    switch (page) {
+      case 'consent': {
+        setIndex(1);
+        break;
+      }
+      case 'reset': {
+        setIndex(2);
+        break;
+      }
+      case 'reset-password': {
+        setIndex(3);
+        break;
+      }
+      default: {
+        setIndex(0);
+        break;
+      }
     }
-  }, [consent]);
-
-  useUpdate(() => {
-    if (reset) {
-      setIndex(2);
-    } else {
-      setIndex(0);
-    }
-  }, [reset]);
+  }, [page]);
 
   // Waiting the mounted state
   useEffectOnce(() => {
@@ -68,6 +76,9 @@ function LoginForms() {
           </CarouselItem>
           <CarouselItem enter={calcEnter()} leave={calcLeave()}>
             <ResetPassword />
+          </CarouselItem>
+          <CarouselItem enter={calcEnter()} leave={calcLeave()}>
+            <PasswordForm />
           </CarouselItem>
         </Carousel>
       </If>

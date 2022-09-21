@@ -1,19 +1,19 @@
 import React, { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IoIosArrowRoundBack, IoIosSend } from 'react-icons/io';
+import { useForm } from 'react-hook-form';
+import { IoIosArrowRoundBack, IoIosCheckmark } from 'react-icons/io';
 
-import { If, InputControlled } from '../../Atoms';
-import { Alert, Button } from '../../Molecules';
+import { getAllQuery } from '../../../services/Tools';
 
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
-import styles from './ResetPassword.module.scss';
-import { getAllQuery } from '../../../services/Tools';
+import styles from './PasswordForm.module.scss';
+import { If, InputControlled } from '../../Atoms';
+import { Alert, Button } from '../../Molecules';
 import { Auth } from '../../../services/Api';
 
-function ResetPassword() {
+function PasswordForm() {
   // Router
   const [searchParams, setSearchParams] = useSearchParams();
   // React hook form
@@ -32,7 +32,7 @@ function ResetPassword() {
       reset({ ...defaultValues });
       // Change the url params, removing {reset: true}
       const paramsEntries = getAllQuery(searchParams);
-      const { page: _, ...params } = Object?.fromEntries(paramsEntries) || {};
+      const { page: _, token: __, ...params } = Object?.fromEntries(paramsEntries) || {};
 
       setSearchParams({ ...params });
     },
@@ -40,37 +40,30 @@ function ResetPassword() {
   );
 
   /**
-   * Method used to send an reset email to the current user
+   * Method used to change the password of the current user present in the token
    * @param {object} data all form field values
    */
   const onSubmit = async (data) => {
+    const token = searchParams.get('token');
+    setMsg('');
     // try to reset the password
-    await Auth.reset({ identity: data?.resetIdentity })
+    await Auth.changePassword({ ...data, token })
       .then(async (response) => {
         if ([200, 201, 202].includes(response?.status)) {
           return response?.json();
         }
-        if (response?.status === 204) {
-          throw new Error('NO_CONTENT');
-        } else if (response?.status === 400) {
-          throw new Error('BAD_REQUEST');
-        } else {
-          throw new Error(response?.statusText);
-        }
+        throw new Error(response?.statusText);
       })
-      .then((response) => {
-        setMsg({ severity: 'success', message: `Un email à été envoyé à l'adresse: "${response}"` });
+      .then(() => {
+        setMsg({ severity: 'success', message: 'Votre mot de passe à correctement été changé' });
+        // goBack(); // TODO timer
       })
       .catch((err) => {
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
-          console.error('ERROR: [onSubmit - Auth.reset]', err);
+          console.error('ERROR: [onSubmit - Auth.changePassword]', err);
         }
-        if (err?.message === 'NO_CONTENT') {
-          setMsg({ severity: 'error', message: `L'utilisateur "${data?.resetIdentity}" n'a pas d'email associé à son compte, veuillez contacter un administrateur.` });
-        } else if (err?.message === 'BAD_REQUEST') {
-          setMsg({ severity: 'error', message: `Aucun utilisateur n'est associé à cette identité : "${data?.resetIdentity}".` });
-        }
+        setMsg({ severity: 'error', message: 'Impossible de mettre à jour le mot de passe, la demande à expiré ou déjà été réalisé.' });
       });
   };
 
@@ -79,8 +72,13 @@ function ResetPassword() {
       <form className={styles.Form} method="post" action="#" onSubmit={handleSubmit(onSubmit)}>
         {/* Title section */}
         <div className={styles.Header}>
-          <h4>Réinitialisation</h4>
-          <p className={`${styles.Subtitle} subtitle1`}>Vous avez oublié votre mot de passe ?</p>
+          <h4>
+            Nouveau
+            <br />
+            mot de passe
+
+          </h4>
+          <p className={`${styles.Subtitle} subtitle1`}>Choisissez un nouveau mot de passe et confirmez le.</p>
         </div>
         <If condition={!!msg?.message}>
           <Alert
@@ -95,23 +93,18 @@ function ResetPassword() {
         {/* Fields */}
         <InputControlled
           control={control}
-          label="Identifiant*"
-          name="resetIdentity"
-          type="text"
-          placeholder="Entrez votre identifiant"
+          label="Mot de passe*"
+          name="password"
+          type="password"
+          placeholder="Entrez votre nouveau mot de passe"
         />
-
-        {/* Info */}
-        <div className={styles.Disclaimer}>
-          <p className="subtitle1">
-            Pour récupérer votre compte
-          </p>
-          <p className="body2">
-            Entrez l&apos;identifiant associée à votre compte
-            et nous vous enverrons un lien pour réinitialiser votre mot de passe.
-            Si vous n&apos;avez pas de compte, contactez un administrateur.
-          </p>
-        </div>
+        <InputControlled
+          control={control}
+          label="Confirmer le mot de passe*"
+          name="passwordConfirmed"
+          type="password"
+          placeholder="Entrez à nouveau votre mot de passe"
+        />
 
         {/* Actions */}
         <div className={styles.Actions}>
@@ -129,9 +122,9 @@ function ResetPassword() {
             color="black"
             loading={isSubmitting}
             type="submit"
-            endIcon={IoIosSend}
+            endIcon={IoIosCheckmark}
           >
-            Envoyer
+            Valider
           </Button>
         </div>
       </form>
@@ -139,4 +132,4 @@ function ResetPassword() {
   );
 }
 
-export default React.memo(ResetPassword);
+export default React.memo(PasswordForm);

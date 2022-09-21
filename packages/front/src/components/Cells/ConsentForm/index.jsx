@@ -19,7 +19,7 @@ import { getAllQuery } from '../../../services/Tools';
 
 function ConsentForm({ values, setConsent }) {
   // Router
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   // React hook form
   const {
     handleSubmit, control, formState: { isSubmitting }, watch, reset,
@@ -36,8 +36,12 @@ function ConsentForm({ values, setConsent }) {
     () => {
       reset({ ...defaultValues });
       setConsent(undefined);
+      // update the page value in searchParams
+      const paramsEntries = getAllQuery(searchParams);
+      const { reset: _, ...params } = Object?.fromEntries(paramsEntries) || {};
+      setSearchParams({ ...params });
     },
-    [reset, setConsent],
+    [reset, searchParams, setConsent, setSearchParams],
   );
 
   const onSubmit = async (data) => {
