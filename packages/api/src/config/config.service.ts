@@ -79,7 +79,7 @@ class ConfigService {
       },
       preview: true,
       template: {
-        dir: __dirname + '/../templates',
+        dir: __dirname + '/../mail/templates',
         adapter: new HandlebarsAdapter(/* helpers */ undefined, {
           inlineCssEnabled: true,
           /** See https://www.npmjs.com/package/inline-css#api */

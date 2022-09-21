@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
 import { CodesDTO } from '../codes/codes.dto';
-import { bin2hex, randomBytes } from '../utils';
+import { base64Encode, bin2hex, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/users.dto';
 import { ClientsDTO } from '../clients/clients.dto';
@@ -50,34 +50,53 @@ export class AuthService {
         message: 'No user associated to this identity',
       };
     }
-    // Response if the user has an email
-    const emailResponse = {
-      status: 'FOUND',
-      message: user?.email,
-    };
-    // Response if the user hasn't an email
-    const noEmailResponse = {
-      status: 'NO_EMAIL',
-      message: 'Any email is associated to this user',
+    let response = {
+      status: 'NO_EMAIL_SERVICE',
+      message: 'This server is not allowed to send emails.',
     };
 
-    this.mailerService
-      .sendMail({
-        to: 'thibaud.perrin6@gmail.com',
-        // from: 'jean.perrin.topline@gmail.com',
-        subject: 'Testing Nest Mailermodule with template ✔',
-        template: 'welcome', // The `.pug`, `.ejs` or `.hbs` extension is appended automatically.
-        context: {
-          // Data to be sent to template engine.
-          code: 'cf1a3f828287',
-          username: 'john doe',
-        },
-      })
-      .then(console.log)
-      .catch(console.log);
+    if (user?.email) {
+      const payload = { identity: identity };
+      const token = this.jwtService.sign(payload, {
+        expiresIn: 20 + 's',
+      });
+      await this.mailerService
+        .sendMail({
+          to: 'thibaud.perrin6@gmail.com',
+          // from: 'jean.perrin.topline@gmail.com',
+          subject: 'Demande de changement de mot de passe 🔒',
+          template: 'resetPassword',
+          context: {
+            // Data to be sent to template engine.
+            src: 'https://www.mynetfair.com/_files/images/dynamic/products/tmp/200_200_customer_logos_100017583_1283951388_Jean_perrin.jpg', // TODO update with lumilock logo
+            appName: process?.env?.APP_NAME || 'Lumilock',
+            frontUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
+            token: `${process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI}?reset-password=true&token=${token}`,
+          },
+        })
+        .then(() => {
+          // Response if the user has an email
+          response = {
+            status: 'FOUND',
+            message: user?.email,
+          };
+        })
+        .catch((err) => {
+          console.log('error', err);
+          response = {
+            status: 'EMAIL_NOT_SEND',
+            message: 'Unable to send email, an error has occurred.',
+          };
+        });
+    } else {
+      // Response if the user hasn't an email
+      response = {
+        status: 'NO_EMAIL',
+        message: 'Any email is associated to this user',
+      };
+    }
 
-    // checking if this user has an associated email
-    return user?.email ? emailResponse : noEmailResponse;
+    return response;
   }
 
   // generate authenticate jwa code

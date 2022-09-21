@@ -94,16 +94,23 @@
             margin: auto;
         }
 
-        .actions>a {
+        .actions>.button {
             position: relative;
             display: block;
             text-align: center;
             background-color: #101524 !important;
             color: white;
+            border-radius: 8px;
+        }
+
+        .actions>.button>a {
+            position: relative;
+            display: block;
+            text-align: center;
+            color: white;
             font-family: 'Lexend', serif;
             font-weight: 500;
             padding: 16px 32px;
-            border-radius: 8px;
             text-decoration: none;
         }
 
@@ -143,7 +150,9 @@
                 </p>
             </div>
             <div class="actions">
-                <a href="#">Nouveau mot de passe</a>
+                <div class="button">
+                    <a href="#">Nouveau mot de passe</a>
+                </div>
             </div>
         </div>
         <div class="footer">
