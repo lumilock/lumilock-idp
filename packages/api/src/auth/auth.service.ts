@@ -120,21 +120,37 @@ export class AuthService {
             valide?.lastChangedDateTime,
             password,
           );
-          if (!updatedEmail) {
+          console.log(
+            'updatedEmail',
+            updatedEmail ? 'true' : 'false',
+            updatedEmail,
+          );
+          if (!!updatedEmail) {
+            // https://postmarkapp.com/guides/password-reset-email-best-practices
             await this.mailerService.sendMail({
               to: updatedEmail,
               subject: 'Votre mot de passe à été changé 🎉',
-              template: 'resetPassword',
+              template: 'passwordUpdated',
               context: {
                 // Data to be sent to template engine.
                 src: 'https://www.mynetfair.com/_files/images/dynamic/products/tmp/200_200_customer_logos_100017583_1283951388_Jean_perrin.jpg', // TODO update with lumilock logo
                 appName: process?.env?.APP_NAME || 'Lumilock',
-                frontUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
-                token: `${process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI}?page=reset-password&token=${token}`,
-                location: geoString || 'Not found',
+                when: new Date(Date.now()).toLocaleString(undefined, {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  second: 'numeric',
+                }),
+                where: geoString || 'Not found',
                 device: deviceString || 'Not found',
+                accountUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
+                frontUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
               },
             });
+            console.log('success');
             return {
               status: 'SUCCESS',
               message: 'The password has been changed',

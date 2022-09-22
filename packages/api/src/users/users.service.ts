@@ -45,7 +45,7 @@ export class UsersService {
       .set({ password }) // TODO hash
       .where('email = :identity OR login = :identity', { identity })
       // Used to check if data has already been updated
-      .andWhere('last_changed_date_time::timestamp(3) = :lcdt', {
+      .andWhere('LEFT(last_changed_date_time::text, 23) = :lcdt', {
         lcdt: new Date(lastChangedDateTime)
           .toISOString()
           .slice(0, 23)
