@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import * as format from 'pg-format';
+import * as bcrypt from 'bcrypt';
 
 import { oidcConstants } from '../auth/oidcConstants';
 import { User } from '../model/users.entity';
@@ -39,10 +40,15 @@ export class UsersService {
     lastChangedDateTime: number,
     password: string,
   ): Promise<string> {
+    // Hashing password
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(password, salt);
+
     const uptd = await this.repo
       .createQueryBuilder('user')
       .update(User)
-      .set({ password }) // TODO hash
+      .set({ password: hash })
       .where('email = :identity OR login = :identity', { identity })
       // Used to check if data has already been updated
       .andWhere('LEFT(last_changed_date_time::text, 23) = :lcdt', {

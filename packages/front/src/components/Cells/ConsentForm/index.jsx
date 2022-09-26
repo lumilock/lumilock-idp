@@ -53,10 +53,10 @@ function ConsentForm({ values, setConsent }) {
     await Auth.login({ identity, password, consent }, getAllQuery(searchParams))
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
-          if (response.redirected && response.url) {
-            // data.redirect contains the string URL to redirect to
-            window.history.back();
-          }
+          // if (response.redirected && response.url) {
+          // data.redirect contains the string URL to redirect to
+          // window.history.back();
+          // }
           return response?.json();
         }
         if (response?.status === 401) {
@@ -67,7 +67,9 @@ function ConsentForm({ values, setConsent }) {
       })
       .then((response) => {
         setErrorMsg('');
-        goBack();
+        if (response?.frontUri) {
+          window.location.assign(response?.frontUri);
+        }
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error('SUCCESS: [onSubmit - Auth.login]', response);

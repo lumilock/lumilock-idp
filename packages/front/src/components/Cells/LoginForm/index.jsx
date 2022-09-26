@@ -27,15 +27,22 @@ function LoginForm({ setConsent }) {
   const [errorMsg, setErrorMsg] = useState('');
 
   const navigateTo = useCallback(
-    (e, page) => {
+    (page) => {
       const paramsEntries = getAllQuery(searchParams);
       const params = Object?.fromEntries(paramsEntries) || {};
 
       setSearchParams({ ...params, page });
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const navigateAction = useCallback(
+    (e, page) => {
+      navigateTo(page);
       e.preventDefault();
       return false;
     },
-    [searchParams, setSearchParams],
+    [navigateTo],
   );
 
   /**
@@ -47,10 +54,10 @@ function LoginForm({ setConsent }) {
     await Auth.login(data, getAllQuery(searchParams))
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
-          if (response.redirected && response.url) {
-            // data.redirect contains the string URL to redirect to
-            window.history.back();
-          }
+          // if (response.redirected && response.url) {
+          // data.redirect contains the string URL to redirect to
+          // window.history.back();
+          // }
           return response?.json();
         }
         if (response?.status === 401) {
@@ -65,6 +72,8 @@ function LoginForm({ setConsent }) {
         if (response?.error === 'consent_required') {
           setConsent({ ...data, consent: false, clientInfos: response?.clientInfos });
           navigateTo('consent');
+        } else if (response?.frontUri) {
+          window.location.assign(response?.frontUri);
         }
       })
       .catch((err) => {
@@ -113,7 +122,7 @@ function LoginForm({ setConsent }) {
         >
           Se connecter
         </Button>
-        <a href="?reset=true" className={`${styles.Link} body2`} onClick={(e) => navigateTo(e, 'reset')}>Mot de passe oublier ?</a>
+        <a href="?reset=true" className={`${styles.Link} body2`} onClick={(e) => navigateAction(e, 'reset')}>Mot de passe oublier ?</a>
       </form>
     </div>
   );

@@ -1,3 +1,12 @@
+import * as bcrypt from 'bcrypt';
+
+const hashPassword = (password) => {
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
+  return hash;
+};
+
 // Function getting user data with address as json object and
 // transform it into two array of array.
 // first : array of users
@@ -32,7 +41,7 @@ export default async (data) => {
         [
           u?.uniqueId ?? null,
           u?.id ?? null,
-          u?.password === undefined ? '$undefined$' : u.password,
+          u?.password === undefined ? '$undefined$' : hashPassword(u.password),
           u?.givenName === undefined ? '$undefined$' : u.givenName,
           u?.familyName === undefined ? '$undefined$' : u.familyName,
           u?.middleName === undefined ? '$undefined$' : u.middleName,

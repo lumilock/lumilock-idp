@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as jwa from 'jwa';
+import * as bcrypt from 'bcrypt';
 
 import { UsersService } from '../users/users.service';
 import { CodesService } from '../codes/codes.service';
@@ -22,13 +23,22 @@ export class AuthService {
     private readonly mailerService: MailerService,
   ) {}
 
-  // Function to validate if the user is auth
+  /**
+   * Method to validate if the user can be auth
+   * checking his identity and his password
+   *  */
   async validateUser(identity: string, pass: string): Promise<any> {
+    // retreaving a user by identity
     const user = await this.usersService.findByIdentity(identity);
-    if (user && user.password === pass) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
+    // checking if we retreave the user
+    if (user) {
+      // using bcrypt to validate the password
+      const isMatch = await bcrypt.compare(pass, user.password);
+      if (isMatch) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...result } = user; // return everything except the password
+        return result;
+      }
     }
     return null;
   }
@@ -120,11 +130,7 @@ export class AuthService {
             valide?.lastChangedDateTime,
             password,
           );
-          console.log(
-            'updatedEmail',
-            updatedEmail ? 'true' : 'false',
-            updatedEmail,
-          );
+
           if (!!updatedEmail) {
             // https://postmarkapp.com/guides/password-reset-email-best-practices
             await this.mailerService.sendMail({
