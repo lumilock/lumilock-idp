@@ -1,4 +1,6 @@
-// authorize.dto.ts
+// claims.dto.ts
+// https://openid.net/specs/openid-connect-core-1_0.html#IndividualClaimsRequests
+// https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -8,10 +10,9 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { AddressDTO } from '../users/address.dto';
 
-// https://openid.net/specs/openid-connect-core-1_0.html#IndividualClaimsRequests
-// https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+import { AddressDTO } from '../../users/address.dto';
+
 export class ClaimsDTO implements Readonly<ClaimsDTO> {
   /**
    * Subject - Identifier for the End-User at the Issuer.

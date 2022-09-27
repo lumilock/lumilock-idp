@@ -17,17 +17,16 @@ import {
 import { Response } from 'express';
 import * as DeviceDetector from 'device-detector-js';
 import * as geoip from 'geoip-lite';
-
 import * as querystring from 'query-string';
-import { AuthService } from './auth.service';
-import { AuthorizeDTO } from './authorize.dto';
-import { LocalAuthGuard } from './local-auth.guard';
+
+import { AuthorizeDTO } from './dto';
+import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { oidcConstants } from './oidcConstants';
+import { AuthService } from './auth.service';
 import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
 import { CodesDTO } from '../codes/codes.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
 // import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
 
 @Controller('auth')

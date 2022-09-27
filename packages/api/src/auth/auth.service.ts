@@ -213,15 +213,13 @@ export class AuthService {
     this.codesService.checkExpiration(client?.id);
 
     // 3. saved it in db
-    await this.codesService
-      .create(
-        CodesDTO.from({
-          code: input,
-          client: ClientsDTO.from({ ...client, secret: '' }),
-          user,
-        }),
-      )
-      .then((r) => (console.log('done ->', r.code, r.client, r.user), r));
+    await this.codesService.create(
+      CodesDTO.from({
+        code: input,
+        client: ClientsDTO.from({ ...client, secret: '' }),
+        user,
+      }),
+    );
 
     // 4. encode it before send it
     const signature = hmac.sign(input, oidcConstants.secretCodeGenerator);

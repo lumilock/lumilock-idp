@@ -1,4 +1,5 @@
 // authorize.dto.ts
+// https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -9,9 +10,8 @@ import {
   IsUrl,
   ValidateNested,
 } from 'class-validator';
-import { ClaimsDTO } from './claims.dto';
 
-// https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+import { ClaimsDTO } from './claims.dto';
 
 export enum AuthorizeScope {
   OPENID = 'openid',

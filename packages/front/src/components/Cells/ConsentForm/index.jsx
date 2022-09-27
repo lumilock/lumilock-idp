@@ -56,7 +56,7 @@ function ConsentForm({ values, setConsent }) {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
           if (response.redirected && response.url) {
             // data.redirect contains the string URL to redirect to
-            // window.history.go(-2);
+            window.history.go(-2);
             return null;
           }
           return response?.json();
