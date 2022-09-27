@@ -24,20 +24,26 @@ export class AuthService {
   ) {}
 
   /**
-   * Method to validate if the user can be auth
+   * Method to validate if the user can be authenticate
    * checking his identity and his password
-   *  */
-  async validateUser(identity: string, pass: string): Promise<any> {
+   * @param {string} identity the email or login of an user
+   * @param {string} password the user password
+   * @returns null if user is not authenticate or UserDTO if he is
+   */
+  async validateUser(
+    identity: string,
+    password: string,
+  ): Promise<UsersDTO | undefined> {
     // retreaving a user by identity
     const user = await this.usersService.findByIdentity(identity);
     // checking if we retreave the user
     if (user) {
       // using bcrypt to validate the password
-      const isMatch = await bcrypt.compare(pass, user.password);
+      const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...result } = user; // return everything except the password
-        return result;
+        const { password: _, ...result } = user; // return everything except the password
+        return UsersDTO.from({ password: undefined, ...result });
       }
     }
     return null;
@@ -52,6 +58,7 @@ export class AuthService {
   async sendResetEmail(
     identity: string,
   ): Promise<{ status: string; message: string }> {
+    // Retreaving the user by his identity
     const user = await this.usersService.findByIdentity(identity);
     // Checking if a user has been found
     if (!user?.id) {
@@ -60,26 +67,28 @@ export class AuthService {
         message: 'No user associated to this identity',
       };
     }
+    // Default response message (it's an error message)
     let response = {
       status: 'NO_EMAIL_SERVICE',
       message: 'This server is not allowed to send emails.',
     };
 
+    // Checking if the current user has an email address
     if (user?.email) {
-      // We generate a token (3min) with the current identity inside
+      // We generate data presents in the token: the current identity and the lastChangedDateTime -> used to check if this token has already been used)
       const payload = {
         identity: identity, // To retreave the user
         lastChangedDateTime: user?.lastChangedDateTime?.getTime(), // To block multi modifications
       };
+      // Generation of the token and we adding an expiration time (3min)
       const token = this.jwtService.sign(payload, {
         expiresIn: 60 * 3 + 's',
       });
-      // sending the email<
+      // sending the email
       await this.mailerService
         .sendMail({
           to: user?.email,
-          // from: 'jean.perrin.topline@gmail.com',
-          subject: 'Demande de changement de mot de passe 🔒',
+          subject: 'Demande de changement de mot de passe 🔒', // TODO: translation
           template: 'resetPassword',
           context: {
             // Data to be sent to template engine.
@@ -109,10 +118,19 @@ export class AuthService {
         message: 'Any email is associated to this user',
       };
     }
-
     return response;
   }
 
+  /**
+   * Method used to change the password of a specific user
+   * thanks to the token, send by an email from the method "sendResetEmail"
+   * @param {string} password New user password
+   * @param {string} passwordConfirmed New user password that must be identical to "password"
+   * @param {string} token the token containing the identity of the user who want to change his password
+   * @param {string} geoString the localisation of the client who asking to change password
+   * @param {string} deviceString the device of the client who asking to change password
+   * @returns {object} object with a status and a message keys
+   */
   async changePassword(
     password: string,
     passwordConfirmed: string,
@@ -121,7 +139,7 @@ export class AuthService {
     deviceString: string,
   ): Promise<{ status: string; message: string }> {
     try {
-      // Check the validity and decode the token
+      // Checking the validity and decode the token
       const valide = this.jwtService.verify(token);
       if (valide && password === passwordConfirmed) {
         if (valide?.identity) {
@@ -135,7 +153,7 @@ export class AuthService {
             // https://postmarkapp.com/guides/password-reset-email-best-practices
             await this.mailerService.sendMail({
               to: updatedEmail,
-              subject: 'Votre mot de passe à été changé 🎉',
+              subject: 'Votre mot de passe à été changé 🎉', // TODO: translation
               template: 'passwordUpdated',
               context: {
                 // Data to be sent to template engine.
@@ -156,7 +174,6 @@ export class AuthService {
                 frontUrl: process?.env?.OAUTH2_CLIENT_FRONT_OIDC_URI,
               },
             });
-            console.log('success');
             return {
               status: 'SUCCESS',
               message: 'The password has been changed',
@@ -177,9 +194,14 @@ export class AuthService {
     return { status: 'BAD_REQUEST', message: 'An error occurred' };
   }
 
-  // generate authenticate jwa code
-  // https://www.npmjs.com/package/jwa
-  async authenticate(client: ClientsDTO, user: UsersDTO) {
+  /**
+   * Method used to generate the authenticate jwa code
+   * https://www.npmjs.com/package/jwa
+   * @param {ClientsDTO} client the RP which asking to generate a code
+   * @param {UsersDTO} user the user concern by the RP request
+   * @returns {string} the code sign by jwa('HS256') protocol
+   */
+  async authenticate(client: ClientsDTO, user: UsersDTO): Promise<string> {
     const hmac = jwa('HS256');
     // 1. generate a random code based on : (5 random char / timestamp / 5 random char)
     const randomCode = `${getRandomString(5)}${Math.floor(
@@ -187,7 +209,7 @@ export class AuthService {
     )}${getRandomString(5)}`;
     const input = hmac.sign(randomCode, oidcConstants.secretCodeGenerator);
 
-    // 2. removed all expires codes it in db
+    // 2. removed all expires codes in db
     this.codesService.checkExpiration(client?.id);
 
     // 3. saved it in db
@@ -206,16 +228,21 @@ export class AuthService {
     return signature;
   }
 
-  // Function to generate the token send to the client
-  // https://openid.net/specs/openid-connect-core-1_0.html#IDToken
+  /**
+   * Method to generate the token send to the client
+   * https://openid.net/specs/openid-connect-core-1_0.html#IDToken
+   * @param {CodesDTO} code all data associate to the authenticate code generated in the method "authenticate"
+   * @returns an object containing all token: { access_token, token_type, refresh_token, expires_in, id_token }
+   */
   public async getToken(code: CodesDTO) {
+    // Destructurate the code
     const userId = code?.user?.id;
     const clientId = code?.client?.id;
     const authTime = code?.createDateTime;
-    const clientOrigin = new URL(code?.client?.redirectUris?.[0])?.origin; // ? could be better ([0])
+    const clientOrigin = new URL(code?.client?.redirectUris?.[0])?.origin; // TODO could be better ([0]) ? yes filter by redirect_uri from controller
     const clientSecret = code?.client?.secret;
 
-    // the subject is the userClient id
+    // the subject is the usersClients relation id
     const sub = await this.usersService.getUserClientId(userId, clientId);
 
     // 1. Generate the access_token
@@ -256,7 +283,6 @@ export class AuthService {
       auth_time: Math.floor(new Date(authTime).getTime() / 1000),
       iat: Math.floor(Date.now() / 1000),
     };
-    console.log('clientSecret', clientSecret);
     const idToken = this.jwtService.sign(idTokenPayload, {
       secret: clientSecret,
       expiresIn: oidcConstants.idTokenDuration + 's',
@@ -271,6 +297,10 @@ export class AuthService {
     };
   }
 
+  /**
+   * ? what is this function
+   * ! deprecated
+   */
   async login(user: any) {
     const payload = { login: user.login, sub: user.id };
     console.log('2');
@@ -279,7 +309,13 @@ export class AuthService {
     };
   }
 
-  // profiles info of the auth
+  /**
+   * Method used to retreave profile infos of a specific user
+   * based on the clientId which asking for it and the user id known by this client
+   * @param {string} userSub the id of the user base on the RP which asking
+   * @param {string} clientId The id of the RP which asking
+   * @returns {SubjectDTO} all user info for this subject
+   */
   async profile(
     userSub: string,
     clientId: string,
@@ -288,8 +324,13 @@ export class AuthService {
     return this.usersService.findBySub(userSub, clientId);
   }
 
-  // Check if client have the consent of the user
-  async checkUserConsent(userId, clientId) {
+  /**
+   * Check if client have the consent of the user
+   * @param {string} userSub the id of the user base on the asking RP which
+   * @param {string} clientId The id of the asking RP
+   * @returns {boolean} is the user give his consent or not to this RP?
+   */
+  async checkUserConsent(userId: string, clientId: string) {
     const consent = await this.usersService.checkConsent(userId, clientId);
     return consent;
   }
