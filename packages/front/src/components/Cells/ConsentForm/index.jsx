@@ -27,6 +27,7 @@ function ConsentForm({ values, setConsent }) {
   const clientInfos = watch('clientInfos');
   // States
   const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   /**
    * Method used to leave the consent Form
@@ -48,15 +49,16 @@ function ConsentForm({ values, setConsent }) {
     // try to loggin in
     // exclude needConsent from query values
     const { identity, password, consent } = data;
-
+    setLoading(true);
     // try to loggin in with consent
     await Auth.login({ identity, password, consent }, getAllQuery(searchParams))
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
-          // if (response.redirected && response.url) {
-          // data.redirect contains the string URL to redirect to
-          // window.history.back();
-          // }
+          if (response.redirected && response.url) {
+            // data.redirect contains the string URL to redirect to
+            // window.history.go(-2);
+            return null;
+          }
           return response?.json();
         }
         if (response?.status === 401) {
@@ -67,12 +69,12 @@ function ConsentForm({ values, setConsent }) {
       })
       .then((response) => {
         setErrorMsg('');
-        if (response?.frontUri) {
-          window.location.assign(response?.frontUri);
-        }
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
-          console.error('SUCCESS: [onSubmit - Auth.login]', response);
+          console.log('SUCCESS: [onSubmit - Auth.login]', response);
+        }
+        if (response) {
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -83,6 +85,7 @@ function ConsentForm({ values, setConsent }) {
           // eslint-disable-next-line no-console
           console.error('ERROR: [onSubmit - Auth.login]', err);
         }
+        setLoading(false);
       });
   };
 
@@ -145,7 +148,7 @@ function ConsentForm({ values, setConsent }) {
         <div className={styles.Actions}>
           <Button
             color="black"
-            loading={isSubmitting}
+            loading={isSubmitting || loading}
             variant="standard"
             type="button"
             onClick={goBack}
@@ -155,7 +158,7 @@ function ConsentForm({ values, setConsent }) {
           </Button>
           <Button
             color="black"
-            loading={isSubmitting}
+            loading={isSubmitting || loading}
             type="submit"
             endIcon={IoIosCheckmark}
           >

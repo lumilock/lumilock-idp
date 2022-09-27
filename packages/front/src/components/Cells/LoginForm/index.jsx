@@ -25,6 +25,7 @@ function LoginForm({ setConsent }) {
   } = useForm({ resolver: yupResolver(validationSchema), defaultValues });
   // States
   const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigateTo = useCallback(
     (page) => {
@@ -50,14 +51,16 @@ function LoginForm({ setConsent }) {
    * @param {object} data on fields values
    */
   const onSubmit = async (data) => {
+    setLoading(true);
     // try to loggin in
     await Auth.login(data, getAllQuery(searchParams))
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
-          // if (response.redirected && response.url) {
-          // data.redirect contains the string URL to redirect to
-          // window.history.back();
-          // }
+          if (response.redirected && response.url) {
+            // data.redirect contains the string URL to redirect to
+            window.history.back();
+            return null;
+          }
           return response?.json();
         }
         if (response?.status === 401) {
@@ -72,8 +75,9 @@ function LoginForm({ setConsent }) {
         if (response?.error === 'consent_required') {
           setConsent({ ...data, consent: false, clientInfos: response?.clientInfos });
           navigateTo('consent');
-        } else if (response?.frontUri) {
-          window.location.assign(response?.frontUri);
+        }
+        if (response) {
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -84,6 +88,7 @@ function LoginForm({ setConsent }) {
           // eslint-disable-next-line no-console
           console.error('ERROR: [onSubmit - Auth.login]', err);
         }
+        setLoading(false);
       });
   };
 
@@ -116,7 +121,7 @@ function LoginForm({ setConsent }) {
         />
         <Button
           color="black"
-          loading={isSubmitting}
+          loading={isSubmitting || loading}
           type="submit"
           endIcon={IoIosArrowRoundForward}
         >
