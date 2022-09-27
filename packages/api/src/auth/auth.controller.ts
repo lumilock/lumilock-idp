@@ -208,29 +208,22 @@ export class AuthController {
     @Body() body,
     @Res() res: Response,
   ): Promise<any | undefined> {
-    console.log('<token> Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    console.log('<token> headers', req.headers);
+    // Destructurate body
     const { client_id, grant_type, code, redirect_uri } = body;
-    console.log(
-      '<getToken> (client_id, grant_type, code, redirect_uri)',
-      client_id,
-      grant_type,
-      code,
-      redirect_uri,
-    );
 
     // TODO 1.
     // (2) Ensure the Authorization Code was issued to the authenticated Client.
     // And (3) Verify that the Authorization Code is valid.
     const valideCode: CodesDTO | undefined =
       await this.codeServ.checkAssociation(client_id, code);
-    console.log('<getToken> valideCode : ', valideCode);
 
+    // Throw an error if the code is not valide
     if (!valideCode) {
       throw new Error(
         'Your authentification code is not valide, have been already been used, or has expired.',
       );
     }
+
     // (5) Ensure that the redirect_uri parameter value is identical to the redirect_uri parameter value that was included in the initial Authorization Request.
     // If the redirect_uri parameter value is not present when there is only one registered redirect_uri value,
     // the Authorization Server MAY return an error (since the Client should have included the parameter) or
@@ -243,6 +236,7 @@ export class AuthController {
         'redirect_uri is missing or does not correspond to the client redirect uri',
       );
     }
+
     // (6) Verify that the Authorization Code used was issued in response to an OpenID Connect Authentication Request
     // (so that an ID Token will be returned from the Token Endpoint).
     if (grant_type !== 'authorization_code' && valideCode?.scope === 'openid') {
@@ -255,27 +249,34 @@ export class AuthController {
     // we remove this code because it have been used
     await this.codeServ.removeById(valideCode.id);
     const tokens = await this.serv.getToken(valideCode);
-    console.log('<token> tokens:', tokens);
 
-    console.log('<token> sessionId', req?.session?.id);
-    console.log('<token> End redirect with tokens <<<<<<<<<<<<<<<<<<<<<<<<<<');
-    console.log('');
-    // if everything has been verifying with success we can generate an ID Token and redirect the user
+    // If everything has been verifying with success we can generate an ID Token and redirect the user
+    // * Response Message
     return res
       .status(HttpStatus.OK)
       .set({ 'Cache-Control': 'no-store', Pragma: 'no-cache' })
       .json(tokens);
   }
 
+  /**
+   * Methode used to send a reset password mail to a specific user
+   * retreaving by it's identity
+   * @param {object} body user identity used to retreave it's email
+   * @param {Response} res express response object to response to the client
+   * @returns the response with a status and a message
+   */
   @Post('reset-password')
   public async resetPassword(
     @Body() body,
     @Res() res: Response,
   ): Promise<any | undefined> {
+    // Destructurate to retreave the user identity
     const { identity }: { identity: string } = body;
 
+    // Method used to send the email if possible, returing message status
     const emailresponse = await this.serv.sendResetEmail(identity);
 
+    // * Response Messages
     // Success case only return the email and the status
     if (emailresponse?.status === 'FOUND') {
       return res.status(HttpStatus.OK).json(emailresponse?.message);
@@ -287,6 +288,15 @@ export class AuthController {
     return res.status(HttpStatus.NO_CONTENT).json(emailresponse?.message);
   }
 
+  /**
+   * Mehtod used to change a user password
+   * based of a token send by email in the method "resetPassword"
+   * @param req *
+   * @param headers used to retreave user client device and geolocalisation
+   * @param body containing infos required info to change the current password
+   * @param {Response} res express response object to response to the client
+   * @returns the response with a status and a message
+   */
   @Post('change-password')
   public async changePassword(
     @Req() req,
@@ -294,17 +304,18 @@ export class AuthController {
     @Body() body,
     @Res() res: Response,
   ): Promise<any | undefined> {
+    // Destructurate the body
     const {
       password,
       passwordConfirmed,
       token,
     }: { password: string; passwordConfirmed: string; token: string } = body;
-    // device and ip detector
+
+    // Device detector
     const deviceDetector = new DeviceDetector();
     const userAgent = headers['user-agent'];
     const device = deviceDetector.parse(userAgent);
-    const geo = geoip.lookup(req.ip);
-    // formatting device and geo
+    // Formatting the device in a string message
     const deviceString = [
       device?.client?.name || '',
       device?.os?.name || '',
@@ -314,10 +325,16 @@ export class AuthController {
     ]
       .join(' ')
       .trim();
+
+    // Geolocalisation detector based on ip
+    const geo = geoip.lookup(req.ip);
+    // Formatting the geoloc in a string message
     const geoString = [geo?.city || '', geo?.region || '', geo?.country || '']
       .join(' ')
       .trim();
 
+    // Service method to change the password if the token is valid
+    // and sending an email to notify the user about this change
     const passwordResponse = await this.serv.changePassword(
       password,
       passwordConfirmed,
@@ -325,29 +342,35 @@ export class AuthController {
       geoString,
       deviceString,
     );
+
+    // * Response Messages
     if (passwordResponse?.status === 'SUCCESS') {
       return res.status(HttpStatus.OK).json(passwordResponse?.message);
     } else if (passwordResponse?.status === 'FORBIDDEN') {
       // Returning an error when the token is invalid or has expired
       return res.status(HttpStatus.FORBIDDEN).json(passwordResponse?.message);
     }
-
     // All other errors case returning the error message
     return res.status(HttpStatus.BAD_REQUEST).json(passwordResponse?.message);
   }
 
+  /**
+   * Method used send userInfo to the client with a unique id depending
+   * of the client
+   * @param req *
+   * @param {Response} res express response object to response to the client
+   * @returns the response with a status and a message
+   */
   @UseGuards(JwtAuthGuard)
   @Get('userinfo')
   public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {
-    console.log('<getUserinfo> userInfo >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    console.log('<getUserinfo> req?.user', req?.user);
-    console.log('<getUserinfo> req?.session', req?.session);
+    // Calling a service to retreave user info from a subject id (sub) and it's associated client id
     const { id, ...profile } = await this.serv.profile(
       req?.user?.sub,
       req?.user?.client_id,
     );
-    console.log({ sub: id, ...profile });
-    console.log('<getUserinfo> End <<<<<<<<<<<<<<<<<<<<');
+
+    // * Response Messages
     return res.status(HttpStatus.OK).json({ sub: id, ...profile });
   }
 
@@ -378,11 +401,9 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<any> {
     console.log('<authorize> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    // Just Cast from DTO to JSON
     const parsedQuery = JSON.parse(JSON.stringify(query));
-    console.log('<authorize> req.session: ', req.session);
-    console.log('<authorize> req.session.id: ', req.session.id);
-    console.log('<authorize> query: ', parsedQuery);
-    console.log('<authorize> req.session: ', req.session);
+
     /**
      * TODO : 4 - Si sub (sujet) est dans claims avec une valeur spécifique pour l'ID Token,
      * le serveur d'autorisation DOIT uniquement envoyer une réponse positive si l'utilisateur final identifié
@@ -394,15 +415,14 @@ export class AuthController {
      * si le paramètre claims est pris en charge par la mise en œuvre.
      */
     const { claims } = query;
-    console.log('<authorize> claims: ', claims);
+    console.log('<authorize> claims: ', claims); // TODO: 4
     if (claims?.sub) {
-      console.log('<authorize> End claims sub: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-      console.log('');
       return true;
     }
+
+    // Redirect the user to the login url with all clients information
+    // * Response redirection
     const redirectUrl = querystring.stringify(parsedQuery);
-    console.log('<authorize> End redirect: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-    console.log('');
     res.redirect(
       HttpStatus.MOVED_PERMANENTLY,
       `${oidcConstants.loginURL}?${redirectUrl}`,
