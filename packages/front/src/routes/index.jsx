@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useRoutes } from 'react-router-dom';
 import RequireAuth from './RequireAuth';
+import RequireGuest from './RequireGuest';
 
 // Pages
 const Login = React.lazy(() => import('../pages/Login'));
@@ -13,10 +14,22 @@ function AppRoutes() {
       path: '/',
       element: <Outlet />,
       children: [
-        { index: true, element: <Login /> },
         {
+          index: true,
+          element: (
+            <RequireGuest>
+              <Login />
+            </RequireGuest>
+          ),
+        },
+        {
+          index: true,
           path: 'login',
-          element: <Login />,
+          element: (
+            <RequireGuest>
+              <Login />
+            </RequireGuest>
+          ),
         },
         {
           path: 'applications',

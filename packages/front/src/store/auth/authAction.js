@@ -22,7 +22,12 @@ export const updateAction = () => async (dispatch) => {
       });
     })
     // eslint-disable-next-line no-console
-    .catch(console.error)
+    .catch((err) => {
+      if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('ERROR: [Store - Auth.profile]', err);
+      }
+    })
     .finally(() => {
       dispatch({
         type: END_LOADING_AUTH,
