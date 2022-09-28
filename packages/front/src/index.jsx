@@ -1,8 +1,10 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 import * as process from 'process';
 
 import App from './App';
+import store from './store';
 // import reportWebVitals from './reportWebVitals';
 
 import './assets/styles/fonts.scss';
@@ -17,7 +19,9 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <App tab="home" />
+    <Provider store={store}>
+      <App tab="home" />
+    </Provider>
   </React.StrictMode>,
 );
 

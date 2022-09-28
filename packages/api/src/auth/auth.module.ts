@@ -3,9 +3,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './strategies';
+import { LocalStrategy, JwtStrategy } from './strategies';
 import { UsersModule } from '../users/users.module';
-import { JwtStrategy } from './strategies';
 import { AuthController } from './auth.controller';
 import { ClientsModule } from '../clients/clients.module';
 import { UsersClientsModule } from '../users-clients/users-clients.module';

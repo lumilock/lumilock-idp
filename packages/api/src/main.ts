@@ -53,7 +53,6 @@ async function bootstrap() {
     exposedHeaders: ['*', 'Authorization'],
   });
   app.setGlobalPrefix('api');
-
   app.use(cookieParser());
   // session
   app.use(
@@ -64,7 +63,7 @@ async function bootstrap() {
       saveUninitialized: false,
       rolling: true, // keep session alive
       cookie: {
-        maxAge: parseInt(process.env.TOKEN_DURATION, 10) * 1000, // session expires in 1hr, refreshed by `rolling: true` option.
+        maxAge: parseInt(process.env.REFRESH_TOKEN_DURATION, 10), // session expires in 1hr, refreshed by `rolling: true` option.
         httpOnly: true, // so that cookie can't be accessed via client-side script
         secure: false,
       },

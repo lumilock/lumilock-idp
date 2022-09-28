@@ -27,7 +27,8 @@ import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
 import { CodesDTO } from '../codes/codes.dto';
-// import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
+import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
+import { UsersDTO } from '../users/users.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -175,19 +176,25 @@ export class AuthController {
       /** *****************************************
        * * Request to login from the OAuth server
        ****************************************** */
-      // The OAuth app trying to login a end-user
-      return res.redirect(HttpStatus.FOUND, oidcConstants.frontUrl);
+      // The OAuth app trying to login a end-user directly
+      // * Response Message
+      res.status(HttpStatus.OK).json({
+        user: req.user,
+        message: 'User logged in',
+      });
+      return;
     } catch (error) {
       console.log('<login> error', error);
+      return;
     }
   }
 
-  // @UseGuards(AuthenticatedGuard)
   // // @UseGuards(JwtAuthGuard)
-  // @Get('profile')
-  // public async getProfile(@Request() req): Promise<UsersDTO> {
-  //   return await this.serv.profileById(req?.user?.userId);
-  // }
+  @UseGuards(AuthenticatedGuard)
+  @Get('profile')
+  public async getProfile(@Request() req): Promise<UsersDTO> {
+    return req?.user;
+  }
 
   // @UseGuards(OidcAuthGuard)
   // @UseGuards(JwtAuthGuard)

@@ -32,6 +32,7 @@ const Auth = {
     },
     body: JSON.stringify(params),
   }),
+  profile: () => fetch('/api/auth/profile'),
 };
 
 export default Auth;

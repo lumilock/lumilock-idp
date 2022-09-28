@@ -1,0 +1,36 @@
+import {
+  START_LOADING_AUTH,
+  END_LOADING_AUTH,
+  UPDATE_USER_AUTH,
+  INIT,
+} from './authReducer';
+import { Auth } from '../../services/Api';
+
+export const updateAction = () => async (dispatch) => {
+  dispatch({
+    type: START_LOADING_AUTH,
+  });
+  await Auth.profile()
+    .then((res) => {
+      if (res.status !== 200 && res.status !== 302) return Promise.reject(new Error('Unauthorized'));
+      return res.json();
+    })
+    .then((user) => {
+      dispatch({
+        type: UPDATE_USER_AUTH,
+        payload: user,
+      });
+    })
+    // eslint-disable-next-line no-console
+    .catch(console.error)
+    .finally(() => {
+      dispatch({
+        type: END_LOADING_AUTH,
+      });
+    });
+};
+
+export const initAction = () => ({
+  type: INIT,
+  payload: null,
+});
