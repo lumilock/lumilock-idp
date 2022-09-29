@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../services/Hooks';
 import { LoadingLayout, RedirectLayout } from '../components';
@@ -12,7 +11,6 @@ function RequireAuth({ children }) {
     hasData,
     // user,
   } = useAuth();
-  const navigate = useNavigate();
 
   if (loading) {
     // The application is loading user data
@@ -26,8 +24,7 @@ function RequireAuth({ children }) {
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
     // than dropping them off on the home page.
-    navigate('/');
-    return <RedirectLayout />;
+    return <RedirectLayout path="/" />;
   }
 
   return children;

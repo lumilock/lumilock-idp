@@ -57,7 +57,7 @@ async function bootstrap() {
   // session
   app.use(
     session({
-      name: 'LUMILOCK_IDP_SESSION_ID',
+      name: process.env.SESSION_ID_NAME,
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,

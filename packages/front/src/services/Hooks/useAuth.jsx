@@ -10,6 +10,7 @@ function useAuth() {
   const { loading, loaded, hasData } = useSelector(authStateSelector);
   const user = useSelector(authInfoSelector);
   const dispatch = useDispatch();
+
   // Router
   const [searchParams] = useSearchParams();
   const location = useLocation();

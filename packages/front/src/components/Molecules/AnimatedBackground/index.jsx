@@ -50,7 +50,7 @@ TileMask.defaultProps = {
 function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
   const ref = useRef(null);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-  const [interval, setIntrvl] = useState(null);
+  // const [interval, setIntrvl] = useState(null);
   const ballsArray = useMemo(() => Array.from({ length: ballsNumber }, (_v, k) => k), [ballsNumber]);
   const gridColumns = useMemo(() => Array.from({ length: Math.ceil((windowSize?.width || 0) / 256) }, (_v, k) => k), [windowSize?.width]);
   const gridRows = useMemo(() => Array.from({ length: Math.ceil((windowSize?.height || 0) / 256) }, (_v, k) => k), [windowSize?.height]);
@@ -123,13 +123,8 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
         move(circle2, x, y, size);
         move(circle3, x, y, size);
       }
-
-      const id = window.setInterval(() => {
-        setNewPositions();
-      }, 5000 / 5);
-      setIntrvl(id);
     },
-    [ballsNumber, maxSize, minSize, move, setNewPositions],
+    [ballsNumber, maxSize, minSize, move],
   );
 
   useEffect(() => {
@@ -153,27 +148,18 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
     [],
   );
 
+  // At the mounted state we initialize all shapes
+  // and started the interval animation
   useEffectOnce(() => {
     init();
+    const id = window.setInterval(() => {
+      setNewPositions();
+    }, 5000 / 5);
+    // At the unmounted state we removed the Interval
+    return () => {
+      window.clearInterval(id);
+    };
   });
-
-  useEffect(() => {
-    if (!interval) {
-      const id = window.setInterval(() => {
-        setNewPositions();
-      }, 5000 / 5);
-
-      return () => {
-        window.clearInterval(id);
-      };
-    }
-    return () => {};
-  }, [interval, setNewPositions]);
-
-  useEffect(() => () => {
-    window.clearInterval(interval);
-    setIntrvl(null);
-  }, [interval, setNewPositions]);
 
   return (
     <div ref={ref} className={styles.Base}>

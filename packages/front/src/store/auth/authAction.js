@@ -35,6 +35,22 @@ export const updateAction = () => async (dispatch) => {
     });
 };
 
+export const softUpdateAction = (payload) => async (dispatch) => {
+  // Starting to update store
+  await dispatch({
+    type: START_LOADING_AUTH,
+  });
+  // Updating store
+  await dispatch({
+    type: UPDATE_USER_AUTH,
+    payload,
+  });
+  // Ending to update store
+  await dispatch({
+    type: END_LOADING_AUTH,
+  });
+};
+
 export const initAction = () => ({
   type: INIT,
   payload: null,

@@ -189,7 +189,6 @@ export class AuthController {
     }
   }
 
-  // // @UseGuards(JwtAuthGuard)
   @UseGuards(AuthenticatedGuard)
   @Get('profile')
   public async getProfile(@Request() req): Promise<UsersDTO> {

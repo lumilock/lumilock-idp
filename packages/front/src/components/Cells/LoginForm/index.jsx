@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSearchParams } from 'react-router-dom';
-
 import { IoIosArrowRoundForward } from 'react-icons/io';
+
+import { softUpdateAction } from '../../../store/auth/authAction';
 import { Alert, Button } from '../../Molecules';
 import { InputControlled } from '../../Atoms/Form';
 import { Auth } from '../../../services/Api';
@@ -19,6 +21,8 @@ import { getAllQuery } from '../../../services/Tools';
 function LoginForm({ setConsent }) {
   // Router
   const [searchParams, setSearchParams] = useSearchParams();
+  // Store
+  const dispatch = useDispatch();
   // React hook form
   const {
     handleSubmit, control, formState: { isSubmitting },
@@ -78,6 +82,7 @@ function LoginForm({ setConsent }) {
         }
         if (response) {
           setLoading(false);
+          dispatch(softUpdateAction(response?.user || null));
         }
       })
       .catch((err) => {
