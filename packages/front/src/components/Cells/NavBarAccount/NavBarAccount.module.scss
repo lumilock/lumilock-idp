@@ -38,15 +38,26 @@
     &:hover {
         background-color: var(--color-main);
 
-        & .LeftSection .TextBox {
-            & h4 {
-                color: var(--color-background1);
+        & .LeftSection {
+            & div:first-child {
+                background-color: var(--color-background1);
+                color: var(--color-main);
+
+                & svg {
+                    color: var(--color-main);
+                }
             }
 
-            & p {
-                color: var(--color-background3);
-            }
+            & .TextBox {
+                & h4 {
+                    color: var(--color-background1);
+                }
 
+                & p {
+                    color: var(--color-background3);
+                }
+
+            }
         }
 
     }
