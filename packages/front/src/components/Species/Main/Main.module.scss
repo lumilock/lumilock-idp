@@ -1,0 +1,14 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: rem-calc(256) 1fr;
+    background-color: red;
+
+    .Body {
+        background-color: blue;
+    }
+}

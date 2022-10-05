@@ -1,0 +1,9 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: rem-calc(240);
+    background-color: var(--color-background1);
+}

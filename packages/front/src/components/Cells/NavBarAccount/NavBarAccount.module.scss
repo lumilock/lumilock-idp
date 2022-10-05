@@ -1,0 +1,53 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    text-decoration: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) spacing-rem(3);
+    justify-content: space-between;
+    align-items: center;
+    height: rem-calc(64);
+    padding: rem-calc(12) spacing-rem(1);
+    width: 100%;
+    border-radius: spacing-rem(0.5);
+
+    & .LeftSection {
+        position: relative;
+        display: grid;
+        grid-template-columns: rem-calc(40) minmax(0, 1fr);
+        gap: spacing-rem(2);
+
+        & .TextBox {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+
+            & * {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    & .Icon {
+        color: var(--color-background1);
+    }
+
+    &:hover {
+        background-color: var(--color-main);
+
+        & .LeftSection .TextBox {
+            & h4 {
+                color: var(--color-background1);
+            }
+
+            & p {
+                color: var(--color-background3);
+            }
+
+        }
+
+    }
+}

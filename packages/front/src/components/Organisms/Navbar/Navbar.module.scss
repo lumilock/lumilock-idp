@@ -1,0 +1,14 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--color-background1);
+    border-right: rem-calc(1) solid var(--color-background3);
+    display: flex;
+    flex-direction: column;
+    gap: spacing-rem(1);
+    padding: spacing-rem(2) spacing-rem(1);
+}

@@ -6,28 +6,28 @@
   gap: spacing(1);
   flex-direction: column;
 
-  & > label {
+  &>label {
     font-size: rem-calc(13);
     width: 100%;
   }
 
-  & > input {
+  &>input {
     font-size: spacing-rem(2);
     height: rem-calc(32);
     padding: spacing-rem(1);
     background-color: transparent;
-    border: 1px solid var(--color-divider);
+    border: 1px solid var(--color-content3);
     border-radius: spacing-rem(1);
-    color: var(--color-text-primary);
+    color: var(--color-content1);
     width: 100%;
     font-size: rem-calc(12);
 
     &::placeholder {
-      color: var(--color-divider);
+      color: var(--color-content3);
     }
   }
-  
-  & > .HelperText {
+
+  &>.HelperText {
     font-size: rem-calc(10);
     color: var(--color-alert);
   }

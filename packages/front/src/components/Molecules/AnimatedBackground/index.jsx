@@ -8,6 +8,7 @@ import { ownerWindow, debounce, randomIntFromInterval } from '../../../services/
 import { useEffectOnce } from '../../../services/Hooks';
 import styles from './AnimatedBackground.module.scss';
 
+// TODO useId for ids
 function TileMask({
   columnIndex, rowIndex, rowLength, winHeight,
 }) {
@@ -47,7 +48,9 @@ TileMask.defaultProps = {
   winHeight: 0,
 };
 
-function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
+function AnimatedBackground({
+  ballsNumber, minSize, maxSize, mask,
+}) {
   const ref = useRef(null);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   // const [interval, setIntrvl] = useState(null);
@@ -179,23 +182,25 @@ function AnimatedBackground({ ballsNumber, minSize, maxSize }) {
         ))}
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-        <defs>
-          <clipPath id="svgPath">
-            {gridColumns?.map((cI) => (
-              <React.Fragment key={cI}>
-                {gridRows?.map((rI) => (
-                  <TileMask
-                    key={tileKey(cI, rI)}
-                    columnIndex={cI}
-                    rowIndex={rI}
-                    rowLength={gridRows?.length || 0}
-                    winHeight={windowSize?.height || 0}
-                  />
-                ))}
-              </React.Fragment>
-            ))}
-          </clipPath>
-        </defs>
+        {mask && (
+          <defs>
+            <clipPath id="svgPath">
+              {gridColumns?.map((cI) => (
+                <React.Fragment key={cI}>
+                  {gridRows?.map((rI) => (
+                    <TileMask
+                      key={tileKey(cI, rI)}
+                      columnIndex={cI}
+                      rowIndex={rI}
+                      rowLength={gridRows?.length || 0}
+                      winHeight={windowSize?.height || 0}
+                    />
+                  ))}
+                </React.Fragment>
+              ))}
+            </clipPath>
+          </defs>
+        )}
         <defs>
           <filter id="fancyGoo">
             <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
@@ -234,12 +239,17 @@ AnimatedBackground.propTypes = {
    * Max ball size in rem (1rem = 16px)
    */
   maxSize: PropTypes.number,
+  /**
+   * Display mask
+   */
+  mask: PropTypes.bool,
 };
 
 AnimatedBackground.defaultProps = {
   ballsNumber: 4,
   minSize: 50 / 16,
   maxSize: 500 / 16,
+  mask: true,
 };
 
 export default React.memo(AnimatedBackground);

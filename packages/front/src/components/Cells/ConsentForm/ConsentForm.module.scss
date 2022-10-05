@@ -29,13 +29,13 @@
 
             .Subtitle {
                 font-family: "Lexend Light", sans-serif;
-                color: var(--color-grey-dark);
+                color: var(--color-content3);
             }
         }
 
         & .AppSection {
             position: relative;
-            background-color: var(--color-grey-light);
+            background-color: var(--color-content3);
             padding: spacing-rem(1);
             border-radius: spacing-rem(2);
             display: grid;
@@ -57,7 +57,7 @@
                 height: max-content;
 
                 & p {
-                    color: var(--color-text-secondary);
+                    color: var(--color-content3);
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     overflow: hidden;
@@ -81,7 +81,7 @@
                     display: flex;
                     align-items: center;
                     gap: spacing-rem(1);
-                    color: var(--color-grey-dark);
+                    color: var(--color-content3);
                     list-style: none;
                 }
             }
@@ -97,7 +97,7 @@
             }
 
             & p:last-child {
-                color: var(--color-text-secondary);
+                color: var(--color-content3);
                 font-family: 'Lexend light';
             }
         }

@@ -19,139 +19,139 @@
 
     &.Primary {
         &.Contained {
-            background-color: #{$color-primary}40;
+            background-color: #{$color-main}40;
         }
 
         &.Standard {
             background-color: transparent;
         }
 
-        color: #{$color-primary};
+        color: #{$color-main};
 
         &:not(:disabled).Contained:hover {
-            background-color: #{$color-primary-light}40;
+            background-color: #{$color-main}40;
         }
 
         &:not(:disabled).Standard:hover {
-            background-color: #{$color-primary-dark}10;
+            background-color: #{$color-main}10;
         }
 
         &:not(:disabled).Contained:active {
-            background-color: #{$color-primary-dark}60;
+            background-color: #{$color-main}60;
         }
 
         &:not(:disabled).Standard:active {
-            background-color: #{$color-primary-dark}20;
+            background-color: #{$color-main}20;
         }
 
         &>svg.Icon {
-            color: #{$color-primary};
-            fill: #{$color-primary};
+            color: #{$color-main};
+            fill: #{$color-main};
         }
     }
 
     &.Secondary {
         &.Contained {
-            background-color: #{$color-secondary}40;
+            background-color: #{$color-content1}40;
         }
 
         &.Standard {
             background-color: transparent;
         }
 
-        color: #{$color-secondary};
+        color: #{$color-content1};
 
         &:not(:disabled).Contained:hover {
-            background-color: #{$color-secondary-dark}40;
+            background-color: #{$color-content1}40;
         }
 
         &:not(:disabled).Standard:hover {
-            background-color: #{$color-secondary-dark}10;
+            background-color: #{$color-content1}10;
         }
 
         &:not(:disabled).Contained:active {
-            background-color: #{$color-secondary-dark}60;
+            background-color: #{$color-content1}60;
         }
 
         &:not(:disabled).Standard:active {
-            background-color: #{$color-secondary-dark}20;
+            background-color: #{$color-content1}20;
         }
 
         &>svg.Icon {
-            color: #{$color-secondary};
-            fill: #{$color-secondary};
+            color: #{$color-content1};
+            fill: #{$color-content1};
         }
     }
 
     &.White {
         &.Contained {
-            background-color: var(--color-white);
+            background-color: var(--color-background1);
         }
 
         &.Standard {
             background-color: transparent;
         }
 
-        color: var(--color-text-primary);
+        color: var(--color-text-content1);
 
         &:not(:disabled).Contained:hover {
-            background-color: var(--color-grey-light);
+            background-color: var(--color-content3);
         }
 
         &:not(:disabled).Standard:hover {
-            background-color: #{$color-grey-dark}10;
+            background-color: #{$color-content1}10;
         }
 
         &:not(:disabled).Contained:active {
-            background-color: var(--color-grey);
+            background-color: var(--color-content2);
         }
 
         &:not(:disabled).Standard:active {
-            background-color: #{$color-grey-dark}20;
+            background-color: #{$color-content1}20;
         }
 
         &>svg.Icon {
-            color: var(--color-text-primary);
-            fill: var(--color-text-primary);
+            color: var(--color-main);
+            fill: var(--color-main);
         }
     }
 
     &.Black {
         &.Contained {
-            background-color: var(--color-black);
-            color: var(--color-white);
+            background-color: var(--color-content1);
+            color: var(--color-background1);
 
             &>svg.Icon {
-                color: var(--color-white);
-                fill: var(--color-white);
+                color: var(--color-brackground1);
+                fill: var(--color-background1);
             }
         }
 
         &.Standard {
             background-color: transparent;
-            color: var(--color-black);
+            color: var(--color-content1);
 
             &>svg.Icon {
-                color: var(--color-black);
-                fill: var(--color-black);
+                color: var(--color-content1);
+                fill: var(--color-content1);
             }
         }
 
 
         &:not(:disabled).Contained:hover {
-            background-color: #{$color-grey-dark}88;
+            background-color: #{$color-content1}88;
         }
 
         &:not(:disabled).Standard:hover {
-            background-color: #{$color-grey-dark}10;
+            background-color: #{$color-content1}10;
         }
 
         &:not(:disabled).Contained:active {
-            background-color: var(--color-grey-dark);
+            background-color: var(--color-content1);
         }
 
         &:not(:disabled).Standard:active {
-            background-color: #{$color-grey-dark}20;
+            background-color: #{$color-content1}20;
         }
     }
 

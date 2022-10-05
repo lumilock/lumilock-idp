@@ -2,26 +2,16 @@
 @import "toolkit.scss";
 
 :root {
-    --color-black: #{$color-black};
-    --color-accent: #{$color-accent};
-    --color-white: #{$color-white};
-    --color-text-primary: #{$color-text-primary};
-    --color-text-secondary: #{$color-text-secondary};
-    --color-text-disabled: #{$color-text-disabled};
-    --color-text-icon: #{$color-text-icon};
-    --color-divider: #{$color-divider};
-
-    --color-primary: #{$color-primary};
-    --color-primary-light: #{$color-primary-light};
-    --color-primary-dark: #{$color-primary-dark};
-
-    --color-secondary: #{$color-secondary};
-    --color-secondary-light: #{$color-secondary-light};
-    --color-secondary-dark: #{$color-secondary-dark};
-
-    --color-tertiary: #{$color-tertiary};
-    --color-tertiary-light: #{$color-tertiary-light};
-    --color-tertiary-dark: #{$color-tertiary-dark};
+    --color-main: #{$color-main};
+    --color-content1: #{$color-content1};
+    --color-content2: #{$color-content2};
+    --color-content3: #{$color-content3};
+    --color-background1: #{$color-background1};
+    --color-background2: #{$color-background2};
+    --color-background2-5: #{$color-background2-5};
+    --color-background3: #{$color-background3};
+    --color-background3-5: #{$color-background3-5};
+    --color-gradient: #{$color-gradient};
 
     --color-alert: #{$color-alert};
     --color-alert-light: #{$color-alert-light};
@@ -39,10 +29,6 @@
     --color-success: #{$color-success};
     --color-success-light: #{$color-success-light};
     --color-success-dark: #{$color-success-dark};
-
-    --color-grey: #{$color-grey};
-    --color-grey-dark: #{$color-grey-dark};
-    --color-grey-light: #{$color-grey-light};
 }
 
 *,
@@ -71,83 +57,90 @@ body {
 }
 
 h1 {
-    font-family: "Lexend ExtraLight", sans-serif;
-    font-size: rem-calc(96);
+    font-family: "Lexend Bold", sans-serif;
+    font-size: rem-calc(40);
     font-weight: 100;
-    letter-spacing: rem-calc(-1.5);
-    text-transform: uppercase;
+    letter-spacing: -0.06rem;
 }
 
 h2 {
-    font-family: "Lexend Light", sans-serif;
-    font-size: rem-calc(60);
+    font-family: "Lexend SemiBold", sans-serif;
+    font-size: rem-calc(24);
     font-weight: 100;
-    letter-spacing: rem-calc(-0.5);
+    letter-spacing: -0.04rem;
 }
 
 h3 {
-    font-family: "Lexend Regular", sans-serif;
-    font-size: rem-calc(48);
-    font-weight: normal;
-    letter-spacing: rem-calc(0);
+    font-family: "Lexend SemiBold", sans-serif;
+    font-size: rem-calc(16);
+    font-weight: 100;
+    letter-spacing: -0.06rem;
 }
 
 /*Font style guide*/
 h4 {
-    font-family: "Lexend Regular", sans-serif;
-    font-size: rem-calc(34);
-    font-weight: normal;
-    letter-spacing: rem-calc(0.25);
+    font-family: "Lexend SemiBold", sans-serif;
+    font-size: rem-calc(12);
+    font-weight: 100;
+    letter-spacing: -0.04rem;
 }
 
 h5 {
-    font-family: "Lexend Regular", sans-serif;
-    font-size: rem-calc(24);
-    font-weight: normal;
-    letter-spacing: rem-calc(0);
+    font-family: "Lexend Medium", sans-serif;
+    font-size: rem-calc(10);
+    font-weight: 100;
+    letter-spacing: -0.04rem;
 }
 
 h6 {
     font-family: "Lexend Medium", sans-serif;
-    font-size: rem-calc(20);
-    font-weight: normal;
-    letter-spacing: rem-calc(0.15);
+    font-size: rem-calc(8);
+    font-weight: 100;
+    letter-spacing: -0.04rem;
 }
 
 .subtitle1 {
-    font-family: "Lexend Regular", sans-serif;
-    font-size: rem-calc(16);
-    font-weight: 100;
-    letter-spacing: rem-calc(0.15);
+    font-family: "Lexend Medium", sans-serif;
+    font-size: rem-calc(14);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.04rem;
+    line-height: 150%;
 }
 
 .subtitle2 {
     font-family: "Lexend Medium", sans-serif;
-    font-size: rem-calc(14);
-    font-weight: 100;
-    letter-spacing: rem-calc(0.1);
+    font-size: rem-calc(12);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.04rem;
+    line-height: 125%;
 }
 
 .body1 {
     font-family: "Lexend Regular", sans-serif;
-    font-size: rem-calc(16);
-    font-weight: 100;
-    letter-spacing: rem-calc(0.5);
+    font-size: rem-calc(14);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.02rem;
+    line-height: 150%;
 }
 
 .body2 {
     font-family: "Lexend Regular", sans-serif;
-    font-size: rem-calc(14);
-    font-weight: 100;
-    letter-spacing: rem-calc(0.25);
+    font-size: rem-calc(12);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.02rem;
+    line-height: 125%;
 }
 
 button {
-    font-family: "Lexend Medium", sans-serif;
-    font-size: rem-calc(14);
-    font-weight: 100;
-    letter-spacing: rem-calc(1.25);
-    text-transform: uppercase;
+    font-family: "Lexend Semibold", sans-serif;
+    font-size: rem-calc(16);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.04rem;
 }
 
 .overline {
