@@ -2,6 +2,9 @@
 
 .Base {
     position: relative;
+    display: flex;
+    gap: spacing-rem(2);
+    align-items: center;
 
     &.Main {
         color: var(--color-main);

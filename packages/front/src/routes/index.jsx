@@ -7,6 +7,9 @@ import RequireGuest from './RequireGuest';
 const Login = React.lazy(() => import('../pages/Login'));
 const Profile = React.lazy(() => import('../pages/Profile'));
 const Applications = React.lazy(() => import('../pages/Applications'));
+const Services = React.lazy(() => import('../pages/Services'));
+const Users = React.lazy(() => import('../pages/Users'));
+const Keys = React.lazy(() => import('../pages/Keys'));
 const Settings = React.lazy(() => import('../pages/Settings'));
 
 function AppRoutes() {
@@ -45,6 +48,30 @@ function AppRoutes() {
           element: (
             <RequireAuth>
               <Applications />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: 'services',
+          element: (
+            <RequireAuth>
+              <Services />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: 'users',
+          element: (
+            <RequireAuth>
+              <Users />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: 'keys',
+          element: (
+            <RequireAuth>
+              <Keys />
             </RequireAuth>
           ),
         },

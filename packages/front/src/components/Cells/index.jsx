@@ -4,3 +4,4 @@ export { default as ResetPassword } from './ResetPassword';
 export { default as PasswordForm } from './PasswordForm';
 export { default as NavBarAccount } from './NavBarAccount';
 export { default as NavBarMenu } from './NavBarMenu';
+export { default as TitleSection } from './TitleSection';

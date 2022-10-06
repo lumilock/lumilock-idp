@@ -6,4 +6,9 @@
     width: 100%;
     height: rem-calc(240);
     background-color: var(--color-background1);
+
+    & .HeaderTitle {
+        position: absolute;
+        width: 100%;
+    }
 }

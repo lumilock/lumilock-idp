@@ -1,0 +1,14 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    z-index: 1;
+    align-items: flex-end;
+    height: spacing-rem(8);
+    width: 100%;
+    padding: spacing-rem(3) spacing-rem(3) spacing-rem(2) spacing-rem(3);
+    background: linear-gradient(#{$color-content1}80, #{$color-content1}00);
+}
