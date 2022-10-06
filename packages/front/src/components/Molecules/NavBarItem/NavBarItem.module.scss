@@ -29,6 +29,10 @@
     &.Active {
         background-color: var(--color-main);
         color: var(--color-background1);
+
+        & svg {
+            color: var(--color-background1);
+        }
     }
 
     &:hover:not(.Active) {

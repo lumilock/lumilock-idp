@@ -1,8 +1,13 @@
 import React from 'react';
+import { IoIosKey } from 'react-icons/io';
+
+import { HeaderWrapper } from '../../components/Species';
 
 function Keys() {
   return (
-    <div>Keys</div>
+    <HeaderWrapper icon={IoIosKey} title="Clefs">
+      <h1>Keys</h1>
+    </HeaderWrapper>
   );
 }
 

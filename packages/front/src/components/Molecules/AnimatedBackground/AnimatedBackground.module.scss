@@ -18,6 +18,7 @@
     & .Group,
     & .Group2 {
         position: absolute;
+        opacity: 0;
         top: 0;
         left: 0;
         width: 100%;
@@ -32,7 +33,7 @@
 
             & .Circle {
                 background: #101524;
-                transform: scale(1.05);
+                transform: scale(1);
             }
         }
 
@@ -40,8 +41,8 @@
             z-index: 1;
 
             & .Circle {
-                background: #3b34ce;
-                transform: scale(1.25);
+                background: #271fc1;
+                transform: scale(1.5);
             }
         }
 

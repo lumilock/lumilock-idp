@@ -5,48 +5,4 @@
     display: flex;
     gap: spacing-rem(2);
     align-items: center;
-
-    &.Main {
-        color: var(--color-main);
-    }
-
-    &.Content1 {
-        color: var(--color-content1);
-    }
-
-    &.Content2 {
-        color: var(--color-content2);
-    }
-
-    &.Content3 {
-        color: var(--color-content3);
-    }
-
-    &.Background1 {
-        color: var(--color-background1);
-    }
-
-    &.Background2 {
-        color: var(--color-background2);
-    }
-
-    &.Background3 {
-        color: var(--color-background3);
-    }
-
-    &.Standard {
-        color: var(--color-content1);
-    }
-
-    &.Alert {
-        color: var(--color-alert);
-    }
-
-    &.AlertDark {
-        color: var(--color-alert-dark);
-    }
-
-    &.Info {
-        color: var(--color-info);
-    }
 }

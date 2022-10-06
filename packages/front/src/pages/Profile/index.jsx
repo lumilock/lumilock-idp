@@ -1,8 +1,13 @@
 import React from 'react';
+import { IoIosPerson } from 'react-icons/io';
+
+import { HeaderWrapper } from '../../components/Species';
 
 function Profile() {
   return (
-    <div>Profile</div>
+    <HeaderWrapper icon={IoIosPerson} title="Profil">
+      <h1>Profil</h1>
+    </HeaderWrapper>
   );
 }
 

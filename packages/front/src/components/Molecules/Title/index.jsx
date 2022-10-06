@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { IoIosStar } from 'react-icons/io';
 
-import { pascalCase } from '../../../services/Tools';
 import { Icon, Typography } from '../../Atoms';
 import styles from './Title.module.scss';
 
@@ -10,12 +9,12 @@ function Title({ icon, title, color }) {
   return (
     <div className={[
       styles.Base,
-      styles?.[pascalCase(color)],
     ].join(' ').trim()}
     >
       <Icon
-        size="xxsmall"
+        size="xsmall"
         ionIcon={icon}
+        color={color}
       />
       <Typography color={color} variant="h3">{title}</Typography>
     </div>
@@ -23,10 +22,16 @@ function Title({ icon, title, color }) {
 }
 
 Title.propTypes = {
+  /**
+   * icon in front of the title
+   */
   icon: PropTypes.func,
+  /**
+   * Title text
+   */
   title: PropTypes.string,
   /**
-   * text color variations
+   * Color of the icon and of the text variations
    */
   color: PropTypes.oneOf([
     'alert',

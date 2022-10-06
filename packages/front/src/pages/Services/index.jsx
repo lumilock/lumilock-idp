@@ -1,8 +1,13 @@
 import React from 'react';
+import { IoIosConstruct } from 'react-icons/io';
+
+import { HeaderWrapper } from '../../components/Species';
 
 function Services() {
   return (
-    <div>Services</div>
+    <HeaderWrapper icon={IoIosConstruct} title="Services">
+      <h1>Services</h1>
+    </HeaderWrapper>
   );
 }
 

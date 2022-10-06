@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import React, {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useCallback, useEffect, useId, useMemo, useRef, useState,
 } from 'react';
 
 import If, { Then, Else } from '../../Atoms/If';
-import { ownerWindow, debounce, randomIntFromInterval } from '../../../services/Tools';
+import {
+  ownerWindow, debounce, randomIntFromInterval, browser,
+} from '../../../services/Tools';
 import { useEffectOnce } from '../../../services/Hooks';
 import styles from './AnimatedBackground.module.scss';
 
@@ -51,13 +53,16 @@ TileMask.defaultProps = {
 function AnimatedBackground({
   ballsNumber, minSize, maxSize, mask,
 }) {
+  const componentId = useId();
   const ref = useRef(null);
+  const canvasRef = useRef(null);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   // const [interval, setIntrvl] = useState(null);
   const ballsArray = useMemo(() => Array.from({ length: ballsNumber }, (_v, k) => k), [ballsNumber]);
   const gridColumns = useMemo(() => Array.from({ length: Math.ceil((windowSize?.width || 0) / 256) }, (_v, k) => k), [windowSize?.width]);
   const gridRows = useMemo(() => Array.from({ length: Math.ceil((windowSize?.height || 0) / 256) }, (_v, k) => k), [windowSize?.height]);
-
+  const activateAnimation = useMemo(() => browser() === 'Google Chrome', []);
+  console.log(browser(), activateAnimation);
   const move = useCallback(
     (el, x, y, size) => {
       // eslint-disable-next-line no-param-reassign
@@ -163,6 +168,61 @@ function AnimatedBackground({
       window.clearInterval(id);
     };
   });
+  // const generateNoise = (canvas, ctx, opacity) => {
+  //   for (let x = 0; x < canvas.width; x += 1) {
+  //     for (let y = 0; y < canvas.height; y += 1) {
+  //       const number = Math.floor(Math.random() * 60);
+
+  //       ctx.fillStyle = `rgba(${number},${number},${number},${opacity})`;
+  //       ctx.fillRect(x, y, 1, 1);
+  //     }
+  //   }
+  // };
+
+  const colorMatrix = (canvas, ctx) => {
+    const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const src = image.data;
+    for (let i = 0; i < src.length; i += 4) {
+      const r = src[i];
+      const g = src[i + 1];
+      const b = src[i + 2];
+
+      // thresholding the current value
+      const v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= 127) ? 255 : 0;
+
+      src[i] = src[i + 1];
+      src[i + 1] = src[i + 2];
+      src[i + 2] = v;
+    }
+    ctx.putImageData(image, 0, 0);
+  };
+
+  useEffectOnce(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 500, 200);
+    // ctx.filter = 'blur(20px)';
+    ctx.beginPath();
+    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(165, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(180, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    ctx.arc(225, 50, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fillStyle = 'blue';
+    ctx.fill();
+    colorMatrix(canvas, ctx);
+    // generateNoise(canvas, ctx, 1);
+  }, []);
 
   return (
     <div ref={ref} className={styles.Base}>
@@ -181,6 +241,19 @@ function AnimatedBackground({
           <span key={k} className={`${styles.Circle} circle`} />
         ))}
       </div>
+      <canvas
+        id={`gooeyCanvas${componentId}`}
+        ref={canvasRef}
+        className={styles.Root}
+        style={{
+          border: '1px solid #d3d3d3',
+          position: 'relative',
+          // filter: `url('#matrix${componentId}')`,
+          // filter: `url('#fancyGoo') url('#blurFilter') url('#fancyGoo')`,
+        }}
+      >
+        Your browser does not support the HTML canvas tag.
+      </canvas>
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
         {mask && (
           <defs>
@@ -202,7 +275,15 @@ function AnimatedBackground({
           </defs>
         )}
         <defs>
-          <filter id="fancyGoo">
+          {/* <filter
+            filterUnits="objectBoundingBox"
+            id={`matrix${componentId}`}
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter> */}
+          {/* <filter id="fancyGoo">
             <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
             <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
             <feComposite in="SourceGraphic" in2="goo" operator="atop" />
@@ -219,7 +300,7 @@ function AnimatedBackground({
               stitchTiles="stitch"
             />
             <feDisplacementMap in="SourceGraphic" in2="noise" scale="200" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
+          </filter> */}
         </defs>
       </svg>
     </div>
