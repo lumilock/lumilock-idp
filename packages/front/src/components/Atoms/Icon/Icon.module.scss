@@ -6,8 +6,15 @@
   justify-content: center;
   align-items: center;
 
-  &.Tiny,
-  &.Tiny>svg {
+  &.XXSmall,
+  &.XXSmall>svg {
+    height: rem-calc(12);
+    width: rem-calc(12);
+  }
+
+
+  &.XSmall,
+  &.XSmall>svg {
     height: spacing-rem(2);
     width: spacing-rem(2);
   }

@@ -27,7 +27,7 @@ function Button({
         <Icon
           ionIcon={loading ? IoLogoIonic : startIcon}
           title=""
-          size="tiny"
+          size="xsmall"
           className={styles.Icon}
         />
       </If>
@@ -36,7 +36,7 @@ function Button({
         <Icon
           ionIcon={loading ? IoLogoIonic : endIcon}
           title=""
-          size="tiny"
+          size="xsmall"
           className={styles.Icon}
         />
       </If>

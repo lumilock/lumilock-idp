@@ -52,7 +52,7 @@ function CheckboxField({
       <div className={styles.Checkbox}>
         <Icon
           ionIcon={isChecked ? IoCheckbox : IoSquareOutline}
-          size="tiny"
+          size="xsmall"
           onClick={() => handleClick(isChecked)}
           className={styles.CheckboxIcon}
         />

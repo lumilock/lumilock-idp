@@ -5,6 +5,7 @@ import RequireGuest from './RequireGuest';
 
 // Pages
 const Login = React.lazy(() => import('../pages/Login'));
+const Profile = React.lazy(() => import('../pages/Profile'));
 const Applications = React.lazy(() => import('../pages/Applications'));
 const Settings = React.lazy(() => import('../pages/Settings'));
 
@@ -29,6 +30,14 @@ function AppRoutes() {
             <RequireGuest>
               <Login />
             </RequireGuest>
+          ),
+        },
+        {
+          path: 'profile',
+          element: (
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
           ),
         },
         {

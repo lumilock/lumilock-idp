@@ -1,0 +1,37 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: spacing-rem(2);
+    padding: rem-calc(12) spacing-rem(1);
+
+    color: var(--color-content1);
+    text-decoration: none;
+    border-radius: spacing-rem(0.5);
+
+    & .Title {
+        font-family: 'Lexend Medium', sans-serif;
+        height: 16px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 16px;
+    }
+
+    &.Active,
+    &.Loading {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    &.Active {
+        background-color: var(--color-main);
+        color: var(--color-background1);
+    }
+
+    &:hover:not(.Active) {
+        background-color: var(--color-background3);
+    }
+}

@@ -6,9 +6,9 @@
     min-height: 100%;
     display: grid;
     grid-template-columns: rem-calc(256) 1fr;
-    background-color: red;
+    background-color: var(--color-background2);
 
     .Body {
-        background-color: blue;
+        // background-color: blue;
     }
 }

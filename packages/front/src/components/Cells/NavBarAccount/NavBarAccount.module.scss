@@ -17,6 +17,7 @@
         display: grid;
         grid-template-columns: rem-calc(40) minmax(0, 1fr);
         gap: spacing-rem(2);
+        height: 100%;
 
         & .TextBox {
             position: relative;
@@ -35,7 +36,12 @@
         color: var(--color-background1);
     }
 
-    &:hover {
+    &.Active,
+    &.Loading {
+        cursor: default;
+    }
+
+    &.Active {
         background-color: var(--color-main);
 
         & .LeftSection {
@@ -59,6 +65,13 @@
 
             }
         }
+    }
 
+    &:hover:not(&.Loading):not(.Active) {
+        background-color: var(--color-background3);
+
+        & .Icon {
+            color: var(--color-content1);
+        }
     }
 }
