@@ -12,7 +12,8 @@ import { bin2hex, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/users.dto';
 import { ClientsDTO } from '../clients/clients.dto';
-import { SubjectDTO } from 'src/users/subject.dto';
+import { SubjectDTO } from '../users/subject.dto';
+import { UsersInfosDTO } from '../users/dto';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
   async validateUser(
     identity: string,
     password: string,
-  ): Promise<UsersDTO | undefined> {
+  ): Promise<UsersInfosDTO | undefined> {
     // retreaving a user by identity
     const user = await this.usersService.findByIdentity(identity);
     // checking if we retreave the user
@@ -43,7 +44,10 @@ export class AuthService {
       if (isMatch) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: _, ...result } = user; // return everything except the password
-        return UsersDTO.from({ password: undefined, ...result });
+        return UsersInfosDTO.from({
+          password: undefined,
+          ...result,
+        });
       }
     }
     return null;

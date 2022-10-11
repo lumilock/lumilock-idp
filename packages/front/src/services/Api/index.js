@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
 export { default as Auth } from './Auth';
+export { default as Clients } from './Clients';

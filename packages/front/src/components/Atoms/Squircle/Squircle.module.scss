@@ -32,11 +32,11 @@
             fill: transparent;
             stroke: var(--color-content3);
             stroke-dasharray: spacing-rem(1);
-            opacity: .5;
+            opacity: .25;
         }
 
         &>svg {
-            opacity: .5;
+            opacity: .25;
         }
     }
 

@@ -1,22 +1,16 @@
 import React from 'react';
 import { IoIosApps } from 'react-icons/io';
 
-import { TitleSection } from '../../components/Cells';
-import { FavoritesSection } from '../../components/Organisms';
+import { ApplicationsSection, FavoritesSection } from '../../components/Organisms';
 import { HeaderWrapper } from '../../components/Species';
+import styles from './Applications.module.scss';
 
 function Applications() {
   return (
     <HeaderWrapper icon={IoIosApps} title="Applications">
-      <div>
+      <div className={styles.Root}>
         <FavoritesSection />
-        <TitleSection
-          color="content1"
-          borderColor="background3"
-          variant="underlined"
-          title="Toutes les applications"
-          icon={IoIosApps}
-        />
+        <ApplicationsSection />
       </div>
     </HeaderWrapper>
   );

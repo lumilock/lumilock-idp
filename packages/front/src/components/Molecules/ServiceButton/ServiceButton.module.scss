@@ -1,0 +1,32 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: var(--color-background1);
+    border: rem-calc(1) solid var(--color-background3);
+    padding: spacing-rem(1);
+    gap: spacing-rem(1);
+    border-radius: spacing-rem(1);
+
+    &:not([disabled]) {
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--color-background3);
+        }
+    }
+
+    & .Title {
+        & h3 {
+            color: var(--color-content1);
+        }
+
+        & p {
+            color: var(--color-content3);
+        }
+    }
+}

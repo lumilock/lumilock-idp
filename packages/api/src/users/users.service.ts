@@ -9,6 +9,7 @@ import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './users.dto';
 import { disableUsers, upsertUsers } from './queries';
+import { UsersInfosDTO } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -19,13 +20,19 @@ export class UsersService {
   ) {}
 
   // Find user by identity
-  async findByIdentity(identity: string): Promise<UsersDTO | undefined> {
+  async findByIdentity(identity: string): Promise<UsersInfosDTO | undefined> {
     return this.repo
-      .findOne({
-        where: [{ email: identity }, { login: identity }],
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
+      .where('user.email = :identity OR user.login = :identity', {
+        identity: identity,
       })
+      .andWhere('uc.client_id = :clientId', {
+        clientId: oidcConstants.clientLauncherId,
+      })
+      .getOne()
       .then((user) => {
-        return user ? UsersDTO.fromEntity(user) : undefined;
+        return user ? UsersInfosDTO.fromEntity(user) : undefined;
       });
   }
 

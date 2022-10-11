@@ -1,30 +1,31 @@
 import React from 'react';
-import { IoIosStar } from 'react-icons/io';
+import { IoIosBasket } from 'react-icons/io';
 import { Else, If, Then } from '../../Atoms';
 
 import { TitleSection } from '../../Cells';
 import { AppLink } from '../../Molecules';
-import styles from './FavoritesSection.module.scss';
+import styles from './ApplicationsSection.module.scss';
 
-function FavoritesSection() {
-  const apps = Array.from({ length: 0 }, (v, k) => k);
+function ApplicationsSection() {
+  const apps = Array.from({ length: 100 }, (v, k) => k);
   return (
     <div className={styles.Root}>
       <TitleSection
         color="content1"
         borderColor="background3"
         variant="underlined"
-        title="Favoris"
+        title="Toutes les applications"
+        icon={IoIosBasket}
       />
       <div className={styles.AppContainer}>
         <If condition={apps.length > 0}>
           <Then>
             {apps.map((index) => (
-              <AppLink key={index} path="/settings" />
+              <AppLink key={index} path="/settings" name="App name" />
             ))}
           </Then>
           <Else>
-            <AppLink icon={IoIosStar} variant="dashed" ghost />
+            <AppLink variant="dashed" ghost />
           </Else>
         </If>
       </div>
@@ -33,4 +34,4 @@ function FavoritesSection() {
   );
 }
 
-export default React.memo(FavoritesSection);
+export default React.memo(ApplicationsSection);
