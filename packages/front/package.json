@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "as-bind": "^0.4.0",
     "axios": "^0.27.2",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@redux-devtools/extension": "^3.2.2",
+    "assemblyscript": "^0.21.6",
     "eslint": "^8.23.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-react-app": "^7.0.1",
@@ -41,7 +43,9 @@
   },
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
-    "build": "react-scripts build",
+    "build:react": "react-scripts build",
+    "build:wasm": "asc ./node_modules/as-bind/lib/assembly/as-bind.ts --config assembly/tsconfig.json --target release",
+    "build": "yarn build:wasm && yarn build:react",
     "test": "react-scripts test",
     "lint": "npx eslint --ignore-pattern '**/node_modules/*' --ignore-pattern '**/*.test.js' --fix ./src --ext .js --ext .jsx",
     "eject": "react-scripts eject"

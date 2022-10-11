@@ -8,7 +8,7 @@ function HeaderWrapper({ icon, title, children }) {
 
   useEffectOnce(() => {
     setHeader(icon, title);
-  }, []);
+  });
 
   return children;
 }

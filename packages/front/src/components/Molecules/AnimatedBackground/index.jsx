@@ -5,9 +5,9 @@ import React, {
 
 import If, { Then, Else } from '../../Atoms/If';
 import {
-  ownerWindow, debounce, randomIntFromInterval, browser,
+  ownerWindow, debounce, randomIntFromInterval,
 } from '../../../services/Tools';
-import { useEffectOnce } from '../../../services/Hooks';
+import background from '../../../assets/images/backLogo.png';
 import styles from './AnimatedBackground.module.scss';
 
 // TODO useId for ids
@@ -51,89 +51,13 @@ TileMask.defaultProps = {
 };
 
 function AnimatedBackground({
-  ballsNumber, minSize, maxSize, mask,
+  mask,
 }) {
   const componentId = useId();
   const ref = useRef(null);
-  const canvasRef = useRef(null);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-  // const [interval, setIntrvl] = useState(null);
-  const ballsArray = useMemo(() => Array.from({ length: ballsNumber }, (_v, k) => k), [ballsNumber]);
   const gridColumns = useMemo(() => Array.from({ length: Math.ceil((windowSize?.width || 0) / 256) }, (_v, k) => k), [windowSize?.width]);
   const gridRows = useMemo(() => Array.from({ length: Math.ceil((windowSize?.height || 0) / 256) }, (_v, k) => k), [windowSize?.height]);
-  const activateAnimation = useMemo(() => browser() === 'Google Chrome', []);
-  console.log(browser(), activateAnimation);
-  const move = useCallback(
-    (el, x, y, size) => {
-      // eslint-disable-next-line no-param-reassign
-      el.style.top = `${x}px`;
-      // eslint-disable-next-line no-param-reassign
-      el.style.left = `${y}px`;
-      // eslint-disable-next-line no-param-reassign
-      el.style.width = `${size}rem`;
-      // eslint-disable-next-line no-param-reassign
-      el.style.height = `${size}rem`;
-      // eslint-disable-next-line no-param-reassign
-      el.style.transition = '5s ease-in-out';
-    },
-    [],
-  );
-
-  const setNewPositions = useCallback(() => {
-    // Define elements
-    const container = ref?.current;
-    const group1 = container?.getElementsByClassName('group1')[0];
-    const circleG1 = group1?.getElementsByClassName('circle');
-    const group2 = container?.getElementsByClassName('group2')[0];
-    const circleG2 = group2?.getElementsByClassName('circle');
-    const group3 = container?.getElementsByClassName('group3')[0];
-    const circleG3 = group3?.getElementsByClassName('circle');
-
-    const index = randomIntFromInterval(0, ballsNumber - 1);
-
-    const circle1 = circleG1[index];
-    const circle2 = circleG2[index];
-    const circle3 = circleG3[index];
-
-    const width = container?.offsetWidth;
-    const height = container?.offsetHeight;
-    const size = randomIntFromInterval(minSize, maxSize);
-    const y = randomIntFromInterval(size - 0, (windowSize?.width || width));
-    const x = randomIntFromInterval(size - 0, (windowSize?.height || height));
-    move(circle1, x, y, size);
-    move(circle2, x, y, size);
-    move(circle3, x, y, size);
-  }, [ballsNumber, maxSize, minSize, move, windowSize?.height, windowSize?.width]);
-
-  const init = useCallback(
-    () => {
-      // Define elements
-      const container = ref?.current;
-      const group1 = container?.getElementsByClassName('group1')[0];
-      const circleG1 = group1?.getElementsByClassName('circle');
-      const group2 = container?.getElementsByClassName('group2')[0];
-      const circleG2 = group2?.getElementsByClassName('circle');
-      const group3 = container?.getElementsByClassName('group3')[0];
-      const circleG3 = group3?.getElementsByClassName('circle');
-      // Calculate container size
-      const width = container?.offsetWidth;
-      const height = container?.offsetHeight;
-      setWindowSize({ width, height });
-      // initialise circles
-      for (let index = 0; index < ballsNumber; index += 1) {
-        const circle1 = circleG1[index];
-        const circle2 = circleG2[index];
-        const circle3 = circleG3[index];
-        const size = randomIntFromInterval(minSize, maxSize);
-        const y = randomIntFromInterval(size - 0, width);
-        const x = randomIntFromInterval(size - 0, height);
-        move(circle1, x, y, size);
-        move(circle2, x, y, size);
-        move(circle3, x, y, size);
-      }
-    },
-    [ballsNumber, maxSize, minSize, move],
-  );
 
   useEffect(() => {
     const handleResize = debounce(() => {
@@ -143,6 +67,7 @@ function AnimatedBackground({
 
     const win = ownerWindow(ref.current);
     win.addEventListener('resize', handleResize);
+    handleResize();
 
     return () => {
       handleResize.clear();
@@ -156,108 +81,13 @@ function AnimatedBackground({
     [],
   );
 
-  // At the mounted state we initialize all shapes
-  // and started the interval animation
-  useEffectOnce(() => {
-    init();
-    const id = window.setInterval(() => {
-      setNewPositions();
-    }, 5000 / 5);
-    // At the unmounted state we removed the Interval
-    return () => {
-      window.clearInterval(id);
-    };
-  });
-  // const generateNoise = (canvas, ctx, opacity) => {
-  //   for (let x = 0; x < canvas.width; x += 1) {
-  //     for (let y = 0; y < canvas.height; y += 1) {
-  //       const number = Math.floor(Math.random() * 60);
-
-  //       ctx.fillStyle = `rgba(${number},${number},${number},${opacity})`;
-  //       ctx.fillRect(x, y, 1, 1);
-  //     }
-  //   }
-  // };
-
-  const colorMatrix = (canvas, ctx) => {
-    const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const src = image.data;
-    for (let i = 0; i < src.length; i += 4) {
-      const r = src[i];
-      const g = src[i + 1];
-      const b = src[i + 2];
-
-      // thresholding the current value
-      const v = (0.2126 * r + 0.7152 * g + 0.0722 * b >= 127) ? 255 : 0;
-
-      src[i] = src[i + 1];
-      src[i + 1] = src[i + 2];
-      src[i + 2] = v;
-    }
-    ctx.putImageData(image, 0, 0);
-  };
-
-  useEffectOnce(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, 500, 200);
-    // ctx.filter = 'blur(20px)';
-    ctx.beginPath();
-    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(165, 50, 40, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(180, 50, 40, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fillStyle = 'red';
-    ctx.fill();
-    ctx.arc(225, 50, 40, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fillStyle = 'blue';
-    ctx.fill();
-    colorMatrix(canvas, ctx);
-    // generateNoise(canvas, ctx, 1);
-  }, []);
-
   return (
-    <div ref={ref} className={styles.Base}>
-      <div className={`${styles.Group} group1`}>
-        {ballsArray.map((k) => (
-          <span key={k} className={`${styles.Circle} circle`} />
-        ))}
-      </div>
-      <div className={`${styles.Group} group2`}>
-        {ballsArray.map((k) => (
-          <span key={k} className={`${styles.Circle} circle`} />
-        ))}
-      </div>
-      <div className={`${styles.Group} group3`}>
-        {ballsArray.map((k) => (
-          <span key={k} className={`${styles.Circle} circle`} />
-        ))}
-      </div>
-      <canvas
-        id={`gooeyCanvas${componentId}`}
-        ref={canvasRef}
-        className={styles.Root}
-        style={{
-          border: '1px solid #d3d3d3',
-          position: 'relative',
-          // filter: `url('#matrix${componentId}')`,
-          // filter: `url('#fancyGoo') url('#blurFilter') url('#fancyGoo')`,
-        }}
-      >
-        Your browser does not support the HTML canvas tag.
-      </canvas>
+    <div ref={ref} className={styles.Base} style={{ clipPath: `url(#svgPath${componentId})` }}>
+      <img src={background} alt="Background" />
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
         {mask && (
           <defs>
-            <clipPath id="svgPath">
+            <clipPath id={`svgPath${componentId}`}>
               {gridColumns?.map((cI) => (
                 <React.Fragment key={cI}>
                   {gridRows?.map((rI) => (
@@ -274,34 +104,6 @@ function AnimatedBackground({
             </clipPath>
           </defs>
         )}
-        <defs>
-          {/* <filter
-            filterUnits="objectBoundingBox"
-            id={`matrix${componentId}`}
-          >
-            <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter> */}
-          {/* <filter id="fancyGoo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-          <filter id="blurFilter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="100" />
-          </filter>
-          <filter id="noiseFilter">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.75"
-              numOctaves="100"
-              result="noise"
-              stitchTiles="stitch"
-            />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="200" xChannelSelector="R" yChannelSelector="G" />
-          </filter> */}
-        </defs>
       </svg>
     </div>
   );
@@ -309,27 +111,12 @@ function AnimatedBackground({
 
 AnimatedBackground.propTypes = {
   /**
-   * Number of balls to generate
-   */
-  ballsNumber: PropTypes.number,
-  /**
-   * Min ball size in rem (1rem = 16px)
-   */
-  minSize: PropTypes.number,
-  /**
-   * Max ball size in rem (1rem = 16px)
-   */
-  maxSize: PropTypes.number,
-  /**
    * Display mask
    */
   mask: PropTypes.bool,
 };
 
 AnimatedBackground.defaultProps = {
-  ballsNumber: 4,
-  minSize: 50 / 16,
-  maxSize: 500 / 16,
   mask: true,
 };
 

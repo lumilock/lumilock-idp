@@ -1,0 +1,23 @@
+{
+  "extends": "../node_modules/assemblyscript/std/assembly.json",
+  "include": [
+    "./**/*.ts"
+  ],
+  "entries": [
+    "./index.ts"
+  ],
+  "options": {
+    "exportRuntime": true,
+    "transform": "as-bind"
+  },
+  "targets": {
+    "release": {
+      "optimize": true,
+      "outFile": "../public/myModule.release.wasm"
+    },
+    "debug": {
+      "debug": true,
+      "outFile": "../public/myModule.debug.wasm"
+    }
+  }
+}
