@@ -1,15 +1,17 @@
 import React from 'react';
 import { IoIosConstruct } from 'react-icons/io';
 
-import { ServicesSection } from '../../components/Organisms';
+import { ServiceSideBar, ServicesSection } from '../../components/Organisms';
 import { HeaderWrapper } from '../../components/Species';
+
+import styles from './Services.module.scss';
 
 function Services() {
   return (
     <HeaderWrapper icon={IoIosConstruct} title="Services">
-      <div>
+      <div className={styles.Root}>
         <ServicesSection />
-        {/* <ApplicationsSection /> */}
+        <ServiceSideBar />
       </div>
     </HeaderWrapper>
   );

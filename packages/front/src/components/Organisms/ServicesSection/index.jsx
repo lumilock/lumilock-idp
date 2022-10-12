@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Clients } from '../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../services/Hooks';
@@ -17,6 +17,7 @@ function ServicesSection() {
     setSuccess,
     setLoading,
   ] = useRequestStates([]);
+  const [selected, setSelected] = useState('');
 
   const fetchServices = useCallback(
     async () => {
@@ -67,6 +68,8 @@ function ServicesSection() {
                 id={app?.id}
                 image={app?.logoUri}
                 name={app?.clientName}
+                selected={app?.id === selected}
+                setSelected={setSelected}
               />
             ))}
           </When>

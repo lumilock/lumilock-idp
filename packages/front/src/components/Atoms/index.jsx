@@ -7,4 +7,6 @@ export { default as Typography } from './Typography';
 export { default as SuspenseTrigger } from './SuspenseTrigger';
 export { default as Divider } from './Divider';
 export { default as Skeleton } from './Skeleton';
+export { default as FetchInterceptor } from './FetchInterceptor';
+export { default as Toggle } from './Toggle';
 export * from './Form';

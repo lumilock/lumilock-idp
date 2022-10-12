@@ -2,6 +2,7 @@
 
 .Base {
     border-style: solid;
+    border-bottom: none;
 
     &.Background1 {
         border-color: var(--color-background1);

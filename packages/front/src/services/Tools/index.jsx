@@ -8,3 +8,4 @@ export { default as pascalCase } from './pascalCase';
 export { default as getAllQuery } from './getAllQuery';
 export { default as getInitials } from './getInitials';
 export { default as browser } from './browser';
+export * from './cssRem';

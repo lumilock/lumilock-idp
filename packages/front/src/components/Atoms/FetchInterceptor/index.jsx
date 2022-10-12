@@ -3,7 +3,7 @@ import { useLogout } from '../../../services/Hooks';
 
 const { fetch: originalFetch } = window;
 
-function Test({ children }) {
+function FetchInterceptor({ children }) {
   // Store
   const logout = useLogout();
 
@@ -24,4 +24,4 @@ function Test({ children }) {
   return [children];
 }
 
-export default React.memo(Test);
+export default React.memo(FetchInterceptor);

@@ -173,8 +173,10 @@ button {
     // }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1000px) {}
+
+@media screen and (min-width: 1920) {
     // html {
-    //     font-size: 16px;
+    //     font-size: calc(16px + 8 * ((100vw - 600px) / 1920));
     // }
 }

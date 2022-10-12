@@ -15,18 +15,12 @@
     &:not([disabled]) {
         cursor: pointer;
 
-        &:hover {
+        &:hover:not(.Active) {
             background-color: var(--color-background3);
         }
     }
 
-    & .Title {
-        & h3 {
-            color: var(--color-content1);
-        }
-
-        & p {
-            color: var(--color-content3);
-        }
+    &.Active {
+        background-color: var(--color-main);
     }
 }
