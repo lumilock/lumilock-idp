@@ -6,7 +6,7 @@ import styles from './ServiceButton.module.scss';
 
 function ServiceButton({ image, name, id }) {
   const handleClick = () => {
-    console.log('click');
+    console.log('click', image);
   };
 
   return (

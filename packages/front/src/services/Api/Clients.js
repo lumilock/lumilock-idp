@@ -1,8 +1,8 @@
 const Clients = {
   // get all clients services
-  services: () => fetch('/api/clients'),
+  services: () => fetch('/api/clients?all=true'),
   // get all clients for an admin user
-  apps: () => fetch('/api/clients?all=true'),
+  apps: () => fetch('/api/clients'),
 };
 
 export default Clients;
