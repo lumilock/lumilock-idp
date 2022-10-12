@@ -13,11 +13,11 @@
 
     & .Title {
         font-family: 'Lexend Medium', sans-serif;
-        height: 16px;
+        height: spacing-rem(2);
         font-style: normal;
         font-weight: 500;
-        font-size: 13px;
-        line-height: 16px;
+        font-size: rem-calc(13);
+        line-height: spacing-rem(2);
     }
 
     &.Active,

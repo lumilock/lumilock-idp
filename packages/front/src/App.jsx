@@ -7,17 +7,22 @@ import AppRoutes from './routes';
 import './App.css';
 
 const Main = React.lazy(() => import('./components/Species/Main'));
+const FetchInterceptor = React.lazy(() => import('./components/Species/FetchInterceptor'));
 
 function App() {
   return (
     <main className="App">
       <Router>
-        <Suspense fallback={<span>Connection...</span>}>
-          <Main>
-            <Suspense fallback={<span>Loading...</span>}>
-              <AppRoutes />
+        <Suspense fallback={<span>Initialisation...</span>}>
+          <FetchInterceptor>
+            <Suspense fallback={<span>Connection...</span>}>
+              <Main>
+                <Suspense fallback={<span>Loading...</span>}>
+                  <AppRoutes />
+                </Suspense>
+              </Main>
             </Suspense>
-          </Main>
+          </FetchInterceptor>
         </Suspense>
       </Router>
     </main>

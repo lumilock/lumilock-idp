@@ -1,6 +1,7 @@
 export const START_LOADING_AUTH = 'START_LOADING_AUTH';
 export const END_LOADING_AUTH = 'END_LOADING_AUTH';
 export const UPDATE_USER_AUTH = 'UPDATE_USER_AUTH';
+export const LOGOUT_AUTH = 'LOGOUT_AUTH';
 export const INIT = 'INIT';
 
 const initialState = {
@@ -28,7 +29,15 @@ export function authReducer(state = initialState, action) {
     case END_LOADING_AUTH: {
       return { ...state, loading: false, loaded: true };
     }
-    // Function to re-init all the user store
+    // Function to re-init all the auth store
+    case LOGOUT_AUTH: {
+      return {
+        loading: false,
+        loaded: true,
+        user: null,
+      };
+    }
+    // Function to re-init all the user store globally trigger
     case INIT: {
       return initialState;
     }

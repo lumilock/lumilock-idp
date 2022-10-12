@@ -38,4 +38,28 @@
     &[disabled] {
         pointer-events: none;
     }
+
+    &:not([disabled])::before {
+        content: '';
+        position: absolute;
+        display: block;
+        top: rem-calc(-8);
+        left: rem-calc(-8);
+        width: calc(100% + rem-calc(16));
+        height: calc(100% + rem-calc(16));
+        background-color: var(--color-background1);
+        border: rem-calc(1) solid var(--color-background3);
+        border-radius: rem-calc(4);
+        transform: scale(0.75);
+        opacity: 0;
+        transition: .5s $transitionInOut;
+    }
+
+    &:not([disabled]):hover {
+        &::before {
+            transform: scale(1);
+            transition: .25s $transitionInOut;
+            opacity: 1;
+        }
+    }
 }

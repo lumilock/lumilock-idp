@@ -30,7 +30,7 @@ function ServicesSection() {
           }
           throw new Error(response?.statusText);
         }).then((response) => {
-          setApps(response);
+          setApps(response || []);
           setSuccess('Apps has been correctly loaded');
           setLoading(false);
         }).catch((err) => {
