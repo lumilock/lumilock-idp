@@ -64,7 +64,7 @@ class MinioClient {
 
   static async signedUrl(
     path,
-    duration = 24 * 60 * 60,
+    duration = 24 * 60 * 60, // default 1 days in seconds
     bucketName = fssConstants.bucketName,
   ) {
     return new Promise((resolve, reject) => {

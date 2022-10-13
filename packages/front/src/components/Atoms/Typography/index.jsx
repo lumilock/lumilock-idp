@@ -6,7 +6,7 @@ import colors from '../../../services/Theme/colors';
 import styles from './Typography.module.scss';
 
 function Typography({
-  variant, component, paragraph, className, color, children,
+  variant, component, paragraph, className, color, ellipsis, children,
 }) {
   const defaultVariantMapping = {
     h1: 'h1',
@@ -29,6 +29,7 @@ function Typography({
   const classes = [
     `${styles?.Base}`,
     className ? ` ${className}` : '',
+    ellipsis ? ` ${styles.Ellipsis}` : '',
     ['subtitle1', 'subtitle2', 'body1', 'body2'].includes(variant) ? ` ${variant}` : '',
     ` ${styles?.[pascalCase(color)]}`,
   ].join('');
@@ -48,6 +49,11 @@ Typography.propTypes = {
    * @default false
    */
   paragraph: PropTypes.bool,
+  /**
+   * If `true`, the element overflow with ellipsis.
+   * @default false
+   */
+  ellipsis: PropTypes.bool,
   /**
    * The component used for the root node.
    * Either a string to use a HTML element or a component.
@@ -89,6 +95,7 @@ Typography.propTypes = {
 Typography.defaultProps = {
   className: '',
   paragraph: false,
+  ellipsis: false,
   component: undefined,
   variant: 'body1',
   children: '',

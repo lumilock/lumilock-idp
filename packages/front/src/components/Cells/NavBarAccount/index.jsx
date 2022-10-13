@@ -6,7 +6,7 @@ import {
   Else, Icon, If, Skeleton, Then, Typography,
 } from '../../Atoms';
 import { useAuth } from '../../../services/Hooks';
-import { getInitials } from '../../../services/Tools';
+import { getInitials, remCalc } from '../../../services/Tools';
 
 import { Avatar } from '../../Molecules';
 import styles from './NavBarAccount.module.scss';
@@ -51,10 +51,12 @@ function NavBarAccount() {
             <Else>
               <Skeleton
                 width="60%"
+                height={remCalc(15)}
                 animation="wave"
               />
               <Skeleton
                 width="30%"
+                height={remCalc(15)}
                 animation="wave"
               />
             </Else>

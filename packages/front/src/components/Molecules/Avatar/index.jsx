@@ -28,14 +28,16 @@ function Avatar({
       <Choose>
         {/* Display image */}
         <When condition={!!src}>
-          <img
-            alt=""
-            src={src}
-            {...rest}
-            className={styles.Image}
-            style={loaded ? {} : { display: 'none' }}
-            onLoad={() => setLoaded(true)}
-          />
+          <figure>
+            <img
+              alt=""
+              src={src}
+              {...rest}
+              className={styles.Image}
+              style={loaded ? {} : { display: 'none' }}
+              onLoad={() => setLoaded(true)}
+            />
+          </figure>
           <Icon
             style={!loaded ? {} : { display: 'none' }}
             className={styles.Icon}

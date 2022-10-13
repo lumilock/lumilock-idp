@@ -80,4 +80,19 @@
   &.Info {
     color: var(--color-info);
   }
+
+  &.Loading {
+    animation: rotateKeyframe 1.5s linear infinite;
+  }
+}
+
+
+@keyframes rotateKeyframe {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
 }

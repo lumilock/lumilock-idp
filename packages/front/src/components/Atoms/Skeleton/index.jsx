@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { pascalCase } from '../../../services/Tools';
+import { loadingAnimations } from '../../../services/Theme';
 import styles from './Skeleton.module.scss';
 
 function Skeleton({
@@ -16,7 +17,7 @@ function Skeleton({
         className,
         animation ? styles?.[pascalCase(animation)] : '',
         styles?.[pascalCase(variant)],
-      ].join(' ').trim()}
+      ].join(' ').replaceAll('  ', ' ').trim()}
       style={{
         height,
         width,
@@ -32,7 +33,7 @@ Skeleton.propTypes = {
 * If `false` the animation effect is disabled.
 * @default 'pulse'
 */
-  animation: PropTypes.oneOf(['pulse', 'wave', false]),
+  animation: PropTypes.oneOf(loadingAnimations),
   /**
    * @ignore
    */

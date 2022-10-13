@@ -2,16 +2,20 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Query,
   Req,
   Res,
+  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+
+import { PermissionsGuard } from '../common/guards';
 import { Permission } from '../common/enums';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
-
 import { ClientsService } from './clients.service';
+import { ClientsFullDTO } from './dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -47,5 +51,18 @@ export class ClientsController {
 
     // response
     return res.status(HttpStatus.OK).json(clients);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['clients'])
+  @UseGuards(PermissionsGuard)
+  @Get(':id')
+  public async getById(
+    @Param('id') id: string,
+  ): Promise<ClientsFullDTO | undefined> {
+    // get clients
+    const clients = await this.serv.findById(id);
+    // response
+    return clients;
   }
 }

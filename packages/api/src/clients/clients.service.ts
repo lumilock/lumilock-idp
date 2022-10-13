@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Client } from '../model/clients.entity';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { ClientsDTO } from './clients.dto';
+import { ClientsFullDTO } from './dto';
 
 @Injectable()
 export class ClientsService {
@@ -18,9 +19,10 @@ export class ClientsService {
       return Promise.all(
         clients?.map(async (client) => {
           if (client?.logoUri) {
+            const duration = 60 * 60; // 60s * 60min = 1h in seconds
             // get signed url from the object storage system
             await fileStorageSystem
-              .signedUrl(client?.logoUri)
+              .signedUrl(client?.logoUri, duration)
               .then((url) => (client.logoUri = url))
               .catch(console.error);
           }
@@ -29,10 +31,19 @@ export class ClientsService {
       );
     });
   }
+
   // Find client by id
-  async findById(id: string): Promise<ClientsDTO | undefined> {
-    return this.repo.findOne(id).then((user) => {
-      return user ? ClientsDTO.fromEntity(user) : undefined;
+  async findById(id: string): Promise<ClientsFullDTO | undefined> {
+    return this.repo.findOne(id).then(async (client) => {
+      if (client?.logoUri) {
+        const duration = 60; // 60s
+        // get signed url from the object storage system
+        await fileStorageSystem
+          .signedUrl(client?.logoUri, duration)
+          .then((url) => (client.logoUri = url))
+          .catch(console.error);
+      }
+      return client ? ClientsFullDTO.fromEntity(client) : undefined;
     });
   }
 

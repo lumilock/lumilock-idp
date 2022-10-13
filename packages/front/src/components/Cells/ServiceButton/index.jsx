@@ -5,7 +5,7 @@ import ServiceProfile from '../../Molecules/ServiceProfile';
 import styles from './ServiceButton.module.scss';
 
 function ServiceButton({
-  image, name, id, selected, setSelected,
+  image, name, id, selected, setSelected, disabled, loading,
 }) {
   const handleClick = () => {
     setSelected((old) => (old === id ? '' : id));
@@ -16,11 +16,13 @@ function ServiceButton({
       className={[
         styles.Root,
         selected ? styles.Active : '',
+        loading ? styles.Loading : '',
       ].join(' ').replace('  ', ' ').trim()}
       onClick={handleClick}
       onKeyDown={handleClick}
       role="button"
       tabIndex={0}
+      disabled={disabled ? 'disabled' : ''}
     >
       <ServiceProfile
         image={image}
@@ -28,6 +30,7 @@ function ServiceButton({
         subtitle={id}
         titleColor={!selected ? 'content1' : 'background1'}
         subtitleColor={!selected ? 'content3' : 'background3'}
+        loading={loading}
       />
     </div>
   );
@@ -39,6 +42,8 @@ ServiceButton.propTypes = {
   name: PropTypes.string,
   selected: PropTypes.bool,
   setSelected: PropTypes.func,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 ServiceButton.defaultProps = {
@@ -46,6 +51,8 @@ ServiceButton.defaultProps = {
   name: 'App name',
   selected: false,
   setSelected: () => {},
+  disabled: false,
+  loading: false,
 };
 
 export default React.memo(ServiceButton);

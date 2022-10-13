@@ -3,7 +3,9 @@ import React, { useCallback, useContext } from 'react';
 import ServicesContext from '../../../pages/Services/ServicesContext';
 import { Clients } from '../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../services/Hooks';
-import { Choose, OtherWise, When } from '../../Atoms';
+import {
+  Choose, OtherWise, Typography, When,
+} from '../../Atoms';
 import { ServiceButton } from '../../Cells';
 import styles from './ServicesSection.module.scss';
 
@@ -44,7 +46,7 @@ function ServicesSection() {
             console.error('ERROR: [fetchServices - Clients.services]', err);
           }
           setApps([]);
-          setErrors('Impossible to load applications');
+          setErrors('Impossible de charger les applications');
           setLoading(false);
         });
     },
@@ -60,10 +62,16 @@ function ServicesSection() {
       <div className={styles.ServicesContainer}>
         <Choose>
           <When condition={!!loading}>
-            <p>loading</p>
+            {Array.from({ length: 3 }, (v) => v).map((value) => (
+              <ServiceButton
+                key={value}
+                disabled
+                loading
+              />
+            ))}
           </When>
           <When condition={!!errors}>
-            <p>errors</p>
+            <Typography color="alert">{errors}</Typography>
           </When>
           <When condition={!!success && apps.length > 0}>
             {apps.map((app) => (

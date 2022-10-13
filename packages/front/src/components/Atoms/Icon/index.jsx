@@ -1,13 +1,15 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { IoIosSync } from 'react-icons/io';
 
 import styles from './Icon.module.scss';
 import { pascalCase } from '../../../services/Tools';
+import { colors } from '../../../services/Theme';
 
 const sizesTypes = ['xxsmall', 'xsmall', 'small', 'medium', 'large'];
 
 function Icon({
-  ionIcon: Component, size, className, color, ...rest
+  ionIcon, size, className, color, loading, loadingColor, ...rest
 }) {
   const customSize = useMemo(() => (!sizesTypes.includes(size) ? { size } : {}), [size]);
 
@@ -19,14 +21,17 @@ function Icon({
     large: 'Large',
   }), []);
 
+  const Component = useMemo(() => (loading ? IoIosSync : ionIcon), [ionIcon, loading]);
+
   return (
     <Component
       className={[
         styles.Base,
+        loading ? styles.Loading : '',
         styles?.[classes?.[size]] || '',
-        styles?.[pascalCase(color)],
+        styles?.[pascalCase(loading ? loadingColor : color)],
         className,
-      ].join(' ').trim()}
+      ].join(' ').replaceAll('  ', ' ').trim()}
       {...customSize}
       {...rest}
     />
@@ -43,25 +48,20 @@ Icon.propTypes = {
   /**
    * text color variations
    */
-  color: PropTypes.oneOf([
-    'alert',
-    'alert dark',
-    'info',
-    'standard',
-    'main',
-    'content1',
-    'content2',
-    'content3',
-    'background1',
-    'background2',
-    'background3',
-  ]),
+  color: PropTypes.oneOf(colors),
+  /**
+   * Spinner color variations
+   */
+  loadingColor: PropTypes.oneOf(colors),
+  loading: PropTypes.bool,
 };
 
 Icon.defaultProps = {
   className: '',
   size: 'small',
   color: 'content1',
+  loadingColor: 'content3',
+  loading: false,
 };
 
 export default React.memo(Icon);

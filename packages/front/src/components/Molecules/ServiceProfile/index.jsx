@@ -1,23 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Squircle, Typography } from '../../Atoms';
+import {
+  Else, If, Skeleton, Squircle, Then, Typography,
+} from '../../Atoms';
 import colors from '../../../services/Theme/colors';
 import styles from './ServiceProfile.module.scss';
+import { remCalc } from '../../../services/Tools';
 
 function ServiceProfile({
   image, title, subtitle, titleColor, subtitleColor, loading,
 }) {
-  console.log(loading);
   return (
     <div className={styles.Root}>
       <Squircle
         size="medium"
         image={image}
+        loading={loading}
+        animation="wave"
       />
       <div className={styles.Title}>
-        <Typography variant="h3" color={titleColor}>{title}</Typography>
-        <Typography variant="body2" color={subtitleColor}>{subtitle}</Typography>
+        <If condition={loading}>
+          <Then>
+            <Skeleton width="64px" height={remCalc(20)} animation="wave" />
+            <Skeleton width="128px" height={remCalc(15)} animation="wave" />
+          </Then>
+          <Else>
+            <Typography variant="h3" color={titleColor}>{title}</Typography>
+            <Typography variant="body2" color={subtitleColor}>{subtitle}</Typography>
+          </Else>
+        </If>
       </div>
     </div>
   );

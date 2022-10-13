@@ -3,6 +3,12 @@
 .Base {
     position: relative;
 
+    &.Ellipsis {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
     &.Main {
         color: var(--color-main);
     }
