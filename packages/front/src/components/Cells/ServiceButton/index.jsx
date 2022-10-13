@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Squircle, Typography } from '../../Atoms';
+import ServiceProfile from '../../Molecules/ServiceProfile';
 import styles from './ServiceButton.module.scss';
 
 function ServiceButton({
@@ -22,14 +22,13 @@ function ServiceButton({
       role="button"
       tabIndex={0}
     >
-      <Squircle
-        size="medium"
+      <ServiceProfile
         image={image}
+        title={name}
+        subtitle={id}
+        titleColor={!selected ? 'content1' : 'background1'}
+        subtitleColor={!selected ? 'content3' : 'background3'}
       />
-      <div className={styles.Title}>
-        <Typography variant="h3" color={!selected ? 'content1' : 'background1'}>{name}</Typography>
-        <Typography variant="body2" color={!selected ? 'content3' : 'background3'}>{id}</Typography>
-      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { pascalCase } from '../../../services/Tools';
+import colors from '../../../services/Theme/colors';
 import styles from './Typography.module.scss';
 
 function Typography({
@@ -59,19 +60,7 @@ Typography.propTypes = {
   /**
    * text color variations
    */
-  color: PropTypes.oneOf([
-    'alert',
-    'alert dark',
-    'info',
-    'standard',
-    'main',
-    'content1',
-    'content2',
-    'content3',
-    'background1',
-    'background2',
-    'background3',
-  ]),
+  color: PropTypes.oneOf(colors),
   /**
    * Applies the theme typography styles.
    * @default 'body1'

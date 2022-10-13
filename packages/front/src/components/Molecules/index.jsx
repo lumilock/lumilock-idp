@@ -8,4 +8,5 @@ export { default as Avatar } from './Avatar';
 export { default as NavBarItem } from './NavBarItem';
 export { default as Title } from './Title';
 export { default as AppLink } from './AppLink';
-export { default as ServiceButton } from './ServiceButton';
+export { default as ToggleSideBar } from './ToggleSideBar';
+export { default as ServiceProfile } from './ServiceProfile';

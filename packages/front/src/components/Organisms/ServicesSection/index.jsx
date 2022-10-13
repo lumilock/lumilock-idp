@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 
+import ServicesContext from '../../../pages/Services/ServicesContext';
 import { Clients } from '../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../services/Hooks';
 import { Choose, OtherWise, When } from '../../Atoms';
-import { ServiceButton } from '../../Molecules';
+import { ServiceButton } from '../../Cells';
 import styles from './ServicesSection.module.scss';
 
 function ServicesSection() {
@@ -17,7 +18,10 @@ function ServicesSection() {
     setSuccess,
     setLoading,
   ] = useRequestStates([]);
-  const [selected, setSelected] = useState('');
+  // Context
+  const {
+    selected, setSelected,
+  } = useContext(ServicesContext);
 
   const fetchServices = useCallback(
     async () => {
@@ -31,7 +35,7 @@ function ServicesSection() {
           }
           throw new Error(response?.statusText);
         }).then((response) => {
-          setApps(response || []);
+          setApps([...response] || []);
           setSuccess('Apps has been correctly loaded');
           setLoading(false);
         }).catch((err) => {

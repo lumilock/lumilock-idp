@@ -2,14 +2,10 @@
 
 .Root {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display: block;
     background-color: var(--color-background1);
     border: rem-calc(1) solid var(--color-background3);
     padding: spacing-rem(1);
-    gap: spacing-rem(1);
     border-radius: spacing-rem(1);
 
     &:not([disabled]) {

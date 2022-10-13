@@ -2,7 +2,5 @@
 
 .Container {
     position: relative;
-    display: block;
-    width: fit-content;
-    height: fit-content;
+    transition-timing-function: $transitionInOut;
 }

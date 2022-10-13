@@ -5,3 +5,5 @@ export { default as PasswordForm } from './PasswordForm';
 export { default as NavBarAccount } from './NavBarAccount';
 export { default as NavBarMenu } from './NavBarMenu';
 export { default as TitleSection } from './TitleSection';
+export { default as ServiceSideBarContent } from './ServiceSideBarContent';
+export { default as ServiceButton } from './ServiceButton';

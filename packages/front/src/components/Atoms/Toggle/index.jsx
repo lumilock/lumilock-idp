@@ -7,6 +7,7 @@ import { useEffectOnce, useUpdate } from '../../../services/Hooks';
 
 import styles from './Toggle.module.scss';
 import { remCalc } from '../../../services/Tools';
+import ErrorBoundary from '../ErrorBoundary';
 
 // State machine constantes
 const VISIBLE = 1;
@@ -24,7 +25,7 @@ function Toggle({
   const checkAnimateEnter = useMemo(() => (animateEnter ? ENTERING : VISIBLE), [animateEnter]);
   // Transition state
   const [state, setState] = useState(visible ? checkAnimateEnter : HIDDEN);
-  const [size, setSize] = useState(remCalc(orientation === 'vertical' ? containerRef.current?.clientHeight : containerRef.current?.clientWidth));
+  const [size, setSize] = useState(remCalc((orientation === 'vertical' ? containerRef?.current?.children[0]?.offsetHeight : containerRef?.current?.children[0]?.offsetWidth) || 0));
 
   if (visible) {
     childRef.current = children;
@@ -32,7 +33,7 @@ function Toggle({
 
   // Get the dimension (height or width) we want to change
   const getDimension = useCallback(
-    () => (remCalc(orientation === 'vertical' ? containerRef.current?.clientHeight : containerRef.current?.clientWidth)),
+    () => (remCalc((orientation === 'vertical' ? containerRef?.current?.children[0]?.offsetHeight : containerRef?.current?.children[0]?.offsetWidth) || 0)),
     [orientation],
   );
 
@@ -95,14 +96,15 @@ function Toggle({
   style.overflow = 'hidden';
 
   return (
-    <div style={style}>
+    <ErrorBoundary>
       <div
         className={styles.Container}
+        style={style}
         ref={containerRef}
       >
         {childRef.current}
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }
 

@@ -1,0 +1,9 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: spacing-rem(3);
+    padding: spacing-rem(3) spacing-rem(2);
+}
