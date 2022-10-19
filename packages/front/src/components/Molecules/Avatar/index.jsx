@@ -7,6 +7,7 @@ import {
   When, Icon, OtherWise,
 } from '../../Atoms';
 import styles from './Avatar.module.scss';
+import { getInitials, textToColor } from '../../../services/Tools';
 
 function Avatar({
   className, size, src, icon, loadingIcon, children, ...rest
@@ -23,8 +24,30 @@ function Avatar({
     small: 'Small',
   }), []);
 
+  // Get the initial names to display
+  const initials = useMemo(() => {
+    if (!!children && typeof children === 'string' && children?.length <= 3) {
+      return children.toUpperCase() || '';
+    } if (!!children && typeof children === 'string' && children?.length > 3) {
+      return getInitials(children).toUpperCase() || '';
+    }
+    return '';
+  }, [children]);
+
+  const style = {
+    backgroundColor: `#${textToColor(initials, 155, 255)}`,
+    color: `#${textToColor(initials, 0, 75)}`,
+  };
+
   return (
-    <div className={[styles.Base, className, styles?.[classes?.[size]]].join(' ').trim()}>
+    <div
+      className={[
+        styles.Base,
+        className,
+        styles?.[classes?.[size]],
+      ].join(' ').replaceAll('  ', ' ').trim()}
+      style={Object.keys(style).length > 0 ? style : {}}
+    >
       <Choose>
         {/* Display image */}
         <When condition={!!src}>
@@ -52,8 +75,8 @@ function Avatar({
           />
         </When>
         {/* Display Initial */}
-        <When condition={!!children && typeof children === 'string' && children?.length <= 3}>
-          {children || <span>Empty</span>}
+        <When condition={!!children && typeof children === 'string'}>
+          {initials || <span>Empty</span>}
         </When>
         {/* Display Default Icon */}
         <OtherWise>

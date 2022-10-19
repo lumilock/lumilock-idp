@@ -4,4 +4,6 @@ export { default as Header } from './Header';
 export { default as FavoritesSection } from './FavoritesSection';
 export { default as ApplicationsSection } from './ApplicationsSection';
 export { default as ServicesSection } from './ServicesSection';
-export { default as ServiceSideBar } from './ServiceSideBar';
+export { default as ServicesSideBar } from './ServicesSideBar';
+export { default as UsersSection } from './UsersSection';
+export { default as UsersSideBar } from './UsersSideBar';

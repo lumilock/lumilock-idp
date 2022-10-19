@@ -7,3 +7,4 @@ export { default as NavBarMenu } from './NavBarMenu';
 export { default as TitleSection } from './TitleSection';
 export { default as ServiceSideBarContent } from './ServiceSideBarContent';
 export { default as ServiceButton } from './ServiceButton';
+export { default as UserRow } from './UserRow';

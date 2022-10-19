@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 import { NavLink } from 'react-router-dom';
 
@@ -6,14 +6,13 @@ import {
   Else, Icon, If, Skeleton, Then, Typography,
 } from '../../Atoms';
 import { useAuth } from '../../../services/Hooks';
-import { getInitials, remCalc } from '../../../services/Tools';
+import { remCalc } from '../../../services/Tools';
 
 import { Avatar } from '../../Molecules';
 import styles from './NavBarAccount.module.scss';
 
 function NavBarAccount() {
   const { loading, user } = useAuth();
-  const initial = useMemo(() => (!user?.picture ? getInitials(user?.name?.s) || '' : ''), [user?.name, user?.picture]);
 
   return (
     <NavLink
@@ -29,7 +28,7 @@ function NavBarAccount() {
         <If condition={!loading}>
           <Then>
             <Avatar size="medium" src={user?.picture}>
-              {initial}
+              {user?.name}
             </Avatar>
           </Then>
           <Else>

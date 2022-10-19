@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { IoIosPeople } from 'react-icons/io';
 
 import { HeaderWrapper } from '../../components/Species';
+import { UsersSection, UsersSideBar } from '../../components/Organisms';
+import UsersContext from './UsersContext';
+import styles from './Users.module.scss';
 
 function Users() {
+  // States
+  const [selected, setSelected] = useState('');
+
+  // Context value
+  const value = useMemo(
+    () => ({
+      selected,
+      setSelected,
+    }),
+    [selected],
+  );
+
   return (
     <HeaderWrapper icon={IoIosPeople} title="Utilisateurs">
-      <h1>Utilisateurs</h1>
+      <UsersContext.Provider value={value}>
+        <div className={styles.Root}>
+          <UsersSection />
+          <UsersSideBar />
+        </div>
+      </UsersContext.Provider>
     </HeaderWrapper>
   );
 }

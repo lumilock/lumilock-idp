@@ -4,12 +4,13 @@ import { EntityManager, Repository } from 'typeorm';
 import * as format from 'pg-format';
 import * as bcrypt from 'bcrypt';
 
+import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
 import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './users.dto';
 import { disableUsers, upsertUsers } from './queries';
-import { UsersInfosDTO } from './dto';
+import { UsersInfosDTO, UsersLightDTO } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,29 @@ export class UsersService {
     @InjectEntityManager()
     private readonly entityManager: EntityManager,
   ) {}
+
+  // Find all clients
+  async all(): Promise<UsersLightDTO[] | undefined> {
+    return this.repo
+      .find({
+        order: { familyName: 'ASC' },
+      })
+      .then((users) => {
+        return Promise.all(
+          users?.map(async (user) => {
+            if (user?.picture) {
+              const duration = 60; // 60s
+              // get signed url from the object storage system
+              await fileStorageSystem
+                .signedUrl(user?.picture, duration)
+                .then((url) => (user.picture = url))
+                .catch(console.error);
+            }
+            return UsersLightDTO.fromEntity(user);
+          }) || undefined,
+        );
+      });
+  }
 
   // Find user by identity
   async findByIdentity(identity: string): Promise<UsersInfosDTO | undefined> {

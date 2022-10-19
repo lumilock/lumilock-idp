@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { IoIosConstruct } from 'react-icons/io';
 
-import { ServiceSideBar, ServicesSection } from '../../components/Organisms';
+import { ServicesSideBar, ServicesSection } from '../../components/Organisms';
 import { HeaderWrapper } from '../../components/Species';
 
 import styles from './Services.module.scss';
@@ -25,7 +25,7 @@ function Services() {
       <ServicesContext.Provider value={value}>
         <div className={styles.Root}>
           <ServicesSection />
-          <ServiceSideBar />
+          <ServicesSideBar />
         </div>
       </ServicesContext.Provider>
     </HeaderWrapper>

@@ -4,7 +4,7 @@ import ServicesContext from '../../../pages/Services/ServicesContext';
 import { ServiceSideBarContent } from '../../Cells';
 import { ToggleSideBar } from '../../Molecules';
 
-function ServiceSideBar() {
+function ServicesSideBar() {
   // Context
   const {
     selected,
@@ -17,4 +17,4 @@ function ServiceSideBar() {
   );
 }
 
-export default React.memo(ServiceSideBar);
+export default React.memo(ServicesSideBar);

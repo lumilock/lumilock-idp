@@ -1,0 +1,33 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: spacing-rem(3);
+    gap: spacing-rem(1);
+    flex: 1;
+
+    & .UsersContainer {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        & .Box {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            border: rem-calc(1) solid var(--color-background3);
+            border-radius: spacing-rem(1);
+            overflow: hidden;
+
+            &>div:not(:last-child) {
+                border-bottom: rem-calc(1) solid var(--color-background3);
+            }
+        }
+
+    }
+}

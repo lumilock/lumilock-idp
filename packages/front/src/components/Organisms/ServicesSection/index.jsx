@@ -62,8 +62,9 @@ function ServicesSection() {
       <div className={styles.ServicesContainer}>
         <Choose>
           <When condition={!!loading}>
-            {Array.from({ length: 3 }, (v) => v).map((value) => (
+            {Array.from({ length: 3 }, (_, v) => v).map((value) => (
               <ServiceButton
+                id={value.toString()}
                 key={value}
                 disabled
                 loading
