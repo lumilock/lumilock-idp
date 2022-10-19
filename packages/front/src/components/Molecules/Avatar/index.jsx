@@ -35,8 +35,8 @@ function Avatar({
   }, [children]);
 
   const style = {
-    backgroundColor: `#${textToColor(initials, 155, 255)}`,
-    color: `#${textToColor(initials, 0, 75)}`,
+    backgroundColor: `#${textToColor(children && typeof children === 'string' ? children : initials, 125, 235)}`,
+    color: `#${textToColor(children && typeof children === 'string' ? children : initials, 0, 75)}`,
   };
 
   return (
@@ -95,7 +95,7 @@ Avatar.propTypes = {
   className: PropTypes.string,
   icon: PropTypes.func,
   loadingIcon: PropTypes.func,
-  size: PropTypes.oneOf(['xlarge', 'xxlarge', 'large', 'regular', 'medium', 'small']),
+  size: PropTypes.oneOf(['xlarge', 'xxlarge', 'large', 'medium', 'regular', 'small']),
   children: PropTypes.string,
 };
 

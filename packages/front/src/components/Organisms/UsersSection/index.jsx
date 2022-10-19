@@ -79,7 +79,6 @@ function UsersSection() {
           </When>
           <When condition={!!success && users.length > 0}>
             <div className={styles.Box}>
-
               {users.map((user) => (
                 <UserRow
                   key={user?.id}

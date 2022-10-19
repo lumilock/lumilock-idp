@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import UsersContext from '../../../pages/Users/UsersContext';
+import { UserSideBarContent } from '../../Cells';
 import { ToggleSideBar } from '../../Molecules';
 
 function UsersSideBar() {
@@ -11,7 +12,7 @@ function UsersSideBar() {
 
   return (
     <ToggleSideBar open={!!selected}>
-      test
+      <UserSideBarContent id={selected} />
     </ToggleSideBar>
   );
 }

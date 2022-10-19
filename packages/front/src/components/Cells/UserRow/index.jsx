@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { IoPin } from 'react-icons/io5';
-import styles from './UserRow.module.scss';
+
+import { remCalc } from '../../../services/Tools';
 import { Avatar, Gender } from '../../Molecules';
 import {
   Else, Icon, If, Skeleton, Then, Typography,
 } from '../../Atoms';
+import styles from './UserRow.module.scss';
 
 function UserRow({
   id, image, name, gender, login, locality, selected, setSelected, disabled, loading,
@@ -32,7 +33,7 @@ function UserRow({
         <Then>
           <div className={styles.Head}>
             <Avatar size="small" {...(!image && { src: image })}>
-              {name}
+              {login}
             </Avatar>
             <div className={styles.Name}>
               <Typography varian="h4" color={!selected ? 'content1' : 'background1'}>
@@ -57,14 +58,14 @@ function UserRow({
         </Then>
         <Else>
           <div className={styles.Head}>
-            <Skeleton variant="circular" width={24} height={24} animation="wave" />
+            <Skeleton variant="circular" width={remCalc(24)} height={remCalc(24)} animation="wave" />
             <div className={styles.Name}>
-              <Skeleton width={100} animation="wave" />
+              <Skeleton width={remCalc(100)} animation="wave" />
             </div>
-            <Skeleton width={100} animation="wave" />
+            <Skeleton width={remCalc(100)} animation="wave" />
           </div>
           <div className={styles.Locality}>
-            <Skeleton width={100} animation="wave" />
+            <Skeleton width={remCalc(100)} animation="wave" />
           </div>
         </Else>
       </If>

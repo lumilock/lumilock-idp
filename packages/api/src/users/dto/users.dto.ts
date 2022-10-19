@@ -14,11 +14,11 @@ import {
   IsOptional,
   validateSync,
 } from 'class-validator';
-import { User, UserGender } from '../model/users.entity';
-import { AddressesDTO } from '../addresses/addresses.dto';
-import { CodesDTO } from '../codes/codes.dto';
-import { UsersClientsDTO } from '../users-clients/users-clients.dto';
-import noTilde from '../utils/noTilde';
+import { User, UserGender } from '../../model/users.entity';
+import { AddressesDTO } from '../../addresses/addresses.dto';
+import { CodesDTO } from '../../codes/codes.dto';
+import { UsersClientsDTO } from '../../users-clients/users-clients.dto';
+import noTilde from '../../utils/noTilde';
 
 export class UsersDTO implements Readonly<UsersDTO> {
   @ApiProperty({ required: true })

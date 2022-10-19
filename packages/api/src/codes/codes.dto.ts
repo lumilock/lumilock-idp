@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Code, CodeScope } from '../model/codes.entity';
 import { ClientsDTO } from '../clients/clients.dto';
-import { UsersDTO } from '../users/users.dto';
+import { UsersDTO } from '../users/dto/users.dto';
 
 export class CodesDTO implements Readonly<CodesDTO> {
   @ApiProperty({ required: true })

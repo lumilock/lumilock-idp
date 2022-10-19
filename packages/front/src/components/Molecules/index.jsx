@@ -10,5 +10,6 @@ export { default as Title } from './Title';
 export { default as AppLink } from './AppLink';
 export { default as ToggleSideBar } from './ToggleSideBar';
 export { default as ServiceProfile } from './ServiceProfile';
+export { default as UserProfile } from './UserProfile';
 export { default as LabeledText } from './LabeledText';
 export { default as Gender } from './Gender';

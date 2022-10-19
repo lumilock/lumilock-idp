@@ -28,7 +28,7 @@ function NavBarAccount() {
         <If condition={!loading}>
           <Then>
             <Avatar size="medium" src={user?.picture}>
-              {user?.name}
+              {user?.login}
             </Avatar>
           </Then>
           <Else>

@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Address } from '../model/addresses.entity';
-import { UsersDTO } from '../users/users.dto';
+import { UsersDTO } from '../users/dto/users.dto';
 
 // https://connect2id.com/products/server/docs/api/userinfo
 export class AddressesDTO implements Readonly<AddressesDTO> {

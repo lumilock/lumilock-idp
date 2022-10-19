@@ -8,7 +8,7 @@ import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
 import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
-import { UsersDTO } from './users.dto';
+import { UsersDTO } from './dto/users.dto';
 import { disableUsers, upsertUsers } from './queries';
 import { UsersInfosDTO, UsersLightDTO } from './dto';
 
@@ -95,7 +95,15 @@ export class UsersService {
 
   // Find user by id
   async findById(id: string): Promise<UsersDTO | undefined> {
-    return this.repo.findOne(id).then((user) => {
+    return this.repo.findOne(id).then(async (user) => {
+      if (user?.picture) {
+        const duration = 60; // 60s
+        // get signed url from the object storage system
+        await fileStorageSystem
+          .signedUrl(user?.picture, duration)
+          .then((url) => (user.picture = url))
+          .catch(console.error);
+      }
       return user ? UsersDTO.fromEntity(user) : undefined;
     });
   }

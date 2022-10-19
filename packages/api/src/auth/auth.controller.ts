@@ -28,7 +28,7 @@ import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
 import { CodesDTO } from '../codes/codes.dto';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
-import { UsersDTO } from '../users/users.dto';
+import { UsersDTO } from '../users/dto/users.dto';
 
 @Controller('auth')
 export class AuthController {

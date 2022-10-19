@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 
 import { UsersService } from '../../users/users.service';
-import { UsersDTO } from '../../users/users.dto';
+import { UsersDTO } from '../../users/dto/users.dto';
 import { User } from '../../model/users.entity';
 
 // User seed

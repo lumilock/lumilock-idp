@@ -1,9 +1,9 @@
-import { Controller, Get, SetMetadata, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, SetMetadata, UseGuards } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
-import { UsersLightDTO } from './dto';
-import { formattedUpsertUsers } from './helpers';
 
+import { UsersLightDTO } from './dto';
+import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
+import { formattedUpsertUsers } from './helpers';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -22,9 +22,20 @@ export class UsersController {
   @UseGuards(PermissionsGuard)
   @Get('/')
   public async getAll(): Promise<UsersLightDTO[] | undefined> {
-    // get users
+    // Get users
     const users = await this.serv.all();
-    // response
+    // Response
+    return users;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['clients'])
+  @UseGuards(PermissionsGuard)
+  @Get(':id')
+  public async getById(@Param('id') id: string) {
+    // Get users
+    const users = await this.serv.findById(id);
+    // Response
     return users;
   }
 
