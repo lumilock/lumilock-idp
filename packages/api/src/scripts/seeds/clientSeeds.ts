@@ -1,5 +1,5 @@
 // Client seeds
-import { ClientsDTO } from '../../clients/clients.dto';
+import { ClientsDTO } from '../../clients/dto/clients.dto';
 import { ClientsService } from '../../clients/clients.service';
 import { Client } from '../../model/clients.entity';
 

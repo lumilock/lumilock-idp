@@ -15,7 +15,7 @@ import { PermissionsGuard } from '../common/guards';
 import { Permission } from '../common/enums';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
 import { ClientsService } from './clients.service';
-import { ClientsFullDTO } from './dto';
+import { ClientsFullDTO, ClientsLightDTO, ClientsDTO } from './dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -32,7 +32,10 @@ export class ClientsController {
   // @SetMetadata('permissions', ['clients'])
   // @UseGuards(PermissionsGuard)
   @Get('/')
-  public async getAll(@Req() req, @Query() query, @Res() res: Response) {
+  public async getAll(
+    @Req() req,
+    @Query() query,
+  ): Promise<ClientsLightDTO[] | ClientsDTO[] | undefined> {
     const user = req?.user;
 
     // get clients
@@ -46,11 +49,11 @@ export class ClientsController {
       clients = await this.serv.all();
     } else {
       // Finding only clients that user can access
-      // clients = await this.serv.allBySub(subId);
+      clients = await this.serv.allByUser(user?.id);
     }
 
     // response
-    return res.status(HttpStatus.OK).json(clients);
+    return clients;
   }
 
   @UseGuards(AuthenticatedGuard)

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
@@ -8,16 +8,19 @@ import {
 import styles from './AppLink.module.scss';
 
 function AppLink({
-  ghost, path, picture, icon, variant, name, className,
+  ghost, path, picture, icon, variant, name, className, ...rest
 }) {
+  const pathname = useMemo(() => (path || '/#'), [path]);
+  const Component = useMemo(() => (path ? 'a' : NavLink), [path]);
   return (
-    <NavLink
-      to={!ghost ? path : '#'}
+    <Component
+      href={!ghost ? pathname : '/#'}
       disabled={ghost ? 'disabled' : ''}
       className={[
         styles?.Base,
         className,
       ].join(' ').trim()}
+      {...rest}
     >
       <Squircle
         size="large"
@@ -36,7 +39,7 @@ function AppLink({
           </div>
         </Else>
       </If>
-    </NavLink>
+    </Component>
   );
 }
 

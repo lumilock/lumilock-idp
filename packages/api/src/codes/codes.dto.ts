@@ -9,7 +9,7 @@ import {
   IsDate,
 } from 'class-validator';
 import { Code, CodeScope } from '../model/codes.entity';
-import { ClientsDTO } from '../clients/clients.dto';
+import { ClientsDTO } from '../clients/dto/clients.dto';
 import { UsersDTO } from '../users/dto/users.dto';
 
 export class CodesDTO implements Readonly<CodesDTO> {

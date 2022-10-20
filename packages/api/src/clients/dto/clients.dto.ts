@@ -1,7 +1,7 @@
 // item.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString, IsUUID } from 'class-validator';
-import { Client } from '../model/clients.entity';
+import { Client } from '../../model/clients.entity';
 
 export class ClientsDTO implements Readonly<ClientsDTO> {
   @ApiProperty({ required: true })

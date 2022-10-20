@@ -11,7 +11,7 @@ import { CodesDTO } from '../codes/codes.dto';
 import { bin2hex, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/dto/users.dto';
-import { ClientsDTO } from '../clients/clients.dto';
+import { ClientsDTO } from '../clients/dto/clients.dto';
 import { SubjectDTO } from '../users/subject.dto';
 import { UsersInfosDTO } from '../users/dto';
 
