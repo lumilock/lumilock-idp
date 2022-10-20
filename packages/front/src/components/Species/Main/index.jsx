@@ -14,6 +14,8 @@ function Main({ children }) {
     loading,
     loaded,
     hasData,
+    location,
+    searchParams,
   } = useAuth();
 
   // While loading we trigger the suspense parent component
@@ -24,7 +26,11 @@ function Main({ children }) {
   // if user is not authenticated,
   // we just return children
   // without template
-  if (!loading && loaded && !hasData) {
+  if (
+    !loading
+    && loaded
+    && ((['/', '/login'].includes(location?.pathname) && searchParams?.filter(([key]) => key !== 'page')?.length !== 0) || !hasData)
+  ) {
     return children;
   }
 

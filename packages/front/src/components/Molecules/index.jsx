@@ -13,3 +13,4 @@ export { default as ServiceProfile } from './ServiceProfile';
 export { default as UserProfile } from './UserProfile';
 export { default as LabeledText } from './LabeledText';
 export { default as Gender } from './Gender';
+export { default as LinkButton } from './LinkButton';

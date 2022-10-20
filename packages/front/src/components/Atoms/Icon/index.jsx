@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { IoIosSync } from 'react-icons/io';
+import { IoIosStar, IoIosSync } from 'react-icons/io';
 
 import styles from './Icon.module.scss';
 import { pascalCase } from '../../../services/Tools';
@@ -9,7 +9,7 @@ import { colors } from '../../../services/Theme';
 const sizesTypes = ['xxsmall', 'xsmall', 'small', 'medium', 'large'];
 
 function Icon({
-  ionIcon, size, className, color, loading, loadingColor, ...rest
+  ionIcon, size, className, color, loading, component, loadingColor, ...rest
 }) {
   const customSize = useMemo(() => (!sizesTypes.includes(size) ? { size } : {}), [size]);
 
@@ -21,7 +21,9 @@ function Icon({
     large: 'Large',
   }), []);
 
-  const Component = useMemo(() => (loading ? IoIosSync : ionIcon), [ionIcon, loading]);
+  const defaultComponent = useMemo(() => component ?? ionIcon, [component, ionIcon]);
+
+  const Component = useMemo(() => (loading ? IoIosSync : defaultComponent), [defaultComponent, loading]);
 
   return (
     <Component
@@ -39,8 +41,13 @@ function Icon({
 }
 
 Icon.propTypes = {
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
   className: PropTypes.string,
-  ionIcon: PropTypes.func.isRequired,
+  ionIcon: PropTypes.func,
   size: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.oneOf(sizesTypes),
@@ -57,7 +64,9 @@ Icon.propTypes = {
 };
 
 Icon.defaultProps = {
+  component: undefined,
   className: '',
+  ionIcon: IoIosStar,
   size: 'small',
   color: 'content1',
   loadingColor: 'content3',

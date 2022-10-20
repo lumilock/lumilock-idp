@@ -7,10 +7,17 @@
     gap: spacing-rem(3);
     padding: spacing-rem(3) spacing-rem(2);
 
-    & .States {
+    & .Icons {
         position: relative;
         display: flex;
-        gap: spacing-rem(1);
+        justify-content: space-between;
+
+        & .States,
+        & .Actions {
+            position: relative;
+            display: flex;
+            gap: spacing-rem(1);
+        }
     }
 
     & .Fields {
