@@ -94,6 +94,7 @@ function Toggle({
     }
   }
   style.overflow = 'hidden';
+  style.overflow = 'clip';
 
   return (
     <ErrorBoundary>

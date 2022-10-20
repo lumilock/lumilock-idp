@@ -67,7 +67,13 @@ export class UsersLightDTO implements Readonly<UsersLightDTO> {
       name: entity.name,
       picture: entity.picture,
       gender: entity.gender,
-      locality: entity.addresses?.[0]?.locality,
+      locality: [
+        entity.addresses?.[0]?.locality,
+        entity.addresses?.[0]?.country,
+      ]
+        .filter((c) => !!c && c?.trim() !== '')
+        .join(', ')
+        .trim(),
     });
   }
 }

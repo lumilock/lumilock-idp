@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import UsersContext from '../../../pages/Users/UsersContext';
 import { UserSideBarContent } from '../../Cells';
 import { ToggleSideBar } from '../../Molecules';
+import styles from './UsersSideBar.module.scss';
 
 function UsersSideBar() {
   // Context
@@ -12,7 +13,9 @@ function UsersSideBar() {
 
   return (
     <ToggleSideBar open={!!selected}>
-      <UserSideBarContent id={selected} />
+      <div className={styles.FlexContainer}>
+        <UserSideBarContent id={selected} />
+      </div>
     </ToggleSideBar>
   );
 }

@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 import React, { useCallback, useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  IoIosArchive, IoIosCheckmark, IoIosClose, IoIosCreate, IoIosEye, IoIosEyeOff, IoIosGlobe, IoIosLink, IoIosPerson,
+  IoIosArchive, IoIosCheckmark, IoIosClose, IoIosCreate, IoIosGlobe, IoIosPerson,
 } from 'react-icons/io';
 
 import UsersContext from '../../../pages/Users/UsersContext';
@@ -14,15 +14,17 @@ import {
 import {
   Button, LabeledText, LinkButton, UserProfile,
 } from '../../Molecules';
-
 import flags from '../../../assets/data/flags-24x24.json';
 import styles from './UserSideBarContent.module.scss';
+import { authIdSelector } from '../../../store/auth/authSelector';
 
 function UserSideBarContent() {
   // Context
   const { selected } = useContext(UsersContext);
   // Router
   const navigate = useNavigate();
+  // Store
+  const authId = useSelector(authIdSelector);
   // Request states
   const {
     data: user,
@@ -51,7 +53,11 @@ function UserSideBarContent() {
   });
 
   const handleClick = (id) => {
-    navigate(`${id}`);
+    if (authId !== id) {
+      navigate(`${id}`);
+    } else {
+      navigate('/profile');
+    }
   };
 
   /**
@@ -108,7 +114,7 @@ function UserSideBarContent() {
             name={user?.name}
             gender={user?.gender}
             login={user?.login}
-            locality={user?.login}
+            locality={user?.address?.locality || '-/-'}
             loginColor="content3"
             localityColor="content3"
           />
@@ -180,10 +186,6 @@ function UserSideBarContent() {
             <LabeledText loading={loading} label="Date d'installation" text={getFormattedDate(user?.createDateTime)} />
             <LabeledText loading={loading} label="Date de dernière mise à jour" text={getFormattedDate(user?.lastChangedDateTime)} />
           </div>
-
-          <pre>
-            {JSON.stringify(user, 2, 2)}
-          </pre>
         </Then>
         <Else>
           <Typography color="alert">{errors}</Typography>

@@ -14,7 +14,7 @@ export const authStateSelector = ({ auth }) => ({
 export const authInfoSelector = ({ auth }) => auth.user;
 
 // Current user id
-export const authIdSelector = ({ auth }) => auth?.user?.sub;
+export const authIdSelector = ({ auth }) => auth?.user?.id;
 
 // Get only user profile infos
 export const authProfileSelector = createSelector(

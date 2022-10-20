@@ -10,7 +10,7 @@ import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { UsersDTO } from './dto/users.dto';
 import { disableUsers, upsertUsers } from './queries';
-import { UsersInfosDTO, UsersLightDTO } from './dto';
+import { UsersDetailedDTO, UsersInfosDTO, UsersLightDTO } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -23,9 +23,22 @@ export class UsersService {
   // Find all clients
   async all(): Promise<UsersLightDTO[] | undefined> {
     return this.repo
-      .find({
-        order: { familyName: 'ASC' },
-      })
+      .createQueryBuilder('user')
+      .leftJoinAndSelect(
+        'user.addresses',
+        'a',
+        `a.is_active = true
+            AND a.is_archived = false
+            AND a.create_date_time = (SELECT MAX(a1.create_date_time)
+                                      FROM addresses a1
+                                      WHERE a1.is_active = true
+                                        AND a1.is_archived = false
+                                        AND a1.user_id = user.id
+                                      )
+          `,
+      ) // Joining active and non archived addresses, and retreave only the most recent
+      .orderBy('user.family_name', 'ASC')
+      .getMany()
       .then((users) => {
         return Promise.all(
           users?.map(async (user) => {
@@ -94,18 +107,36 @@ export class UsersService {
   }
 
   // Find user by id
-  async findById(id: string): Promise<UsersDTO | undefined> {
-    return this.repo.findOne(id).then(async (user) => {
-      if (user?.picture) {
-        const duration = 60; // 60s
-        // get signed url from the object storage system
-        await fileStorageSystem
-          .signedUrl(user?.picture, duration)
-          .then((url) => (user.picture = url))
-          .catch(console.error);
-      }
-      return user ? UsersDTO.fromEntity(user) : undefined;
-    });
+  async findById(id: string): Promise<UsersDetailedDTO | undefined> {
+    return this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndSelect(
+        'user.addresses',
+        'a',
+        `a.is_active = true
+        AND a.is_archived = false
+        AND a.create_date_time = (SELECT MAX(a1.create_date_time)
+                                  FROM addresses a1
+                                  WHERE a1.is_active = true
+                                    AND a1.is_archived = false
+                                    AND a1.user_id = user.id
+                                  )
+      `,
+      ) // Joining active and non archived addresses, and retreave only the most recent
+      .orderBy('user.family_name', 'ASC')
+      .where('user.id = :id', { id })
+      .getOne()
+      .then(async (user) => {
+        if (user?.picture) {
+          const duration = 60; // 60s
+          // get signed url from the object storage system
+          await fileStorageSystem
+            .signedUrl(user?.picture, duration)
+            .then((url) => (user.picture = url))
+            .catch(console.error);
+        }
+        return user ? UsersDetailedDTO.fromEntity(user) : undefined;
+      });
   }
 
   // Find user by subject id and clientId

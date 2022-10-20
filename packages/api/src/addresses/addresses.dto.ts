@@ -115,7 +115,7 @@ export class AddressesDTO implements Readonly<AddressesDTO> {
       region: entity.region,
       postalCode: entity.postalCode,
       country: entity.country,
-      user: UsersDTO.fromEntity(entity.user),
+      user: entity?.user && UsersDTO.fromEntity(entity.user),
       isActive: entity.isActive,
       isArchived: entity.isArchived,
       createDateTime: entity.createDateTime,
