@@ -4,8 +4,8 @@ import { IoLogoIonic } from 'react-icons/io5';
 
 import capitalize from '../../../services/Tools/capitalize';
 import { colors, sizes } from '../../../services/Theme';
-import Icon from '../../Atoms/Icon';
-import If from '../../Atoms/If';
+import Icon from '../../Electrons/Icon';
+import If from '../../Electrons/If';
 import styles from './Button.module.scss';
 
 function Button({

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Icon } from '../../Atoms';
-
+import { Icon } from '../../Electrons';
 import styles from './LinkButton.module.scss';
 
 function LinkButton({

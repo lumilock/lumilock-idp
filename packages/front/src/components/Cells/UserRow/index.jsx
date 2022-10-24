@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { IoPin } from 'react-icons/io5';
 
 import { remCalc } from '../../../services/Tools';
-import { Avatar, Gender } from '../../Molecules';
 import {
   Else, Icon, If, Skeleton, Then, Typography,
-} from '../../Atoms';
+} from '../../Electrons';
+import { Avatar } from '../../Atoms';
+import { Gender } from '../../Molecules';
 import styles from './UserRow.module.scss';
 
 function UserRow({

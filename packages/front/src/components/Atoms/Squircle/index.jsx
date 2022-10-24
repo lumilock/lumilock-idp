@@ -4,10 +4,10 @@ import { IoIosConstruct } from 'react-icons/io';
 
 import { capitalize, pascalCase } from '../../../services/Tools';
 import { loadingAnimations } from '../../../services/Theme';
-import Icon from '../Icon';
-import Choose, { OtherWise, When } from '../Choose';
+import Icon from '../../Electrons/Icon';
+import Choose, { OtherWise, When } from '../../Electrons/Choose';
 import styles from './Squircle.module.scss';
-import If from '../If';
+import If from '../../Electrons/If';
 
 const sizesTypes = ['xxsmall', 'xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge', 'xxxlarge'];
 

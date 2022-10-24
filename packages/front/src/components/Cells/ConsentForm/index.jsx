@@ -6,10 +6,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosArrowRoundBack, IoIosCheckmark, IoIosPerson } from 'react-icons/io';
 
 import { Auth } from '../../../services/Api';
-import { Alert, Button } from '../../Molecules';
 import {
-  Squircle, If, Else, Then, CheckboxControlled, Icon,
+  If, Else, Then, Icon,
+} from '../../Electrons';
+import {
+  Squircle, CheckboxControlled,
 } from '../../Atoms';
+import { Alert, Button } from '../../Molecules';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import Logo from '../../../assets/images/Logo.svg';

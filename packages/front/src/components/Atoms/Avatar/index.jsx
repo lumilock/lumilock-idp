@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {
   Choose,
   When, Icon, OtherWise,
-} from '../../Atoms';
+} from '../../Electrons';
 import styles from './Avatar.module.scss';
 import { getInitials, textToColor } from '../../../services/Tools';
 

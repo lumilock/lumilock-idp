@@ -5,15 +5,15 @@ import {
   IoIosArchive, IoIosCheckmark, IoIosClose, IoIosCreate, IoIosGlobe, IoIosPerson,
 } from 'react-icons/io';
 
-import UsersContext from '../../../pages/Users/UsersContext';
 import { Users } from '../../../services/Api';
 import { useEffectOnce, useRequestStates, useUpdate } from '../../../services/Hooks';
 import {
   Else, Icon, If, Then, Typography,
-} from '../../Atoms';
+} from '../../Electrons';
 import {
   Button, LabeledText, LinkButton, UserProfile,
 } from '../../Molecules';
+import UsersContext from '../../../pages/Users/UsersContext';
 import flags from '../../../assets/data/flags-24x24.json';
 import styles from './UserSideBarContent.module.scss';
 import { authIdSelector } from '../../../store/auth/authSelector';

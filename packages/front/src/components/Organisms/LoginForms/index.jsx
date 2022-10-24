@@ -6,9 +6,8 @@ import { Carousel, CarouselItem } from '../../Molecules';
 import {
   ConsentForm, LoginForm, PasswordForm, ResetPassword,
 } from '../../Cells';
-
+import { If } from '../../Electrons';
 import styles from './LoginForms.module.scss';
-import { If } from '../../Atoms';
 
 function LoginForms() {
   // Router

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoIosPower } from 'react-icons/io';
 
-import { Divider } from '../../Atoms';
+import { Divider } from '../../Electrons';
 import { NavBarAccount, NavBarMenu } from '../../Cells';
 import { NavBarItem } from '../../Molecules';
 

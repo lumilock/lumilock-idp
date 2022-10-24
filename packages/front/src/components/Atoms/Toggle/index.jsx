@@ -7,7 +7,7 @@ import { useEffectOnce, useUpdate } from '../../../services/Hooks';
 
 import styles from './Toggle.module.scss';
 import { remCalc } from '../../../services/Tools';
-import ErrorBoundary from '../ErrorBoundary';
+import ErrorBoundary from '../../Electrons/ErrorBoundary';
 
 // State machine constantes
 const VISIBLE = 1;

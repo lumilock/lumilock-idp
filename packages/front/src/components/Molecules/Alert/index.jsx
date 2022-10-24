@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { capitalize } from '../../../services/Tools';
-import If from '../../Atoms/If';
+import If from '../../Electrons/If';
 import styles from './Alert.module.scss';
 
 /**

@@ -6,7 +6,7 @@ import { Header, Navbar } from '../../Organisms';
 
 import styles from './Main.module.scss';
 
-const SuspenseTrigger = React.lazy(() => import('../../Atoms/SuspenseTrigger'));
+const SuspenseTrigger = React.lazy(() => import('../../Electrons/SuspenseTrigger'));
 
 function Main({ children }) {
   // Checking Auth connection

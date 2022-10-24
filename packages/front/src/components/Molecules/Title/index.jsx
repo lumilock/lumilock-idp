@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { IoIosStar } from 'react-icons/io';
 
-import { Icon, Typography } from '../../Atoms';
+import { Icon, Typography } from '../../Electrons';
 import styles from './Title.module.scss';
 
 function Title({ icon, title, color }) {

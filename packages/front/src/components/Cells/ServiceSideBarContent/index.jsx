@@ -9,7 +9,7 @@ import { Clients } from '../../../services/Api';
 import { useEffectOnce, useRequestStates, useUpdate } from '../../../services/Hooks';
 import {
   Else, Icon, If, Then, Typography,
-} from '../../Atoms';
+} from '../../Electrons';
 import { Button, LabeledText, ServiceProfile } from '../../Molecules';
 import styles from './ServiceSideBarContent.module.scss';
 

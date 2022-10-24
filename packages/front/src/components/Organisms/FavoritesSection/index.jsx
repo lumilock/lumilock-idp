@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoIosStar } from 'react-icons/io';
-import { Else, If, Then } from '../../Atoms';
 
+import { Else, If, Then } from '../../Electrons';
 import { TitleSection } from '../../Cells';
 import { AppLink } from '../../Molecules';
 import styles from './FavoritesSection.module.scss';

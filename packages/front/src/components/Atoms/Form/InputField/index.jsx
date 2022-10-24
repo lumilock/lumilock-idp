@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Components
-import If from '../../If';
+import If from '../../../Electrons/If';
 
 // local
 import styles from './InputField.module.scss';

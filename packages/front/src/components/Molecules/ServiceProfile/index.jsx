@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Else, If, Skeleton, Squircle, Then, Typography,
+  Else, If, Skeleton, Then, Typography,
+} from '../../Electrons';
+import {
+  Squircle,
 } from '../../Atoms';
 import colors from '../../../services/Theme/colors';
 import styles from './ServiceProfile.module.scss';

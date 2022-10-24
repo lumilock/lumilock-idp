@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 import {
-  Else, If, Skeleton, Squircle, Then,
+  Else, If, Skeleton, Then,
+} from '../../Electrons';
+import {
+  Squircle,
 } from '../../Atoms';
 import styles from './AppLink.module.scss';
 

@@ -10,7 +10,7 @@ import { softUpdateAction } from '../../../store/auth/authAction';
 import { Alert, Button } from '../../Molecules';
 import { InputControlled } from '../../Atoms/Form';
 import { Auth } from '../../../services/Api';
-import If from '../../Atoms/If';
+import If from '../../Electrons/If';
 
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';

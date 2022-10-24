@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { IoCheckbox, IoSquareOutline } from 'react-icons/io5';
 
 // Components
-import If from '../../If';
-import Icon from '../../Icon';
+import If from '../../../Electrons/If';
+import Icon from '../../../Electrons/Icon';
 
 // local
 import styles from './CheckboxField.module.scss';

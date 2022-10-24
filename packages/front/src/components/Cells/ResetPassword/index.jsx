@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosArrowRoundBack, IoIosSend } from 'react-icons/io';
 
-import { If, InputControlled } from '../../Atoms';
+import { If } from '../../Electrons';
+import { InputControlled } from '../../Atoms';
 import { Alert, Button } from '../../Molecules';
 
 import validationSchema from './validationSchema';

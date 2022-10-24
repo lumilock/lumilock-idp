@@ -5,11 +5,11 @@ import { IoPin } from 'react-icons/io5';
 
 import {
   Else, Icon, If, Skeleton, Then, Typography,
-} from '../../Atoms';
+} from '../../Electrons';
 import colors from '../../../services/Theme/colors';
 import styles from './UserProfile.module.scss';
 import { remCalc } from '../../../services/Tools';
-import Avatar from '../Avatar';
+import Avatar from '../../Atoms/Avatar';
 import Gender from '../Gender';
 
 function UserProfile({

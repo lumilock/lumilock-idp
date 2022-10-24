@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { remCalc } from '../../../services/Tools';
 import {
   Else, If, Skeleton, Then, Typography,
-} from '../../Atoms';
+} from '../../Electrons';
 import styles from './LabeledText.module.scss';
-import { remCalc } from '../../../services/Tools';
 
 function LabeledText({ label, text, loading }) {
   return (

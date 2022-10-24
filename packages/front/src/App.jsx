@@ -7,7 +7,7 @@ import AppRoutes from './routes';
 import './App.css';
 
 const Main = React.lazy(() => import('./components/Species/Main'));
-const FetchInterceptor = React.lazy(() => import('./components/Atoms/FetchInterceptor'));
+const FetchInterceptor = React.lazy(() => import('./components/Electrons/FetchInterceptor'));
 
 function App() {
   return (

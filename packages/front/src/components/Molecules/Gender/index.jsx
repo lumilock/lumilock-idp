@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { IoIosFemale, IoIosHelp, IoIosMale } from 'react-icons/io';
 
-import { Icon, If } from '../../Atoms';
+import { Icon, If } from '../../Electrons';
 import styles from './Gender.module.scss';
 
 function Gender({ gender, badge, ...rest }) {

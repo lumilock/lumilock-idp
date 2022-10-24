@@ -3,7 +3,7 @@ import React, {
   useCallback, useEffect, useId, useMemo, useRef, useState,
 } from 'react';
 
-import If, { Then, Else } from '../../Atoms/If';
+import If, { Then, Else } from '../../Electrons/If';
 import {
   ownerWindow, debounce, randomIntFromInterval,
 } from '../../../services/Tools';

@@ -9,7 +9,8 @@ import { getAllQuery } from '../../../services/Tools';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './PasswordForm.module.scss';
-import { If, InputControlled } from '../../Atoms';
+import { If } from '../../Electrons';
+import { InputControlled } from '../../Atoms';
 import { Alert, Button } from '../../Molecules';
 import { Auth } from '../../../services/Api';
 

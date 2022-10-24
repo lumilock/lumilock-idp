@@ -2,13 +2,12 @@ import React from 'react';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 import { NavLink } from 'react-router-dom';
 
-import {
-  Else, Icon, If, Skeleton, Then, Typography,
-} from '../../Atoms';
 import { useAuth } from '../../../services/Hooks';
 import { remCalc } from '../../../services/Tools';
-
-import { Avatar } from '../../Molecules';
+import {
+  Else, Icon, If, Skeleton, Then, Typography,
+} from '../../Electrons';
+import { Avatar } from '../../Atoms';
 import styles from './NavBarAccount.module.scss';
 
 function NavBarAccount() {

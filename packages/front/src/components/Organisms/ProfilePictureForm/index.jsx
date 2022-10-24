@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ProfileCard, TitleSection } from '../../Cells';
+import { AvatarField } from '../../Molecules';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfilePictureForm.module.scss';
@@ -31,7 +32,7 @@ function ProfilePictureForm() {
     <div className={styles.Root}>
       <TitleSection icon={IoIosImage} title="Image du profil" variant="underlined" />
       <ProfileCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
-        <h1>Picture</h1>
+        <AvatarField label="File" name="file" type="file" accept="image/png, image/jpeg" />
       </ProfileCard>
     </div>
   );

@@ -3,9 +3,9 @@ import { IoIosBasket } from 'react-icons/io';
 
 import { Clients } from '../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../services/Hooks';
-import { Else, If, Then } from '../../Atoms';
-import { TitleSection } from '../../Cells';
+import { Else, If, Then } from '../../Electrons';
 import { AppLink } from '../../Molecules';
+import { TitleSection } from '../../Cells';
 import styles from './ApplicationsSection.module.scss';
 
 function ApplicationsSection() {
