@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^14.4.3",
     "as-bind": "^0.4.0",
     "axios": "^0.27.2",
+    "clsx": "^1.2.1",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

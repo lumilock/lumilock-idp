@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IoIosRefresh, IoIosSave } from 'react-icons/io';
 
-import { Button } from '../../Molecules';
+import { Button } from '../../Atoms';
 import styles from './ProfileCard.module.scss';
 
 function ProfileCard({ handleSubmit, handleReset, children }) {

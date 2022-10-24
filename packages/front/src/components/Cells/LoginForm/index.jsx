@@ -7,7 +7,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
 import { softUpdateAction } from '../../../store/auth/authAction';
-import { Alert, Button } from '../../Molecules';
+import { Button } from '../../Atoms';
+import { Alert } from '../../Molecules';
 import { InputControlled } from '../../Atoms/Form';
 import { Auth } from '../../../services/Api';
 import If from '../../Electrons/If';
@@ -125,7 +126,7 @@ function LoginForm({ setConsent }) {
           placeholder="Entrez votre mot de passe"
         />
         <Button
-          color="black"
+          color="content1"
           loading={isSubmitting || loading}
           type="submit"
           endIcon={IoIosArrowRoundForward}

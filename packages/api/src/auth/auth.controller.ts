@@ -8,16 +8,20 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  UploadedFile,
   HttpStatus,
   Res,
   Body,
   Headers,
   Req,
+  Patch,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as DeviceDetector from 'device-detector-js';
 import * as geoip from 'geoip-lite';
 import * as querystring from 'query-string';
+import * as sharp from 'sharp';
 
 import { AuthorizeDTO } from './dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
@@ -29,6 +33,7 @@ import { CodesService } from '../codes/codes.service';
 import { CodesDTO } from '../codes/codes.dto';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
 import { UsersDTO } from '../users/dto/users.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -192,7 +197,7 @@ export class AuthController {
   @UseGuards(AuthenticatedGuard)
   @Get('profile')
   public async getProfile(@Request() req): Promise<UsersDTO> {
-    return req?.user;
+    return this.serv.getProfile(req?.user);
   }
 
   // @UseGuards(OidcAuthGuard)
@@ -357,6 +362,43 @@ export class AuthController {
     }
     // All other errors case returning the error message
     return res.status(HttpStatus.BAD_REQUEST).json(passwordResponse?.message);
+  }
+
+  /**
+   * Method used to store a profile picture
+   * @param {Express.Multer.File} file the file to upload as avatar picture
+   * @param {Request} req
+   * @returns {string} the signed path to retreave the stored picture
+   */
+  @UseGuards(AuthenticatedGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @Patch('picture')
+  public async patchPicture(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req,
+  ) {
+    const userId = req?.user?.id;
+    let picturePath = '';
+    // Upload client logo file to Object storage
+    if (file?.buffer) {
+      // converte and resize image
+      const sharpedFile = await sharp(file.buffer)
+        .resize(128, 128, {
+          fit: 'cover',
+          position: 'center',
+        })
+        .webp()
+        .toBuffer();
+
+      // generate the object path
+      const path = `users/${userId}/avatar.webp`;
+      picturePath = await this.serv.patchPicture(userId, sharpedFile, path);
+      if (picturePath) {
+        // updating the current session with the new picture path
+        req.session.passport.user.picture = path;
+      }
+    }
+    return { picture: picturePath };
   }
 
   /**

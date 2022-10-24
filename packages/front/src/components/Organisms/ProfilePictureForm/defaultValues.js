@@ -1,6 +1,5 @@
 const defaultValues = {
-  // identity: '',
-  // password: '',
+  file: null,
 };
 
 export default defaultValues;

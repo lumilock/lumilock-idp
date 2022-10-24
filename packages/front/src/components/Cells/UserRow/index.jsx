@@ -33,7 +33,7 @@ function UserRow({
       <If condition={!loading}>
         <Then>
           <div className={styles.Head}>
-            <Avatar size="small" {...(!image && { src: image })}>
+            <Avatar size="small" {...(!!image && { image })}>
               {login}
             </Avatar>
             <div className={styles.Name}>

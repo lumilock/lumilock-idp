@@ -231,4 +231,16 @@ export class UsersService {
     const usersData = await this.entityManager.query(sql);
     return usersData;
   }
+
+  /**
+   * Method used to patch the profile picture of an user
+   * @param {string} userId The id of the target user
+   * @param {string} picture the new picture to store
+   * @returns {bool} true if the path has been saved, false otherwise
+   */
+  async patchPicture(userId: string, picture: string) {
+    return this.repo.update(userId, { picture }).then((user) => {
+      return user?.affected === 1;
+    });
+  }
 }

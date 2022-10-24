@@ -26,6 +26,14 @@
         padding: spacing-rem(4) spacing-rem(3);
     }
 
+    &.XLarge {
+        padding: spacing-rem(5) spacing-rem(4);
+    }
+
+    &.XXLarge {
+        padding: spacing-rem(6) spacing-rem(5);
+    }
+
     border-radius: spacing-rem(0.5);
     border: none;
     min-height: rem-calc(40);

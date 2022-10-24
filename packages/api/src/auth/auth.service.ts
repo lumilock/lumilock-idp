@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
+import fileStorageSystem from '../config/fileStorageSystem';
 import { CodesDTO } from '../codes/codes.dto';
 import { bin2hex, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
@@ -324,6 +325,63 @@ export class AuthService {
   ): Promise<SubjectDTO | undefined> {
     if (!userSub || !clientId) return undefined;
     return this.usersService.findBySub(userSub, clientId);
+  }
+
+  /**
+   * Method used to patch the profile picture of an user
+   * @param {string} userId The id of the target user
+   * @param {object} file the new picture file to store in db and s3
+   * @param {string} path The picture location in the object server storage
+   * @returns {string} the signed path to display the stored file
+   */
+  async patchPicture(
+    userId: string,
+    file: object,
+    path: string,
+  ): Promise<string> {
+    // checking if there is a file
+    if (!file || !userId) return undefined;
+
+    // upload to object storage
+    fileStorageSystem.putObject(file, path);
+
+    // save path in db
+    const hasBeenSaved = await this.usersService.patchPicture(userId, path);
+
+    // sign the path in order to return it in front
+    if (hasBeenSaved) {
+      let pictureUrl = '';
+      // signed path
+      const duration = 60; // 60 seconds
+      await fileStorageSystem
+        .signedUrl(path, duration)
+        .then((url) => (pictureUrl = url))
+        .catch(console.error);
+
+      return pictureUrl;
+    }
+    return '';
+  }
+
+  /**
+   * Method used to signed the user picture path
+   * @param {UsersDTO} user all users data
+   * @returns {UsersDTO} the user dto with a signed picture url
+   */
+  async getProfile(user: UsersDTO): Promise<UsersDTO> {
+    // checking if there is an user
+    if (!user) return undefined;
+    const userCopy = JSON.parse(JSON.stringify(user));
+
+    if (userCopy?.picture) {
+      // signed path
+      const duration = 60; // 60 seconds
+      await fileStorageSystem
+        .signedUrl(user?.picture, duration)
+        .then((url) => (userCopy.picture = url))
+        .catch(console.error);
+    }
+    return userCopy;
   }
 
   /**

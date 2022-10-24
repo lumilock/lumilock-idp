@@ -1,4 +1,3 @@
-export { default as Button } from './Button';
 export { default as Alert } from './Alert';
 export { default as Carousel, CarouselItem } from './Carousel';
 export { default as AnimatedBackground } from './AnimatedBackground';
@@ -13,4 +12,4 @@ export { default as UserProfile } from './UserProfile';
 export { default as LabeledText } from './LabeledText';
 export { default as Gender } from './Gender';
 export { default as LinkButton } from './LinkButton';
-export { default as AvatarField } from './AvatarField';
+export * from './FormFields';

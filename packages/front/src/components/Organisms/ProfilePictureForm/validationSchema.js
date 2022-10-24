@@ -1,8 +1,7 @@
 import * as yup from 'yup';
 
 const schema = yup.object({
-  // identity: yup.string().required(),
-  // password: yup.string().required(),
+  file: yup.mixed().required('Vous devez ajouter une image'),
 }).required();
 
 export default schema;

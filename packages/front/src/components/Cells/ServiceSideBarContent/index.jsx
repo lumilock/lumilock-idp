@@ -10,7 +10,8 @@ import { useEffectOnce, useRequestStates, useUpdate } from '../../../services/Ho
 import {
   Else, Icon, If, Then, Typography,
 } from '../../Electrons';
-import { Button, LabeledText, ServiceProfile } from '../../Molecules';
+import { Button } from '../../Atoms';
+import { LabeledText, ServiceProfile } from '../../Molecules';
 import styles from './ServiceSideBarContent.module.scss';
 
 function ServiceSideBarContent() {
@@ -93,7 +94,7 @@ function ServiceSideBarContent() {
             subtitle={service?.id}
             subtitleColor="content3"
           />
-          <Button startIcon={IoIosCreate} color="black" onClick={() => handleClick(service?.id)}>Éditer</Button>
+          <Button startIcon={IoIosCreate} color="content1" onClick={() => handleClick(service?.id)}>Éditer</Button>
           <div className={styles.States}>
             <Icon
               loading={loading}

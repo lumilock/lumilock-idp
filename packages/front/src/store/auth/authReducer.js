@@ -1,6 +1,7 @@
 export const START_LOADING_AUTH = 'START_LOADING_AUTH';
 export const END_LOADING_AUTH = 'END_LOADING_AUTH';
 export const UPDATE_USER_AUTH = 'UPDATE_USER_AUTH';
+export const UPDATE_USER_PROPS = 'UPDATE_USER_PROPS';
 export const LOGOUT_AUTH = 'LOGOUT_AUTH';
 export const INIT = 'INIT';
 
@@ -24,6 +25,10 @@ export function authReducer(state = initialState, action) {
     // When we are updating the fetched user data
     case UPDATE_USER_AUTH: {
       return { ...state, user: payload };
+    }
+    // When we want to update specific props of the user
+    case UPDATE_USER_PROPS: {
+      return { ...state, user: { ...(state?.user || {}), ...(payload || {}) } };
     }
     // After having fetch and update user data
     case END_LOADING_AUTH: {

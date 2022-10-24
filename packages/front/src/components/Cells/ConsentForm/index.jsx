@@ -10,9 +10,9 @@ import {
   If, Else, Then, Icon,
 } from '../../Electrons';
 import {
-  Squircle, CheckboxControlled,
+  Squircle, CheckboxControlled, Button,
 } from '../../Atoms';
-import { Alert, Button } from '../../Molecules';
+import { Alert } from '../../Molecules';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import Logo from '../../../assets/images/Logo.svg';
@@ -150,9 +150,9 @@ function ConsentForm({ values, setConsent }) {
         </div>
         <div className={styles.Actions}>
           <Button
-            color="black"
+            color="content1"
             loading={isSubmitting || loading}
-            variant="standard"
+            variant="text"
             type="button"
             onClick={goBack}
             startIcon={IoIosArrowRoundBack}
@@ -160,7 +160,7 @@ function ConsentForm({ values, setConsent }) {
             Annuler
           </Button>
           <Button
-            color="black"
+            color="content1"
             loading={isSubmitting || loading}
             type="submit"
             endIcon={IoIosCheckmark}

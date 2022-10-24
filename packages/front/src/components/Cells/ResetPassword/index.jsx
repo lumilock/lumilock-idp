@@ -5,8 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosArrowRoundBack, IoIosSend } from 'react-icons/io';
 
 import { If } from '../../Electrons';
-import { InputControlled } from '../../Atoms';
-import { Alert, Button } from '../../Molecules';
+import { InputControlled, Button } from '../../Atoms';
+import { Alert } from '../../Molecules';
 
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
@@ -117,9 +117,9 @@ function ResetPassword() {
         {/* Actions */}
         <div className={styles.Actions}>
           <Button
-            color="black"
+            color="content1"
             loading={isSubmitting}
-            variant="standard"
+            variant="text"
             type="button"
             onClick={goBack}
             startIcon={IoIosArrowRoundBack}
@@ -127,7 +127,7 @@ function ResetPassword() {
             Annuler
           </Button>
           <Button
-            color="black"
+            color="content1"
             loading={isSubmitting}
             type="submit"
             endIcon={IoIosSend}

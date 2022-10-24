@@ -4,6 +4,7 @@ import {
   UPDATE_USER_AUTH,
   LOGOUT_AUTH,
   INIT,
+  UPDATE_USER_PROPS,
 } from './authReducer';
 import { Auth } from '../../services/Api';
 
@@ -51,6 +52,11 @@ export const softUpdateAction = (payload) => async (dispatch) => {
     type: END_LOADING_AUTH,
   });
 };
+
+export const updateUserPropsAction = (payload) => ({
+  type: UPDATE_USER_PROPS,
+  payload,
+});
 
 export const logoutAction = () => ({
   type: LOGOUT_AUTH,

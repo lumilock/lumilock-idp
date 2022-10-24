@@ -26,7 +26,7 @@ function NavBarAccount() {
         {/* Avatar Section */}
         <If condition={!loading}>
           <Then>
-            <Avatar size="medium" src={user?.picture}>
+            <Avatar size="medium" image={user?.picture}>
               {user?.login}
             </Avatar>
           </Then>

@@ -10,8 +10,8 @@ import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './PasswordForm.module.scss';
 import { If } from '../../Electrons';
-import { InputControlled } from '../../Atoms';
-import { Alert, Button } from '../../Molecules';
+import { InputControlled, Button } from '../../Atoms';
+import { Alert } from '../../Molecules';
 import { Auth } from '../../../services/Api';
 
 function PasswordForm() {
@@ -110,9 +110,9 @@ function PasswordForm() {
         {/* Actions */}
         <div className={styles.Actions}>
           <Button
-            color="black"
+            color="content1"
             loading={isSubmitting}
-            variant="standard"
+            variant="text"
             type="button"
             onClick={goBack}
             startIcon={IoIosArrowRoundBack}
@@ -120,7 +120,7 @@ function PasswordForm() {
             Annuler
           </Button>
           <Button
-            color="black"
+            color="content1"
             loading={isSubmitting}
             type="submit"
             endIcon={IoIosCheckmark}

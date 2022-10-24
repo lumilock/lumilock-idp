@@ -10,7 +10,7 @@ import styles from './Avatar.module.scss';
 import { getInitials, textToColor } from '../../../services/Tools';
 
 function Avatar({
-  className, size, src, icon, loadingIcon, children, ...rest
+  className, size, image, icon, loadingIcon, children, ...rest
 }) {
   const [loaded, setLoaded] = useState(false);
 
@@ -50,12 +50,12 @@ function Avatar({
     >
       <Choose>
         {/* Display image */}
-        <When condition={!!src}>
+        <When condition={!!image}>
           <figure>
             <img
               alt=""
-              src={src}
               {...rest}
+              src={image}
               className={styles.Image}
               style={loaded ? {} : { display: 'none' }}
               onLoad={() => setLoaded(true)}
@@ -91,7 +91,7 @@ function Avatar({
 }
 
 Avatar.propTypes = {
-  src: PropTypes.string,
+  image: PropTypes.string,
   className: PropTypes.string,
   icon: PropTypes.func,
   loadingIcon: PropTypes.func,
@@ -100,7 +100,7 @@ Avatar.propTypes = {
 };
 
 Avatar.defaultProps = {
-  src: '',
+  image: '',
   className: '',
   size: 'medium',
   icon: undefined,

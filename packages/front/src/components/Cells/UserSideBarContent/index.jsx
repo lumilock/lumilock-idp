@@ -10,8 +10,9 @@ import { useEffectOnce, useRequestStates, useUpdate } from '../../../services/Ho
 import {
   Else, Icon, If, Then, Typography,
 } from '../../Electrons';
+import { Button } from '../../Atoms';
 import {
-  Button, LabeledText, LinkButton, UserProfile,
+  LabeledText, LinkButton, UserProfile,
 } from '../../Molecules';
 import UsersContext from '../../../pages/Users/UsersContext';
 import flags from '../../../assets/data/flags-24x24.json';
@@ -102,7 +103,6 @@ function UserSideBarContent() {
       fetchUser(selected);
     }
   });
-
   return (
     <div className={styles.Root}>
       <If condition={!errors}>
@@ -120,7 +120,7 @@ function UserSideBarContent() {
           />
 
           {/* Button */}
-          <Button startIcon={IoIosCreate} color="black" onClick={() => handleClick(user?.id)}>Éditer</Button>
+          <Button startIcon={IoIosCreate} color="content1" onClick={() => handleClick(user?.id)}>Éditer</Button>
 
           {/* Icons Actions and States */}
           <div className={styles.Icons}>
