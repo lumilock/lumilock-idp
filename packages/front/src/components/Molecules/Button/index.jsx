@@ -2,44 +2,50 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IoLogoIonic } from 'react-icons/io5';
 
-// services
 import capitalize from '../../../services/Tools/capitalize';
-
-// Components
+import { colors, sizes } from '../../../services/Theme';
 import Icon from '../../Atoms/Icon';
 import If from '../../Atoms/If';
-
-// local
 import styles from './Button.module.scss';
 
 function Button({
-  startIcon, endIcon, onClick, color, children, className, loading, variant, ...rest
+  startIcon, endIcon, onClick, color, size, children, className, loading, variant, ...rest
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={loading ? 'disabled' : ''}
-      className={`${styles.Base} ${styles[capitalize(color)]} ${styles[capitalize(variant)]} ${className}`}
+      className={[
+        styles.Base,
+        styles?.[colors[color]],
+        styles?.[sizes[size]],
+        styles?.[capitalize(variant)],
+        className,
+      ].join(' ').replaceAll('  ', ' ').trim()}
       {...rest}
     >
-      <If condition={!!startIcon}>
-        <Icon
-          ionIcon={loading ? IoLogoIonic : startIcon}
-          title=""
-          size="xsmall"
-          className={styles.Icon}
-        />
-      </If>
-      {children}
-      <If condition={!!endIcon}>
-        <Icon
-          ionIcon={loading ? IoLogoIonic : endIcon}
-          title=""
-          size="xsmall"
-          className={styles.Icon}
-        />
-      </If>
+      <div className={styles.Content}>
+        <If condition={!!startIcon}>
+          <Icon
+            ionIcon={loading ? IoLogoIonic : startIcon}
+            title=""
+            size="xsmall"
+            color={variant === 'text' ? color : 'background1'}
+            className={styles.Icon}
+          />
+        </If>
+        {children}
+        <If condition={!!endIcon}>
+          <Icon
+            ionIcon={loading ? IoLogoIonic : endIcon}
+            title=""
+            size="xsmall"
+            color={variant === 'text' ? color : 'background1'}
+            className={styles.Icon}
+          />
+        </If>
+      </div>
     </button>
   );
 }
@@ -49,8 +55,9 @@ Button.propTypes = {
   endIcon: PropTypes.func,
   onClick: PropTypes.func,
   className: PropTypes.string,
-  color: PropTypes.oneOf(['primary', 'secondary', 'white', 'black']),
-  variant: PropTypes.oneOf(['standard', 'contained']),
+  color: PropTypes.oneOf(colors),
+  variant: PropTypes.oneOf(['text', 'contained']),
+  size: PropTypes.oneOf(sizes),
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
@@ -62,7 +69,8 @@ Button.defaultProps = {
   startIcon: undefined,
   endIcon: undefined,
   variant: 'contained',
-  color: 'primary',
+  color: 'main',
+  size: 'small',
   className: '',
   onClick: () => {},
   loading: false,

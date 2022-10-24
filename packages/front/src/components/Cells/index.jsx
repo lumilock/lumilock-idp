@@ -9,3 +9,4 @@ export { default as ServiceSideBarContent } from './ServiceSideBarContent';
 export { default as ServiceButton } from './ServiceButton';
 export { default as UserSideBarContent } from './UserSideBarContent';
 export { default as UserRow } from './UserRow';
+export { default as ProfileCard } from './ProfileCard';

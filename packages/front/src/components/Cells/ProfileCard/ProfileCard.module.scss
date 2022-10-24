@@ -1,0 +1,39 @@
+@import "../../../assets/styles/toolkit.scss";
+
+
+
+.Form {
+    position: relative;
+    padding: 0 spacing-rem(3);
+
+    & .Card {
+        position: relative;
+        width: 100%;
+        border: rem-calc(1) solid var(--color-background3);
+        border-radius: spacing-rem(0.5);
+        background-color: var(--color-background1);
+
+        & .Buttons {
+            position: relative;
+            display: flex;
+            width: 100%;
+            padding: spacing-rem(2);
+            gap: spacing-rem(2);
+            border-top: rem-calc(1) solid var(--color-background3);
+
+            &>* {
+                flex: 1;
+            }
+        }
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .Form {
+
+        & .Card {
+            width: rem-calc(512);
+        }
+    }
+}
