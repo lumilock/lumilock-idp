@@ -1,4 +1,4 @@
-import React, { useId, useRef } from 'react';
+import React, { useId } from 'react';
 import { PropTypes } from 'prop-types';
 import clsx from 'clsx';
 import { IoIosRadioButtonOff, IoIosRadioButtonOn } from 'react-icons/io';
@@ -8,26 +8,24 @@ import { Icon, If, Typography } from '../../../Electrons';
 import styles from './RadioField.module.scss';
 
 const RadioField = React.forwardRef(({
-  className, error, label, size, ...rest
+  className, error, label, size, hideError, ...rest
 }, ref) => {
   const fieldId = useId();
-  const localRef = useRef(null);
-  const inputRef = localRef?.current?.children[0]?.children[1];
 
   return (
-    <div ref={localRef} className={clsx(styles.Base, className, styles?.[sizes[size]], inputRef?.disabled && styles.Disabled)}>
+    <div className={clsx(styles.Base, className, styles?.[sizes[size]], rest?.disabled && styles.Disabled)}>
       <div className={styles.Icons}>
         <Icon
-          ionIcon={inputRef?.checked || rest?.checked ? IoIosRadioButtonOn : IoIosRadioButtonOff}
+          ionIcon={rest?.checked ? IoIosRadioButtonOn : IoIosRadioButtonOff}
           size="xsmall"
-          color={inputRef?.checked || rest?.checked ? 'content1' : 'content3'}
+          color={rest?.checked ? 'content1' : 'content3'}
           className={styles.RadioIcon}
         />
         <Typography component="input" id={fieldId} variant="body1" color="content1" ref={ref} {...rest} type="radio" />
       </div>
-      <Typography component="label" htmlFor={fieldId} variant="subtitle1" color={inputRef?.checked ? 'content1' : 'content3'}>{label}</Typography>
-      <If condition={!!error}>
-        <Typography variant="body2" color="alert">{error}</Typography>
+      <Typography component="label" htmlFor={fieldId} variant="subtitle1" color={rest?.checked ? 'content1' : 'content3'}>{label}</Typography>
+      <If condition={!!error && !hideError}>
+        <Typography className={styles.HelperText} variant="body2" color="alert">{error}</Typography>
       </If>
     </div>
   );
@@ -50,6 +48,10 @@ RadioField.propTypes = {
    * All class to pass to the input container div
    */
   className: PropTypes.string,
+  /**
+   * If true will display the error if there is an error message
+   */
+  hideError: PropTypes.bool,
 };
 
 RadioField.defaultProps = {
@@ -57,6 +59,7 @@ RadioField.defaultProps = {
   size: 'regular',
   error: '',
   className: '',
+  hideError: false,
 };
 
 export default React.memo(RadioField);

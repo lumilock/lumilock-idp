@@ -3,23 +3,43 @@ import { IoIosInformationCircle } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { useSelector } from 'react-redux';
 import { InputControlled, RadioControlled } from '../../Molecules';
 import { ProfileCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileInfosForm.module.scss';
 import { Typography } from '../../Electrons';
+import { authInfoSelector } from '../../../store/auth/authSelector';
 
 function ProfileInfosForm() {
+  // Store
+  const {
+    familyName, gender, birthdate, givenName, middleName, name, nickname,
+  } = useSelector(authInfoSelector);
+  // React hook form
   const {
     handleSubmit, reset, control,
-  } = useForm({ resolver: yupResolver(validationSchema), defaultValues: { ...defaultValues } });
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      ...defaultValues,
+      ...{
+        familyName, gender, birthdate, givenName, middleName, name, nickname,
+      },
+    },
+  });
 
   /**
    * Method used to reset all values
    */
   const handleReset = () => {
-    reset({ ...defaultValues });
+    reset({
+      ...defaultValues,
+      ...{
+        familyName, gender, birthdate, givenName, middleName, name, nickname,
+      },
+    });
   };
 
   /**
@@ -41,7 +61,7 @@ function ProfileInfosForm() {
               placeholder="Gabriel Léo Martin Dupond"
               type="text"
               name="name"
-              label="Name"
+              label="Nom complet"
               size="small"
               disabled
             />
@@ -52,7 +72,7 @@ function ProfileInfosForm() {
               placeholder="Gabriel"
               type="text"
               name="givenName"
-              label="Given Name"
+              label="Prenom"
               size="small"
             />
           </div>
@@ -62,7 +82,7 @@ function ProfileInfosForm() {
               placeholder="Léo Martin"
               type="text"
               name="middleName"
-              label="Middle Name (optionel)"
+              label="Deuxième nom (optionel)"
               size="small"
             />
           </div>
@@ -72,7 +92,7 @@ function ProfileInfosForm() {
               placeholder="Dupond"
               type="text"
               name="familyName"
-              label="Family Name"
+              label="Nom de famille"
               size="small"
             />
           </div>
@@ -102,6 +122,7 @@ function ProfileInfosForm() {
                 label="Femme"
                 value="female"
                 size="small"
+                hideError
               />
               <RadioControlled
                 control={control}
@@ -109,6 +130,7 @@ function ProfileInfosForm() {
                 label="Autre"
                 value="other"
                 size="small"
+                hideError
               />
             </div>
           </div>

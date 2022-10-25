@@ -7,10 +7,11 @@ import { ProfileCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileIdentityForm.module.scss';
+import { InputControlled } from '../../Molecules';
 
 function ProfileIdentityForm() {
   const {
-    handleSubmit, reset,
+    handleSubmit, reset, control,
   } = useForm({ resolver: yupResolver(validationSchema), defaultValues: { ...defaultValues } });
 
   /**
@@ -32,7 +33,39 @@ function ProfileIdentityForm() {
     <div className={styles.Root}>
       <TitleSection icon={IoIosPerson} title="Identité" variant="underlined" />
       <ProfileCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
-        <h1>ProfileIdentityForm</h1>
+        <div className={styles.InputsContainer}>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="gabriel.dupond"
+              type="text"
+              name="login"
+              label="Login"
+              size="small"
+              disabled
+            />
+          </div>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="gabriel.dupond@lumilock.com"
+              type="email"
+              name="email"
+              label="Email (optionel)"
+              size="small"
+            />
+          </div>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="+33615636948"
+              type="tel"
+              name="phoneNumber"
+              label="Téléphone portable (optionel)"
+              size="small"
+            />
+          </div>
+        </div>
       </ProfileCard>
     </div>
   );

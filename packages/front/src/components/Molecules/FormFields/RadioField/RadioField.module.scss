@@ -2,7 +2,8 @@
 
 .Base {
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: spacing-rem(3) 1fr;
     align-items: center;
     width: 100%;
 
@@ -23,7 +24,6 @@
     }
 
     & label {
-        padding-left: spacing-rem(0.5);
         width: 100%;
     }
 
@@ -31,7 +31,7 @@
         position: relative;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: start;
         left: rem-calc(1);
 
         & .RadioIcon {
@@ -43,7 +43,12 @@
         & input {
             left: rem-calc(0);
             opacity: 0;
+            width: spacing-rem(2);
         }
+    }
+
+    & .HelperText {
+        grid-column: 1 / 3;
     }
 
 

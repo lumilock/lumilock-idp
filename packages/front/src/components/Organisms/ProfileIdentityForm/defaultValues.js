@@ -1,6 +1,7 @@
 const defaultValues = {
-  // identity: '',
-  // password: '',
+  login: '',
+  email: '',
+  phoneNumber: '',
 };
 
 export default defaultValues;
