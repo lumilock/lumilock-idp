@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 
 import { pascalCase } from '../../../services/Tools';
 import colors from '../../../services/Theme/colors';
+import If, { Else, Then } from '../If';
 import styles from './Typography.module.scss';
 
-function Typography({
-  variant, component, paragraph, className, color, ellipsis, children,
-}) {
+const Typography = React.forwardRef(({
+  variant, component, paragraph, className, color, ellipsis, children, ...rest
+}, ref) => {
   const defaultVariantMapping = {
     h1: 'h1',
     h2: 'h2',
@@ -35,9 +36,16 @@ function Typography({
   ].join('');
 
   return (
-    <Component className={classes}>{children}</Component>
+    <If condition={!!children}>
+      <Then>
+        <Component className={classes} ref={ref} {...rest}>{children}</Component>
+      </Then>
+      <Else>
+        <Component className={classes} ref={ref} {...rest} />
+      </Else>
+    </If>
   );
-}
+});
 
 Typography.propTypes = {
   /**

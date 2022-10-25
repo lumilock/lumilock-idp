@@ -183,8 +183,9 @@ export class AuthController {
        ****************************************** */
       // The OAuth app trying to login a end-user directly
       // * Response Message
+      const profile = await this.serv.getProfile(req?.user);
       res.status(HttpStatus.OK).json({
-        user: req.user,
+        user: profile,
         message: 'User logged in',
       });
       return;

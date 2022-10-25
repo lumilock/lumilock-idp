@@ -5,8 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosArrowRoundBack, IoIosSend } from 'react-icons/io';
 
 import { If } from '../../Electrons';
-import { InputControlled, Button } from '../../Atoms';
-import { Alert } from '../../Molecules';
+import { Button } from '../../Atoms';
+import { Alert, InputControlled } from '../../Molecules';
 
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
@@ -100,6 +100,7 @@ function ResetPassword() {
           name="resetIdentity"
           type="text"
           placeholder="Entrez votre identifiant"
+          variant="outlined"
         />
 
         {/* Info */}

@@ -51,7 +51,7 @@ function ProfilePictureForm() {
           // eslint-disable-next-line no-console
           console.error('ERROR: [onSubmit - Auth.updatePicture]', err);
         }
-        console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
+        // console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
       });
   };
 

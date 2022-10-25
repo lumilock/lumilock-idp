@@ -8,8 +8,7 @@ import { IoIosArrowRoundForward } from 'react-icons/io';
 
 import { softUpdateAction } from '../../../store/auth/authAction';
 import { Button } from '../../Atoms';
-import { Alert } from '../../Molecules';
-import { InputControlled } from '../../Atoms/Form';
+import { Alert, InputControlled } from '../../Molecules';
 import { Auth } from '../../../services/Api';
 import If from '../../Electrons/If';
 
@@ -113,17 +112,19 @@ function LoginForm({ setConsent }) {
         {/* Fields */}
         <InputControlled
           control={control}
-          label="Identifiant*"
+          label="Identifiant"
           name="identity"
           type="text"
           placeholder="Entrez votre identifiant"
+          variant="outlined"
         />
         <InputControlled
           control={control}
-          label="Mot de passe*"
+          label="Mot de passe"
           name="password"
           type="password"
           placeholder="Entrez votre mot de passe"
+          variant="outlined"
         />
         <Button
           color="content1"

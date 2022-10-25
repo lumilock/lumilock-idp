@@ -10,8 +10,8 @@ import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './PasswordForm.module.scss';
 import { If } from '../../Electrons';
-import { InputControlled, Button } from '../../Atoms';
-import { Alert } from '../../Molecules';
+import { Button } from '../../Atoms';
+import { Alert, InputControlled } from '../../Molecules';
 import { Auth } from '../../../services/Api';
 
 function PasswordForm() {
@@ -94,17 +94,19 @@ function PasswordForm() {
         {/* Fields */}
         <InputControlled
           control={control}
-          label="Mot de passe*"
+          label="Mot de passe"
           name="password"
           type="password"
           placeholder="Entrez votre nouveau mot de passe"
+          variant="outlined"
         />
         <InputControlled
           control={control}
-          label="Confirmer le mot de passe*"
+          label="Confirmer le mot de passe"
           name="passwordConfirmed"
           type="password"
           placeholder="Entrez à nouveau votre mot de passe"
+          variant="outlined"
         />
 
         {/* Actions */}
