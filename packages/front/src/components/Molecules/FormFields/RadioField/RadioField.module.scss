@@ -1,0 +1,63 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &:focus-within {
+        outline: var(--color-content1) auto rem-calc(1);
+        outline-offset: rem-calc(2);
+        z-index: 10;
+    }
+
+    &.Disabled {
+        opacity: 0.5;
+    }
+
+    &:not(.Disabled) .Icons,
+    &:not(.Disabled) label,
+    &:not(.Disabled) input {
+        cursor: pointer;
+    }
+
+    & label {
+        padding-left: spacing-rem(0.5);
+        width: 100%;
+    }
+
+    & .Icons {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        left: rem-calc(1);
+
+        & .RadioIcon {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        & input {
+            left: rem-calc(0);
+            opacity: 0;
+        }
+    }
+
+
+    &.Regular {
+        & input {
+            height: spacing-rem(5);
+            max-height: spacing-rem(5);
+        }
+    }
+
+    &.Small {
+        & input {
+            height: spacing-rem(3);
+            max-height: spacing-rem(3);
+        }
+    }
+}

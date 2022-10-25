@@ -17,7 +17,7 @@ const InputField = React.forwardRef(({
 
   return (
     <div className={clsx(styles.Base, className, styles?.[sizes[size]], styles?.[variantClasses[variant]])}>
-      <Typography component="label" htmlFor={fieldId} variant="subtitle1" color="content3">{label}</Typography>
+      <Typography component="label" htmlFor={fieldId} variant="subtitle2" color="content3">{label}</Typography>
       <Typography component="input" id={fieldId} variant="body1" color="content1" ref={ref} {...rest} />
       <If condition={!!error}>
         <Typography variant="body2" color="alert">{error}</Typography>

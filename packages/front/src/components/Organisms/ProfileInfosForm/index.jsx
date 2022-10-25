@@ -3,11 +3,12 @@ import { IoIosInformationCircle } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { InputControlled } from '../../Molecules';
+import { InputControlled, RadioControlled } from '../../Molecules';
 import { ProfileCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileInfosForm.module.scss';
+import { Typography } from '../../Electrons';
 
 function ProfileInfosForm() {
   const {
@@ -86,14 +87,30 @@ function ProfileInfosForm() {
             />
           </div>
           <div className={styles.InputBox}>
-            <InputControlled
-              control={control}
-              placeholder="Homme"
-              type="text"
-              name="gender"
-              label="Sexe"
-              size="small"
-            />
+            <Typography component="p" variant="subtitle2" color="content3">Sexe</Typography>
+            <div className={styles.RadioGroup}>
+              <RadioControlled
+                control={control}
+                name="gender"
+                label="Homme"
+                value="male"
+                size="small"
+              />
+              <RadioControlled
+                control={control}
+                name="gender"
+                label="Femme"
+                value="female"
+                size="small"
+              />
+              <RadioControlled
+                control={control}
+                name="gender"
+                label="Autre"
+                value="other"
+                size="small"
+              />
+            </div>
           </div>
           <div className={styles.InputBox}>
             <InputControlled

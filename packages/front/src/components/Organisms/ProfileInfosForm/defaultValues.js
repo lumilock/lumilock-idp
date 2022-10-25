@@ -1,6 +1,11 @@
 const defaultValues = {
-  // identity: '',
-  // password: '',
+  familyName: '',
+  gender: '',
+  birthdate: '',
+  givenName: '',
+  middleName: '',
+  name: '',
+  nickname: '',
 };
 
 export default defaultValues;

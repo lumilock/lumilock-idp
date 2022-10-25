@@ -22,6 +22,13 @@
             &:first-child {
                 padding: spacing-rem(2) spacing-rem(2) spacing-rem(1) spacing-rem(2);
             }
+
+            &>.RadioGroup {
+                position: relative;
+                display: flex;
+                justify-content: space-between;
+                gap: spacing-rem(2);
+            }
         }
     }
 }
