@@ -1,0 +1,48 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &.Disabled {
+        opacity: 0.5;
+    }
+
+    &.Standard {
+        & select {
+            border: rem-calc(1) solid transparent;
+            background-color: var(--color-background1);
+            outline: none;
+        }
+
+        &:focus-within {
+            outline: var(--color-content1) auto rem-calc(1);
+            outline-offset: rem-calc(2);
+        }
+    }
+
+    &.Outlined {
+        & select {
+            border: rem-calc(1) solid var(--color-content1);
+            background-color: var(--color-background1);
+            border-radius: spacing-rem(1);
+            padding: 0 spacing-rem(1);
+        }
+    }
+
+
+    &.Regular {
+        & select {
+            height: spacing-rem(5);
+            max-height: spacing-rem(5);
+        }
+    }
+
+    &.Small {
+        & select {
+            height: spacing-rem(3);
+            max-height: spacing-rem(3);
+        }
+    }
+}

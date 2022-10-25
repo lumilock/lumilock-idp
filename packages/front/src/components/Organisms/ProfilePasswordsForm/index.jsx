@@ -8,10 +8,11 @@ import { ProfileCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfilePasswordsForm.module.scss';
+import { InputControlled } from '../../Molecules';
 
 function ProfilePasswordsForm() {
   const {
-    handleSubmit, reset,
+    handleSubmit, reset, control,
   } = useForm({ resolver: yupResolver(validationSchema), defaultValues: { ...defaultValues } });
 
   /**
@@ -33,7 +34,38 @@ function ProfilePasswordsForm() {
     <div className={styles.Root}>
       <TitleSection icon={IoIosKey} title="Mot de passes" variant="underlined" />
       <ProfileCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
-        <h1>ProfilePasswordsForm</h1>
+        <div className={styles.InputsContainer}>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="●●●●●●"
+              type="password"
+              name="oldPassword"
+              label="Ancien mot de passe"
+              size="small"
+            />
+          </div>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="●●●●●●●●●●●●"
+              type="password"
+              name="password"
+              label="Nouveau mot de passe"
+              size="small"
+            />
+          </div>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="●●●●●●●●●●●●"
+              type="password"
+              name="confirmedPassword"
+              label="Confirmation du mot de passe"
+              size="small"
+            />
+          </div>
+        </div>
       </ProfileCard>
     </div>
   );

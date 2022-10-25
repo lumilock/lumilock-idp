@@ -1,6 +1,6 @@
 const defaultValues = {
-  // identity: '',
-  // password: '',
+  zoneinfo: '',
+  locale: '',
 };
 
 export default defaultValues;

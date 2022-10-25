@@ -1,24 +1,31 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { IoIosPerson } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import { authInfoSelector } from '../../../store/auth/authSelector';
+import { InputControlled } from '../../Molecules';
 import { ProfileCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileIdentityForm.module.scss';
-import { InputControlled } from '../../Molecules';
 
 function ProfileIdentityForm() {
+  // Store
+  const {
+    login, email, phoneNumber,
+  } = useSelector(authInfoSelector);
+  // React hook form
   const {
     handleSubmit, reset, control,
-  } = useForm({ resolver: yupResolver(validationSchema), defaultValues: { ...defaultValues } });
+  } = useForm({ resolver: yupResolver(validationSchema), defaultValues: { ...defaultValues, ...{ login, email, phoneNumber } } });
 
   /**
    * Method used to reset all values
    */
   const handleReset = () => {
-    reset({ ...defaultValues });
+    reset({ ...defaultValues, ...{ login, email, phoneNumber } });
   };
 
   /**

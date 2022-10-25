@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 
 const schema = yup.object({
-  // identity: yup.string().required(),
-  // password: yup.string().required(),
+  profile: yup.string().url('Format d\'url invalid').nullable(),
+  website: yup.string().url('Format d\'url invalid').nullable(),
 }).required();
 
 export default schema;
