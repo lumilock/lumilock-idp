@@ -11,7 +11,7 @@ function ProfileCard({ handleSubmit, handleReset, children }) {
       <div className={styles.Card}>
         {children}
         <div className={styles.Buttons}>
-          <Button type="button" variant="text" color="standard" startIcon={IoIosRefresh} onClick={handleReset}>Annuler</Button>
+          <Button type="button" variant="text" color="alert dark" startIcon={IoIosRefresh} onClick={handleReset}>Annuler</Button>
           <Button type="submit" color="content1" startIcon={IoIosSave}>Modifier</Button>
         </div>
       </div>

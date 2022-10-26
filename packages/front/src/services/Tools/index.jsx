@@ -9,4 +9,5 @@ export { default as getAllQuery } from './getAllQuery';
 export { default as getInitials } from './getInitials';
 export { default as browser } from './browser';
 export { default as textToColor } from './textToColor';
+export { default as toStringDate } from './toStringDate';
 export * from './cssRem';

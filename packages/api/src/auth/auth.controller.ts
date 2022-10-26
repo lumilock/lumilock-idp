@@ -17,6 +17,7 @@ import {
   Patch,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import * as DeviceDetector from 'device-detector-js';
 import * as geoip from 'geoip-lite';
@@ -24,16 +25,15 @@ import * as querystring from 'query-string';
 import * as sharp from 'sharp';
 
 import { AuthorizeDTO } from './dto';
+import { UsersPatchPersoInfo, UsersDTO } from '../users/dto';
+import { CodesDTO } from '../codes/codes.dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { oidcConstants } from './oidcConstants';
 import { AuthService } from './auth.service';
 import { ClientsService } from '../clients/clients.service';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { CodesService } from '../codes/codes.service';
-import { CodesDTO } from '../codes/codes.dto';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
-import { UsersDTO } from '../users/dto/users.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -400,6 +400,35 @@ export class AuthController {
       }
     }
     return { picture: picturePath };
+  }
+
+  /**
+   * Method used to store a profile picture
+   * @param {UsersPatchPersoInfo} userPersoInfo the new personnal information to update
+   * @param {Request} req
+   * @returns {UsersPatchPersoInfo | undefined} the updated and formatted personnal information or nothing
+   */
+  @UseGuards(AuthenticatedGuard)
+  @Patch('personnal-information')
+  public async patchPersonnalInformation(
+    @Body() userPersoInfo: UsersPatchPersoInfo,
+    @Request() req,
+  ): Promise<UsersPatchPersoInfo | undefined> {
+    const userId = req?.user?.id;
+    const patchedUserPersoInfo = await this.serv.patchPersonnalInformation(
+      userId,
+      userPersoInfo,
+    );
+
+    if (patchedUserPersoInfo && typeof patchedUserPersoInfo === 'object') {
+      // updating the current session with the new picture path
+      Object.keys(patchedUserPersoInfo)?.map((key) => {
+        req.session.passport.user[key] = patchedUserPersoInfo[key];
+      });
+
+      return patchedUserPersoInfo;
+    }
+    return undefined;
   }
 
   /**

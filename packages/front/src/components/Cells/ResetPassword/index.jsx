@@ -80,7 +80,7 @@ function ResetPassword() {
       <form className={styles.Form} method="post" action="#" onSubmit={handleSubmit(onSubmit)}>
         {/* Title section */}
         <div className={styles.Header}>
-          <h4>Réinitialisation</h4>
+          <h2>Réinitialisation</h2>
           <p className={`${styles.Subtitle} subtitle1`}>Vous avez oublié votre mot de passe ?</p>
         </div>
         <If condition={!!msg?.message}>

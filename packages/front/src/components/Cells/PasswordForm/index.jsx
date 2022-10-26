@@ -73,12 +73,11 @@ function PasswordForm() {
       <form className={styles.Form} method="post" action="#" onSubmit={handleSubmit(onSubmit)}>
         {/* Title section */}
         <div className={styles.Header}>
-          <h4>
+          <h2>
             Nouveau
             <br />
             mot de passe
-
-          </h4>
+          </h2>
           <p className={`${styles.Subtitle} subtitle1`}>Choisissez un nouveau mot de passe et confirmez le.</p>
         </div>
         <If condition={!!msg?.message}>

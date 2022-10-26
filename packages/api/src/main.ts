@@ -12,6 +12,7 @@ import * as pg from 'pg';
 
 import { AppModule } from './app.module';
 import { configService } from './config/config.service';
+import { exceptionFactoryDto } from './common/exceptions';
 
 const pgSession = connectPg(session);
 
@@ -44,7 +45,12 @@ async function bootstrap() {
     },
   });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: exceptionFactoryDto,
+    }),
+  );
   app.enableCors({
     origin: '*',
     credentials: true,

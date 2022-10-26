@@ -4,13 +4,18 @@ import { EntityManager, Repository } from 'typeorm';
 import * as format from 'pg-format';
 import * as bcrypt from 'bcrypt';
 
+import {
+  UsersDTO,
+  UsersDetailedDTO,
+  UsersInfosDTO,
+  UsersLightDTO,
+  UsersPatchPersoInfo,
+} from './dto';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
 import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
-import { UsersDTO } from './dto/users.dto';
 import { disableUsers, upsertUsers } from './queries';
-import { UsersDetailedDTO, UsersInfosDTO, UsersLightDTO } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -238,8 +243,23 @@ export class UsersService {
    * @param {string} picture the new picture to store
    * @returns {bool} true if the path has been saved, false otherwise
    */
-  async patchPicture(userId: string, picture: string) {
+  async patchPicture(userId: string, picture: string): Promise<boolean> {
     return this.repo.update(userId, { picture }).then((user) => {
+      return user?.affected === 1;
+    });
+  }
+
+  /**
+   * Method used to patch the personnal information of an user
+   * @param {string} userId The id of the target user
+   * @param {UsersPatchPersoInfo} userPersoInfo the new personnal information to update
+   * @returns {bool} true if the path has been saved, false otherwise
+   */
+  async patchPersonnalInformation(
+    userId: string,
+    userPersoInfo: UsersPatchPersoInfo,
+  ): Promise<boolean> {
+    return this.repo.update(userId, userPersoInfo).then((user) => {
       return user?.affected === 1;
     });
   }

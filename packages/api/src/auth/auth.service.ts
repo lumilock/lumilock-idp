@@ -14,7 +14,7 @@ import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/dto/users.dto';
 import { ClientsDTO } from '../clients/dto/clients.dto';
 import { SubjectDTO } from '../users/subject.dto';
-import { UsersInfosDTO } from '../users/dto';
+import { UsersInfosDTO, UsersPatchPersoInfo } from '../users/dto';
 
 @Injectable()
 export class AuthService {
@@ -361,6 +361,31 @@ export class AuthService {
       return pictureUrl;
     }
     return '';
+  }
+
+  /**
+   * Method used to patch the personnal information of the auth user
+   * @param {string} userId The id of the auth
+   * @param {UsersPatchPersoInfo} userPersoInfo the new personnal information to update
+   * @returns {UsersPatchPersoInfo | string} the updated and formatted personnal information or an empty string
+   */
+  async patchPersonnalInformation(
+    userId: string,
+    userPersoInfo: UsersPatchPersoInfo,
+  ): Promise<UsersPatchPersoInfo | string> {
+    // checking if there is a file
+    if (!userPersoInfo || Object.keys(userPersoInfo)?.length <= 0 || !userId)
+      return undefined;
+
+    // We format the data in order to generate the full name
+    const formattedUserPersoInfo = UsersPatchPersoInfo.from(userPersoInfo);
+    // save path in db
+    const hasBeenSaved = await this.usersService.patchPersonnalInformation(
+      userId,
+      formattedUserPersoInfo,
+    );
+
+    return hasBeenSaved ? formattedUserPersoInfo : '';
   }
 
   /**

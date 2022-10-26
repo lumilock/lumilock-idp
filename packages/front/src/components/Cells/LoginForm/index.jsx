@@ -103,7 +103,7 @@ function LoginForm({ setConsent }) {
         {/* Header */}
         <div className={styles.Header}>
           <img src={Logo} alt="Lumilock logo" />
-          <h4>Bienvenue</h4>
+          <h2>Bienvenue</h2>
           <p className={`${styles.Subtitle} subtitle1`}>Identifiez vous sur votre espace professionnel</p>
         </div>
         <If condition={!!errorMsg}>

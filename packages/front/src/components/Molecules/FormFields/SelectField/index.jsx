@@ -15,41 +15,42 @@ function Options({ placeholder, options }) {
         <Typography component="option" value="" variant="body1" color="content3">{placeholder}</Typography>
       </If>
       {options?.map((option) => (
-        <If condition={!Array.isArray(option?.value)}>
-          {/* Default case if we have normal options */}
-          <Then>
-            <Typography
-              component="option"
-              variant="body1"
-              color="content1"
-              key={option?.value || option}
-              value={option?.value || option}
-            >
-              {option?.label || option}
-            </Typography>
-          </Then>
-          {/* Case if we have options groups */}
-          <Else>
-            <Typography
-              component="optgroup"
-              variant="body1"
-              color="content2"
-              label={option?.label}
-            >
-              {option?.value?.map((o) => (
-                <Typography
-                  component="option"
-                  variant="body1"
-                  color="content1"
-                  key={o?.value || o}
-                  value={o?.value || o}
-                >
-                  {o?.label || o}
-                </Typography>
-              ))}
-            </Typography>
-          </Else>
-        </If>
+        <React.Fragment key={option?.value || option}>
+          <If condition={!Array.isArray(option?.value)}>
+            {/* Default case if we have normal options */}
+            <Then>
+              <Typography
+                component="option"
+                variant="body1"
+                color="content1"
+                value={option?.value || option}
+              >
+                {option?.label || option}
+              </Typography>
+            </Then>
+            {/* Case if we have options groups */}
+            <Else>
+              <Typography
+                component="optgroup"
+                variant="body1"
+                color="content2"
+                label={option?.label}
+              >
+                {option?.value?.map((o) => (
+                  <Typography
+                    component="option"
+                    variant="body1"
+                    color="content1"
+                    key={o?.value || o}
+                    value={o?.value || o}
+                  >
+                    {o?.label || o}
+                  </Typography>
+                ))}
+              </Typography>
+            </Else>
+          </If>
+        </React.Fragment>
       ))}
     </>
   );

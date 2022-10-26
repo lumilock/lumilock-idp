@@ -1,31 +1,35 @@
 import React from 'react';
-import { IoIosInformationCircle } from 'react-icons/io';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IoIosInformationCircle } from 'react-icons/io';
 
-import { useSelector } from 'react-redux';
+import { authInfoSelector } from '../../../store/auth/authSelector';
+import { Auth } from '../../../services/Api';
+import { toStringDate } from '../../../services/Tools';
+import { Typography } from '../../Electrons';
 import { InputControlled, RadioControlled } from '../../Molecules';
 import { ProfileCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileInfosForm.module.scss';
-import { Typography } from '../../Electrons';
-import { authInfoSelector } from '../../../store/auth/authSelector';
+import { updateUserPropsAction } from '../../../store/auth/authAction';
 
 function ProfileInfosForm() {
   // Store
   const {
-    familyName, gender, birthdate, givenName, middleName, name, nickname,
+    familyName, gender, birthdate, givenName, middleName, name, nickname, preferredUsername,
   } = useSelector(authInfoSelector);
+  const dispatch = useDispatch();
   // React hook form
   const {
-    handleSubmit, reset, control,
+    handleSubmit, reset, control, setError,
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
       ...defaultValues,
       ...{
-        familyName, gender, birthdate, givenName, middleName, name, nickname,
+        familyName, gender, birthdate: toStringDate(birthdate), givenName, middleName, name, nickname, preferredUsername,
       },
     },
   });
@@ -37,7 +41,7 @@ function ProfileInfosForm() {
     reset({
       ...defaultValues,
       ...{
-        familyName, gender, birthdate, givenName, middleName, name, nickname,
+        familyName, gender, birthdate: toStringDate(birthdate), givenName, middleName, name, nickname, preferredUsername,
       },
     });
   };
@@ -46,8 +50,45 @@ function ProfileInfosForm() {
    * Method used to send form's data to the db in order to
    * path the user profile picture
    */
-  const onSubmit = async (data, e) => {
-    console.log(data, e);
+  const onSubmit = async (data) => {
+    // eslint-disable-next-line no-unreachable
+    await Auth.updatePersonnalInfo({
+      familyName: data?.familyName,
+      gender: data?.gender,
+      birthdate: data?.birthdate.toISOString(),
+      givenName: data?.givenName,
+      middleName: data?.middleName,
+      nickname: data?.nickname,
+      preferredUsername: data?.preferredUsername,
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then((userInfo) => {
+        dispatch(updateUserPropsAction(userInfo));
+      })
+      .catch(async (err) => {
+        if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.error('ERROR: [onSubmit - Auth.updatePersonnalInfo]', err);
+        }
+        if (err.status === 400) {
+          const error = await err.json();
+
+          if (typeof error?.message === 'object' && Object.keys(error?.message)?.length > 0) {
+            Object.keys(error?.message).forEach((key) => {
+              setError(key, { type: 'custom', message: error?.message?.[key] });
+            });
+          } else {
+            // Todo snackbar error
+            // setErrors(error?.message);
+          }
+        }
+        // console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
+      });
   };
 
   return (
@@ -93,6 +134,16 @@ function ProfileInfosForm() {
               type="text"
               name="familyName"
               label="Nom de famille"
+              size="small"
+            />
+          </div>
+          <div className={styles.InputBox}>
+            <InputControlled
+              control={control}
+              placeholder="Gabi Dupond"
+              type="text"
+              name="preferredUsername"
+              label="Nom d'utilisateur (optionnel)"
               size="small"
             />
           </div>

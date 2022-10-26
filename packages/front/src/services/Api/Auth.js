@@ -42,6 +42,15 @@ const Auth = {
     method: 'PATCH',
     body: data,
   }),
+  // PATCH auth personnal information
+  updatePersonnalInfo: (data) => fetch('/api/auth/personnal-information', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
 };
 
 export default Auth;
