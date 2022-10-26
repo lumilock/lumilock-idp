@@ -15,8 +15,10 @@ import { UsersDTO } from '../users/dto/users.dto';
 import { ClientsDTO } from '../clients/dto/clients.dto';
 import { SubjectDTO } from '../users/subject.dto';
 import {
+  UsersGeoDataDTO,
   UsersIdentityDTO,
   UsersInfosDTO,
+  UsersLinksDTO,
   UsersPasswordDTO,
   UsersPatchPersoInfoDTO,
 } from '../users/dto';
@@ -384,7 +386,7 @@ export class AuthService {
 
     // We format the data in order to generate the full name
     const formattedUserPersoInfo = UsersPatchPersoInfoDTO.from(userPersoInfo);
-    // save path in db
+    // patch personnal information in db
     const hasBeenSaved = await this.usersService.patchPersonnalInformation(
       userId,
       formattedUserPersoInfo,
@@ -425,7 +427,7 @@ export class AuthService {
         uPhoneNumber !== cPhoneNumber ? false : cphoneNumberVerified,
     });
 
-    // save path in db
+    // patch identity in db
     const hasBeenSaved = await this.usersService.patchIdentity(
       userId,
       formattedUserIdentity,
@@ -447,7 +449,7 @@ export class AuthService {
     userPassword: UsersPasswordDTO,
   ): Promise<boolean> {
     // checking if there are data
-    if (!userPassword || !userLogin) return undefined;
+    if (!userPassword || !userLogin || !userId) return undefined;
 
     // Validate the current password
     const userValidated = await this.validateUser(
@@ -465,13 +467,54 @@ export class AuthService {
         error: 'Bad Request',
       });
 
-    // save path in db
+    // patch password in db
     const hasBeenSaved = await this.usersService.patchPassword(
       userId,
       userPassword?.newPassword,
     );
 
     return hasBeenSaved;
+  }
+
+  /**
+   * Method used to patch external links profile and website of the auth user
+   * @param {string} userId The id of the auth
+   * @param {UsersLinksDTO} userLinks new external links profile and website to update
+   * @returns {UsersLinksDTO | string} the patched links if they have been updated or an empty string
+   */
+  async patchLinks(
+    userId: string,
+    userLinks: UsersLinksDTO,
+  ): Promise<UsersLinksDTO | string> {
+    // checking if there are data
+    if (!userLinks || !userId) return undefined;
+
+    // patch external links in db
+    const hasBeenSaved = await this.usersService.patchLinks(userId, userLinks);
+
+    return hasBeenSaved ? userLinks : '';
+  }
+
+  /**
+   * Method used to patch geographique data zoneinfo and locale of the auth user
+   * @param {string} userId The id of the auth
+   * @param {UsersGeoDataDTO} userGeoData new geographique data zoneinfo and locale to update
+   * @returns {UsersGeoDataDTO | string} the patched geographique data if they have been updated or an empty string
+   */
+  async patchGeoData(
+    userId: string,
+    userGeoData: UsersGeoDataDTO,
+  ): Promise<UsersGeoDataDTO | string> {
+    // checking if there are data
+    if (!userGeoData || !userId) return undefined;
+
+    // patch external links in db
+    const hasBeenSaved = await this.usersService.patchGeoData(
+      userId,
+      userGeoData,
+    );
+
+    return hasBeenSaved ? userGeoData : '';
   }
 
   /**

@@ -169,8 +169,8 @@ function UserSideBarContent() {
                 loading={loading}
                 component="img"
                 size="small"
-                title={user?.locale?.split('-')?.[1]?.toLowerCase() ? user?.locale?.split('-')?.[1]?.toLowerCase() : 'Aucune langue trouvé'}
-                src={flags?.[user?.locale?.split('-')?.[1]?.toLowerCase()]}
+                title={user?.locale?.split('-')?.[1]?.toLowerCase() || user?.locale?.split('-')?.[0]?.toLowerCase() || 'Aucune langue trouvé'}
+                src={flags?.[user?.locale?.split('-')?.[1]?.toLowerCase() || user?.locale?.split('-')?.[0]?.toLowerCase()]}
                 alt=""
               />
             </div>

@@ -30,6 +30,8 @@ import {
   UsersDTO,
   UsersIdentityDTO,
   UsersPasswordDTO,
+  UsersLinksDTO,
+  UsersGeoDataDTO,
 } from '../users/dto';
 import { CodesDTO } from '../codes/codes.dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
@@ -505,6 +507,65 @@ export class AuthController {
     );
 
     return patchedUserPassword;
+  }
+
+  /**
+   * Method used to patch external links profile and website of the auth
+   * @param {UsersLinksDTO} userLinks external links profile and website to update
+   * @param {Request} req
+   * @returns {UsersLinksDTO | undefined} determine if external links profile and website has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @Patch('links')
+  public async patchLinks(
+    @Body() userLinks: UsersLinksDTO,
+    @Request() req,
+  ): Promise<UsersLinksDTO | undefined> {
+    // Retreaving auth information
+    const { id: userId } = req?.user;
+
+    // Patch in db
+    const patchedUserLinks = await this.serv.patchLinks(userId, userLinks);
+
+    if (patchedUserLinks && typeof patchedUserLinks === 'object') {
+      // updating the current session with the patched data
+      Object.keys(patchedUserLinks)?.map((key) => {
+        req.session.passport.user[key] = patchedUserLinks[key];
+      });
+
+      return patchedUserLinks;
+    }
+    return undefined;
+  }
+
+  /**
+   * Method used to patch geographique data zoneinfo and locale of the auth
+   * @param {UsersGeoDataDTO} userGeoData geographique data zoneinfo and locale to update
+   * @param {Request} req
+   * @returns {UsersGeoDataDTO | undefined} determine if geographique data zoneinfo and locale has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @Patch('geo-data')
+  public async patchGeoData(
+    @Body() userGeoData: UsersGeoDataDTO,
+    @Request() req,
+  ): Promise<UsersGeoDataDTO | undefined> {
+    // Retreaving auth information
+    const { id: userId } = req?.user;
+
+    // Patch in db
+    const patchedGeoData = await this.serv.patchGeoData(userId, userGeoData);
+
+    if (patchedGeoData && typeof patchedGeoData === 'object') {
+      // updating the current session with the patched data
+      Object.keys(patchedGeoData)?.map((key) => {
+        req.session.passport.user[key] = patchedGeoData[key];
+      });
+
+      return patchedGeoData;
+    }
+
+    return undefined;
   }
 
   /**

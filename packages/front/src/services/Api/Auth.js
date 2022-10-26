@@ -69,6 +69,24 @@ const Auth = {
     },
     body: JSON.stringify(data),
   }),
+  // PATCH auth links profile and website
+  updateLinks: (data) => fetch('/api/auth/links', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
+  // PATCH auth timezone data: zoneinfo and locale
+  updateGeoData: (data) => fetch('/api/auth/geo-data', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
 };
 
 export default Auth;

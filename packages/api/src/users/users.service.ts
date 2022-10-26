@@ -11,6 +11,8 @@ import {
   UsersLightDTO,
   UsersPatchPersoInfoDTO,
   UsersIdentityDTO,
+  UsersLinksDTO,
+  UsersGeoDataDTO,
 } from './dto';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
@@ -242,7 +244,7 @@ export class UsersService {
    * Method used to patch the profile picture of an user
    * @param {string} userId The id of the target user
    * @param {string} picture the new picture to store
-   * @returns {bool} true if the path has been saved, false otherwise
+   * @returns {boolean} true if the path has been saved, false otherwise
    */
   async patchPicture(userId: string, picture: string): Promise<boolean> {
     return this.repo.update(userId, { picture }).then((user) => {
@@ -254,7 +256,7 @@ export class UsersService {
    * Method used to patch the personnal information of an user
    * @param {string} userId The id of the target user
    * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
-   * @returns {bool} true if personnal information has been saved, false otherwise
+   * @returns {boolean} true if personnal information has been saved, false otherwise
    */
   async patchPersonnalInformation(
     userId: string,
@@ -269,7 +271,7 @@ export class UsersService {
    * Method used to patch identity information of an user
    * @param {string} userId The id of the target user
    * @param {UsersIdentityDTO} userIdentity the new identity information to update
-   * @returns {bool} true if identity has been saved, false otherwise
+   * @returns {boolean} true if identity has been saved, false otherwise
    */
   async patchIdentity(
     userId: string,
@@ -284,7 +286,7 @@ export class UsersService {
    * Method used to patch the user password
    * @param {string} userId The id of the target user
    * @param {string} userPassword the new user password to update
-   * @returns {bool} true if the password has been saved, false otherwise
+   * @returns {boolean} true if the password has been saved, false otherwise
    */
   async patchPassword(userId: string, userPassword: string): Promise<boolean> {
     // Hashing password
@@ -293,6 +295,33 @@ export class UsersService {
     const hash = bcrypt.hashSync(userPassword, salt);
 
     return this.repo.update(userId, { password: hash }).then((user) => {
+      return user?.affected === 1;
+    });
+  }
+
+  /**
+   * Method used to patch external links profile and website
+   * @param {string} userId The id of the target user
+   * @param {UsersLinksDTO} userLinks new external links profile and website to update
+   * @returns {boolean} true if external links profile and website has been saved, false otherwise
+   */
+  async patchLinks(userId: string, userLinks: UsersLinksDTO): Promise<boolean> {
+    return this.repo.update(userId, userLinks).then((user) => {
+      return user?.affected === 1;
+    });
+  }
+
+  /**
+   * Method used to patch geographique data zoneinfo and locale
+   * @param {string} userId The id of the target user
+   * @param {UsersGeoDataDTO} userGeoData new geographique data zoneinfo and locale to update
+   * @returns {boolean} true if geographique data zoneinfo and locale has been saved, false otherwise
+   */
+  async patchGeoData(
+    userId: string,
+    userGeoData: UsersGeoDataDTO,
+  ): Promise<boolean> {
+    return this.repo.update(userId, userGeoData).then((user) => {
       return user?.affected === 1;
     });
   }
