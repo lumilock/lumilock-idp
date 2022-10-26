@@ -51,6 +51,24 @@ const Auth = {
     },
     body: JSON.stringify(data),
   }),
+  // PATCH auth identity
+  updateIdentity: (data) => fetch('/api/auth/identity', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
+  // PATCH auth password
+  updatePassword: (data) => fetch('/api/auth/password', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
 };
 
 export default Auth;

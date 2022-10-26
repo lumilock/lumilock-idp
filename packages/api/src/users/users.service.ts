@@ -9,7 +9,8 @@ import {
   UsersDetailedDTO,
   UsersInfosDTO,
   UsersLightDTO,
-  UsersPatchPersoInfo,
+  UsersPatchPersoInfoDTO,
+  UsersIdentityDTO,
 } from './dto';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
@@ -252,14 +253,46 @@ export class UsersService {
   /**
    * Method used to patch the personnal information of an user
    * @param {string} userId The id of the target user
-   * @param {UsersPatchPersoInfo} userPersoInfo the new personnal information to update
-   * @returns {bool} true if the path has been saved, false otherwise
+   * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
+   * @returns {bool} true if personnal information has been saved, false otherwise
    */
   async patchPersonnalInformation(
     userId: string,
-    userPersoInfo: UsersPatchPersoInfo,
+    userPersoInfo: UsersPatchPersoInfoDTO,
   ): Promise<boolean> {
     return this.repo.update(userId, userPersoInfo).then((user) => {
+      return user?.affected === 1;
+    });
+  }
+
+  /**
+   * Method used to patch identity information of an user
+   * @param {string} userId The id of the target user
+   * @param {UsersIdentityDTO} userIdentity the new identity information to update
+   * @returns {bool} true if identity has been saved, false otherwise
+   */
+  async patchIdentity(
+    userId: string,
+    userIdentity: UsersIdentityDTO,
+  ): Promise<boolean> {
+    return this.repo.update(userId, userIdentity).then((user) => {
+      return user?.affected === 1;
+    });
+  }
+
+  /**
+   * Method used to patch the user password
+   * @param {string} userId The id of the target user
+   * @param {string} userPassword the new user password to update
+   * @returns {bool} true if the password has been saved, false otherwise
+   */
+  async patchPassword(userId: string, userPassword: string): Promise<boolean> {
+    // Hashing password
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(userPassword, salt);
+
+    return this.repo.update(userId, { password: hash }).then((user) => {
       return user?.affected === 1;
     });
   }

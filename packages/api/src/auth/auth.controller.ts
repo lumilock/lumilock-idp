@@ -25,7 +25,12 @@ import * as querystring from 'query-string';
 import * as sharp from 'sharp';
 
 import { AuthorizeDTO } from './dto';
-import { UsersPatchPersoInfo, UsersDTO } from '../users/dto';
+import {
+  UsersPatchPersoInfoDTO,
+  UsersDTO,
+  UsersIdentityDTO,
+  UsersPasswordDTO,
+} from '../users/dto';
 import { CodesDTO } from '../codes/codes.dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { oidcConstants } from './oidcConstants';
@@ -403,17 +408,17 @@ export class AuthController {
   }
 
   /**
-   * Method used to store a profile picture
-   * @param {UsersPatchPersoInfo} userPersoInfo the new personnal information to update
+   * Method used to update personal information of the auth
+   * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
    * @param {Request} req
-   * @returns {UsersPatchPersoInfo | undefined} the updated and formatted personnal information or nothing
+   * @returns {UsersPatchPersoInfoDTO | undefined} the updated and formatted personnal information or nothing
    */
   @UseGuards(AuthenticatedGuard)
   @Patch('personnal-information')
   public async patchPersonnalInformation(
-    @Body() userPersoInfo: UsersPatchPersoInfo,
+    @Body() userPersoInfo: UsersPatchPersoInfoDTO,
     @Request() req,
-  ): Promise<UsersPatchPersoInfo | undefined> {
+  ): Promise<UsersPatchPersoInfoDTO | undefined> {
     const userId = req?.user?.id;
     const patchedUserPersoInfo = await this.serv.patchPersonnalInformation(
       userId,
@@ -421,7 +426,7 @@ export class AuthController {
     );
 
     if (patchedUserPersoInfo && typeof patchedUserPersoInfo === 'object') {
-      // updating the current session with the new picture path
+      // updating the current session with the patched data
       Object.keys(patchedUserPersoInfo)?.map((key) => {
         req.session.passport.user[key] = patchedUserPersoInfo[key];
       });
@@ -429,6 +434,77 @@ export class AuthController {
       return patchedUserPersoInfo;
     }
     return undefined;
+  }
+
+  /**
+   * Method used to patch identity information of the auth
+   * @param {UsersIdentityDTO} userIdentity new identity information to update
+   * @param {Request} req
+   * @returns {UsersIdentityDTO | undefined} the updated and formatted identity information or nothing
+   */
+  @UseGuards(AuthenticatedGuard)
+  @Patch('identity')
+  public async patchIdentity(
+    @Body() userIdentity: UsersIdentityDTO,
+    @Request() req,
+  ): Promise<UsersIdentityDTO | undefined> {
+    const {
+      id: userId,
+      email: userEmail,
+      emailVerified: userEmailVerified,
+      phoneNumber: userPhoneNumber,
+      phoneNumberVerified: userPhoneNumberVerified,
+    } = req?.user;
+
+    // Formatted current identity data
+    const currentUserIdentity = UsersIdentityDTO.from({
+      email: userEmail,
+      emailVerified: userEmailVerified,
+      phoneNumber: userPhoneNumber,
+      phoneNumberVerified: userPhoneNumberVerified,
+    });
+
+    // Patch in db
+    const patchedUserIdentity = await this.serv.patchIdentity(
+      userId,
+      currentUserIdentity,
+      userIdentity,
+    );
+
+    if (patchedUserIdentity && typeof patchedUserIdentity === 'object') {
+      // updating the current session with the patched data
+      Object.keys(patchedUserIdentity)?.map((key) => {
+        req.session.passport.user[key] = patchedUserIdentity[key];
+      });
+
+      return patchedUserIdentity;
+    }
+    return undefined;
+  }
+
+  /**
+   * Method used to patch the password of the auth
+   * @param {UsersPasswordDTO} userPassword old, new and confirmed password to update
+   * @param {Request} req
+   * @returns {boolean} determine if the password has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @Patch('password')
+  public async patchPassword(
+    @Body() userPassword: UsersPasswordDTO,
+    @Request() req,
+  ): Promise<boolean> {
+    // Retreaving auth information
+    const { id: userId, login: userLogin } = req?.user;
+
+    // Patch in db
+    const patchedUserPassword = await this.serv.patchPassword(
+      userId,
+      userLogin,
+      userPassword,
+    );
+
+    return patchedUserPassword;
   }
 
   /**

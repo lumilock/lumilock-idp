@@ -5,7 +5,9 @@ import { IsString, IsEnum, IsDate, Matches, IsOptional } from 'class-validator';
 
 import { User, UserGender } from '../../model/users.entity';
 
-export class UsersPatchPersoInfo implements Readonly<UsersPatchPersoInfo> {
+export class UsersPatchPersoInfoDTO
+  implements Readonly<UsersPatchPersoInfoDTO>
+{
   /**
    * The full name of the end-user, with optional language tag
    */
@@ -79,8 +81,10 @@ export class UsersPatchPersoInfo implements Readonly<UsersPatchPersoInfo> {
   @Type(() => Date)
   birthdate: Date;
 
-  public static from(dto: Partial<UsersPatchPersoInfo>): UsersPatchPersoInfo {
-    const user = new UsersPatchPersoInfo();
+  public static from(
+    dto: Partial<UsersPatchPersoInfoDTO>,
+  ): UsersPatchPersoInfoDTO {
+    const user = new UsersPatchPersoInfoDTO();
     user.name = [dto?.givenName, dto?.middleName, dto?.familyName]
       .join(' ')
       .replace(/ +(?= )/g, '')

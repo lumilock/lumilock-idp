@@ -1,6 +1,6 @@
 const defaultValues = {
-  oldPassword: '',
   password: '',
+  newPassword: '',
   confirmedPassword: '',
 };
 

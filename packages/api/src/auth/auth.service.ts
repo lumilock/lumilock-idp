@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as jwa from 'jwa';
@@ -14,7 +14,12 @@ import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/dto/users.dto';
 import { ClientsDTO } from '../clients/dto/clients.dto';
 import { SubjectDTO } from '../users/subject.dto';
-import { UsersInfosDTO, UsersPatchPersoInfo } from '../users/dto';
+import {
+  UsersIdentityDTO,
+  UsersInfosDTO,
+  UsersPasswordDTO,
+  UsersPatchPersoInfoDTO,
+} from '../users/dto';
 
 @Injectable()
 export class AuthService {
@@ -366,19 +371,19 @@ export class AuthService {
   /**
    * Method used to patch the personnal information of the auth user
    * @param {string} userId The id of the auth
-   * @param {UsersPatchPersoInfo} userPersoInfo the new personnal information to update
-   * @returns {UsersPatchPersoInfo | string} the updated and formatted personnal information or an empty string
+   * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
+   * @returns {UsersPatchPersoInfoDTO | string} the updated and formatted personnal information or an empty string
    */
   async patchPersonnalInformation(
     userId: string,
-    userPersoInfo: UsersPatchPersoInfo,
-  ): Promise<UsersPatchPersoInfo | string> {
-    // checking if there is a file
+    userPersoInfo: UsersPatchPersoInfoDTO,
+  ): Promise<UsersPatchPersoInfoDTO | string> {
+    // checking if there are data
     if (!userPersoInfo || Object.keys(userPersoInfo)?.length <= 0 || !userId)
       return undefined;
 
     // We format the data in order to generate the full name
-    const formattedUserPersoInfo = UsersPatchPersoInfo.from(userPersoInfo);
+    const formattedUserPersoInfo = UsersPatchPersoInfoDTO.from(userPersoInfo);
     // save path in db
     const hasBeenSaved = await this.usersService.patchPersonnalInformation(
       userId,
@@ -386,6 +391,87 @@ export class AuthService {
     );
 
     return hasBeenSaved ? formattedUserPersoInfo : '';
+  }
+
+  /**
+   * Method used to patch the identity information of the auth user
+   * @param {string} userId The id of the auth
+   * @param {UsersIdentityDTO} currentUserIdentity previous identity information of the current auth
+   * @param {UsersIdentityDTO} userIdentity new identity information to update
+   * @returns {UsersPatchPersoInfoDTO | string} the updated and formatted identity information or an empty string
+   */
+  async patchIdentity(
+    userId: string,
+    currentUserIdentity: UsersIdentityDTO,
+    userIdentity: UsersIdentityDTO,
+  ): Promise<UsersIdentityDTO | string> {
+    // checking if there are data
+    if (!userIdentity || !userId) return undefined;
+    // Destructurate updated data
+    const { email: uEmail, phoneNumber: uPhoneNumber } = userIdentity;
+    const {
+      email: cEmail,
+      emailVerified: cEmailVerified,
+      phoneNumber: cPhoneNumber,
+      phoneNumberVerified: cphoneNumberVerified,
+    } = currentUserIdentity;
+
+    // We format the data in order to generate the full name
+    const formattedUserIdentity = UsersIdentityDTO.from({
+      email: uEmail,
+      emailVerified: uEmail !== cEmail ? false : cEmailVerified,
+      phoneNumber: uPhoneNumber,
+      phoneNumberVerified:
+        uPhoneNumber !== cPhoneNumber ? false : cphoneNumberVerified,
+    });
+
+    // save path in db
+    const hasBeenSaved = await this.usersService.patchIdentity(
+      userId,
+      formattedUserIdentity,
+    );
+
+    return hasBeenSaved ? formattedUserIdentity : '';
+  }
+
+  /**
+   * Method used to patch the password of the auth user
+   * @param {string} userId The id of the auth
+   * @param {string} userLogin the unique identity login of the auth
+   * @param {UsersPasswordDTO} userPassword old, new and confirmed password to update
+   * @returns {boolean} boolean to determine if the password has been updated
+   */
+  async patchPassword(
+    userId: string,
+    userLogin: string,
+    userPassword: UsersPasswordDTO,
+  ): Promise<boolean> {
+    // checking if there are data
+    if (!userPassword || !userLogin) return undefined;
+
+    // Validate the current password
+    const userValidated = await this.validateUser(
+      userLogin,
+      userPassword?.password,
+    );
+
+    // checking if the old password is corrent
+    if (!userValidated)
+      throw new BadRequestException({
+        statusCode: 400,
+        message: {
+          password: 'This password does not match your current password',
+        },
+        error: 'Bad Request',
+      });
+
+    // save path in db
+    const hasBeenSaved = await this.usersService.patchPassword(
+      userId,
+      userPassword?.newPassword,
+    );
+
+    return hasBeenSaved;
   }
 
   /**

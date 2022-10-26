@@ -51,15 +51,14 @@ function ProfileInfosForm() {
    * path the user profile picture
    */
   const onSubmit = async (data) => {
-    // eslint-disable-next-line no-unreachable
     await Auth.updatePersonnalInfo({
-      familyName: data?.familyName,
-      gender: data?.gender,
-      birthdate: data?.birthdate.toISOString(),
-      givenName: data?.givenName,
-      middleName: data?.middleName,
-      nickname: data?.nickname,
-      preferredUsername: data?.preferredUsername,
+      familyName: data?.familyName || null,
+      gender: data?.gender || null,
+      birthdate: data?.birthdate?.toISOString() || null,
+      givenName: data?.givenName || null,
+      middleName: data?.middleName || null,
+      nickname: data?.nickname || null,
+      preferredUsername: data?.preferredUsername || null,
     })
       .then(async (res) => {
         if (res.status === 200) {
