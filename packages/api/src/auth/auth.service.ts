@@ -35,7 +35,7 @@ export class AuthService {
   /**
    * Method to validate if the user can be authenticate
    * checking his identity and his password
-   * @param {string} identity the email or login of an user
+   * @param {string} identity the email login or phoneNumber of an user
    * @param {string} password the user password
    * @returns null if user is not authenticate or UserDTO if he is
    */

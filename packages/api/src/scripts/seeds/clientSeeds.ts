@@ -2,6 +2,7 @@
 import { ClientsDTO } from '../../clients/dto/clients.dto';
 import { ClientsService } from '../../clients/clients.service';
 import { Client } from '../../model/clients.entity';
+import { getRandomString } from '../../utils';
 
 // function to generate clients
 async function clientSeeds(connection) {
@@ -14,15 +15,19 @@ async function clientSeeds(connection) {
       ClientsDTO.from(
         {
           clientName: 'Lumilock',
-          secret: process.env.CLIENT_LAUNCHER_SECRET,
-          redirectUris: [process.env.CLIENT_LAUNCHER_REDIRECT],
+          secret: getRandomString(40),
+          redirectUris: [],
           appUrl: process.env.OAUTH2_CLIENT_FRONT_OIDC_URI,
           permissions: ['users', 'clients'],
         },
         false,
       ),
     )
-    .then((r) => (console.log('done ->', r.clientName, r.id), r));
+    .then(
+      (r) => (
+        console.log('done -> [Clients]:', r.clientName, r.id, r.secret), r
+      ),
+    );
 
   // Other client
   // const clientALC = clientsService

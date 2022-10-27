@@ -69,9 +69,16 @@ export class UsersService {
     return this.repo
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
-      .where('user.email = :identity OR user.login = :identity', {
-        identity: identity,
-      })
+      .where(
+        `
+        (user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
+        OR (user.login IS NOT NULL AND NULLIF(user.login, '') IS NOT NULL AND user.login = TRIM(:identity))
+        OR (user.phone_number IS NOT NULL AND NULLIF(user.phone_number, '') IS NOT NULL AND user.phone_number = TRIM(:identity))
+        `,
+        {
+          identity,
+        },
+      )
       .andWhere('uc.client_id = :clientId', {
         clientId: oidcConstants.clientLauncherId,
       })
@@ -95,13 +102,20 @@ export class UsersService {
     // Hashing password
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(password, salt);
+    const hash = bcrypt.hashSync(password.trim(), salt);
 
     const uptd = await this.repo
       .createQueryBuilder('user')
       .update(User)
       .set({ password: hash })
-      .where('email = :identity OR login = :identity', { identity })
+      .where(
+        `
+        (user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
+        OR (user.login IS NOT NULL AND NULLIF(user.login, '') IS NOT NULL AND user.login = TRIM(:identity))
+        OR (user.phone_number IS NOT NULL AND NULLIF(user.phone_number, '') IS NOT NULL AND user.phone_number = TRIM(:identity))
+        `,
+        { identity },
+      )
       // Used to check if data has already been updated
       .andWhere('LEFT(last_changed_date_time::text, 23) = :lcdt', {
         lcdt: new Date(lastChangedDateTime)
@@ -292,7 +306,7 @@ export class UsersService {
     // Hashing password
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(userPassword, salt);
+    const hash = bcrypt.hashSync(userPassword.trim(), salt);
 
     return this.repo.update(userId, { password: hash }).then((user) => {
       return user?.affected === 1;

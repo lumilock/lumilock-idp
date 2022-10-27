@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class myInit1648559348093 implements MigrationInterface {
-    name = 'myInit1648559348093'
+export class myInit1666857081130 implements MigrationInterface {
+    name = 'myInit1666857081130'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."users_clients_role_enum" AS ENUM('none', 'admin', 'user', 'guest')`);
@@ -15,6 +15,9 @@ export class myInit1648559348093 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "addresses" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "is_active" boolean NOT NULL DEFAULT true, "is_archived" boolean NOT NULL DEFAULT false, "create_date_time" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "last_changed_date_time" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "formatted" character varying(300) NOT NULL, "street_address" character varying(255) NOT NULL, "locality" character varying(195) NOT NULL, "region" character varying(195) NOT NULL, "postal_code" character varying(100) NOT NULL, "country" character varying(100) NOT NULL, "user_id" uuid, CONSTRAINT "PK_745d8f43d3af10ab8247465e450" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "user_sessions" ("sid" character varying NOT NULL, "sess" text NOT NULL, "expire" TIMESTAMP(6) NOT NULL, CONSTRAINT "PK_5d74a33a1f439b45f64c4e5fcfe" PRIMARY KEY ("sid"))`);
         await queryRunner.query(`CREATE INDEX "IDX_session_expire" ON "user_sessions" ("expire") `);
+        await queryRunner.query(`ALTER TABLE "users_clients" ALTER COLUMN "permissions" DROP NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "clients" ALTER COLUMN "redirect_uris" DROP NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "clients" ALTER COLUMN "permissions" DROP NOT NULL`);
         await queryRunner.query(`ALTER TABLE "users_clients" ADD CONSTRAINT "FK_1e5411dacfbb742eafce27d8c86" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "users_clients" ADD CONSTRAINT "FK_410f7c875e1b512ef6477a3baab" FOREIGN KEY ("client_id") REFERENCES "clients"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "codes" ADD CONSTRAINT "FK_6f6dd484ab53c1014346f191338" FOREIGN KEY ("client_id") REFERENCES "clients"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
@@ -28,6 +31,9 @@ export class myInit1648559348093 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "codes" DROP CONSTRAINT "FK_6f6dd484ab53c1014346f191338"`);
         await queryRunner.query(`ALTER TABLE "users_clients" DROP CONSTRAINT "FK_410f7c875e1b512ef6477a3baab"`);
         await queryRunner.query(`ALTER TABLE "users_clients" DROP CONSTRAINT "FK_1e5411dacfbb742eafce27d8c86"`);
+        await queryRunner.query(`ALTER TABLE "clients" ALTER COLUMN "permissions" SET NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "clients" ALTER COLUMN "redirect_uris" SET NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users_clients" ALTER COLUMN "permissions" SET NOT NULL`);
         await queryRunner.query(`DROP INDEX "public"."IDX_session_expire"`);
         await queryRunner.query(`DROP TABLE "user_sessions"`);
         await queryRunner.query(`DROP TABLE "addresses"`);

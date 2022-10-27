@@ -49,7 +49,6 @@ function ProfileTimezoneForm() {
         return Promise.reject(res);
       })
       .then((userGeoData) => {
-        console.log(userGeoData);
         dispatch(updateUserPropsAction(userGeoData));
         // Todo success snackbar
       })

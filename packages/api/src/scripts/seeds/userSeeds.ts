@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../../users/users.service';
 import { UsersDTO } from '../../users/dto/users.dto';
 import { User } from '../../model/users.entity';
+import { getRandomString } from '../../utils';
 
 // User seed
 // function to generate users
@@ -13,10 +14,11 @@ async function userSeeds(connection) {
     connection.manager,
   );
 
+  const password = getRandomString(8);
   // Hashing password
   const saltRounds = 10;
   const salt = bcrypt.genSaltSync(saltRounds);
-  const hash = bcrypt.hashSync('123456', salt);
+  const hash = bcrypt.hashSync(password, salt);
 
   // Generate one specific user by default
   const adminWork = usersService
@@ -32,7 +34,7 @@ async function userSeeds(connection) {
         true,
       ),
     )
-    .then((r) => (console.log('done ->', r.login), r));
+    .then((r) => (console.log('done -> [Users]:', r.login, password), r));
 
   // execute the seed
   return await Promise.all([adminWork]);

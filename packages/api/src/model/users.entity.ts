@@ -133,7 +133,13 @@ export class User extends BaseEntity {
    * The end-user's preferred telephone number, typically in E.164 format,
    * for example +1 (425) 555-1212 or +56 (2) 687 2400.
    */
-  @Column({ name: 'phone_number', type: 'varchar', nullable: true, length: 50 })
+  @Column({
+    name: 'phone_number',
+    type: 'varchar',
+    unique: true,
+    nullable: true,
+    length: 50,
+  })
   public phoneNumber: string;
 
   /**

@@ -25,11 +25,11 @@ export class Client extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   hide: boolean;
 
-  @Column({ name: 'redirect_uris', type: 'simple-array' })
+  @Column({ name: 'redirect_uris', type: 'simple-array', nullable: true })
   redirectUris: string[];
 
   // Clients permissions available in client for the users
-  @Column({ name: 'permissions', type: 'simple-array' })
+  @Column({ name: 'permissions', type: 'simple-array', nullable: true })
   permissions: string[];
 
   @Column({

@@ -27,7 +27,7 @@ async function usersClientsSeeds(
         client_id: LauncherId,
       }),
     )
-    .then((r) => (console.log('done ->', r.id), r));
+    .then((r) => (console.log('done -> [UsersClients]:', r.id), r));
 
   return await Promise.all([adminLauncherPivot]);
 }
