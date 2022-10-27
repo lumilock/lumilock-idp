@@ -25,6 +25,12 @@
     width: spacing-rem(3);
   }
 
+  &.Regular,
+  &.Regular>svg {
+    height: spacing-rem(4);
+    width: spacing-rem(4);
+  }
+
   &.Medium,
   &.Medium>svg {
     height: spacing-rem(6);

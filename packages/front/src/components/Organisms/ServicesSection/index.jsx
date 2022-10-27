@@ -6,7 +6,7 @@ import { useEffectOnce, useRequestStates } from '../../../services/Hooks';
 import {
   Choose, OtherWise, Typography, When,
 } from '../../Electrons';
-import { ServiceButton } from '../../Cells';
+import { ServiceButton, ServicesActionBar } from '../../Cells';
 import styles from './ServicesSection.module.scss';
 
 function ServicesSection() {
@@ -22,7 +22,7 @@ function ServicesSection() {
   ] = useRequestStates([]);
   // Context
   const {
-    selected, setSelected,
+    selected, setSelected, filter,
   } = useContext(ServicesContext);
 
   const fetchServices = useCallback(
@@ -59,6 +59,7 @@ function ServicesSection() {
 
   return (
     <div className={styles.Root}>
+      <ServicesActionBar />
       <div className={styles.ServicesContainer}>
         <Choose>
           <When condition={!!loading}>
@@ -75,7 +76,7 @@ function ServicesSection() {
             <Typography color="alert">{errors}</Typography>
           </When>
           <When condition={!!success && apps.length > 0}>
-            {apps.map((app) => (
+            {apps?.filter((a) => !filter || a?.clientName?.toLowerCase().includes(filter?.toLowerCase())).map((app) => (
               <ServiceButton
                 key={app?.id}
                 id={app?.id}

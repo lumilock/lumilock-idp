@@ -1,0 +1,74 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    text-decoration: none;
+    border-radius: spacing-rem(1);
+
+    &.Plain {
+        background-color: var(--color-background2);
+    }
+
+    &.Outlined {
+        background-color: var(--color-background1);
+        border: rem-calc(1) solid var(--color-background3);
+    }
+
+    &[disabled] {
+        opacity: .5;
+    }
+
+    &:not([disabled]) {
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--color-background3);
+        }
+    }
+
+    &.XXSmall {
+        height: spacing-rem(1);
+        width: spacing-rem(1);
+    }
+
+    &.XSmall {
+        height: spacing-rem(2);
+        width: spacing-rem(2);
+    }
+
+    &.Small {
+        height: spacing-rem(3);
+        width: spacing-rem(3);
+    }
+
+    &.Regular {
+        height: spacing-rem(4);
+        width: spacing-rem(4);
+    }
+
+    &.Medium {
+        height: spacing-rem(5);
+        width: spacing-rem(5);
+    }
+
+    &.Large {
+        height: spacing-rem(6);
+        width: spacing-rem(6);
+    }
+
+    &.XLarge {
+        height: spacing-rem(7);
+        width: spacing-rem(7);
+    }
+
+    &.XXLarge {
+        height: spacing-rem(8);
+        width: spacing-rem(8);
+    }
+
+}

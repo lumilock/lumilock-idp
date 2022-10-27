@@ -24,7 +24,7 @@
 
     &.Outlined {
         & select {
-            border: rem-calc(1) solid var(--color-content1);
+            border: rem-calc(1) solid var(--color-background3);
             background-color: var(--color-background1);
             border-radius: spacing-rem(1);
             padding: 0 spacing-rem(1);

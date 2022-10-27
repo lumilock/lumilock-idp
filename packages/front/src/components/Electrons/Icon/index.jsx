@@ -4,22 +4,12 @@ import { IoIosStar, IoIosSync } from 'react-icons/io';
 
 import styles from './Icon.module.scss';
 import { pascalCase } from '../../../services/Tools';
-import { colors } from '../../../services/Theme';
-
-const sizesTypes = ['xxsmall', 'xsmall', 'small', 'medium', 'large'];
+import { colors, sizes } from '../../../services/Theme';
 
 function Icon({
   ionIcon, size, className, color, loading, component, loadingColor, ...rest
 }) {
-  const customSize = useMemo(() => (!sizesTypes.includes(size) ? { size } : {}), [size]);
-
-  const classes = useMemo(() => ({
-    xxsmall: 'XXSmall',
-    xsmall: 'XSmall',
-    small: 'Small',
-    medium: 'Medium',
-    large: 'Large',
-  }), []);
+  const customSize = useMemo(() => (!sizes.includes(size) ? { size } : {}), [size]);
 
   const defaultComponent = useMemo(() => component ?? ionIcon, [component, ionIcon]);
 
@@ -30,7 +20,7 @@ function Icon({
       className={[
         styles.Base,
         loading ? styles.Loading : '',
-        styles?.[classes?.[size]] || '',
+        styles?.[sizes?.[size]] || '',
         styles?.[pascalCase(loading ? loadingColor : color)],
         className,
       ].join(' ').replaceAll('  ', ' ').trim()}
@@ -50,7 +40,7 @@ Icon.propTypes = {
   ionIcon: PropTypes.func,
   size: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.oneOf(sizesTypes),
+    PropTypes.oneOf(sizes),
   ]),
   /**
    * text color variations

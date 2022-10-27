@@ -10,14 +10,17 @@ import ServicesContext from './ServicesContext';
 function Services() {
   // States
   const [selected, setSelected] = useState('');
+  const [filter, setFilter] = useState('');
 
   // Context value
   const value = useMemo(
     () => ({
       selected,
       setSelected,
+      filter,
+      setFilter,
     }),
-    [selected],
+    [selected, filter],
   );
 
   return (
