@@ -5,7 +5,7 @@ import { IoIosKey } from 'react-icons/io';
 
 import { Auth } from '../../../services/Api';
 import { InputControlled } from '../../Molecules';
-import { ProfileCard, TitleSection } from '../../Cells';
+import { FormCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfilePasswordsForm.module.scss';
@@ -66,40 +66,32 @@ function ProfilePasswordsForm() {
   return (
     <div className={styles.Root}>
       <TitleSection icon={IoIosKey} title="Mot de passes" variant="underlined" />
-      <ProfileCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
-        <div className={styles.InputsContainer}>
-          <div className={styles.InputBox}>
-            <InputControlled
-              control={control}
-              placeholder="●●●●●●"
-              type="password"
-              name="password"
-              label="Ancien mot de passe"
-              size="small"
-            />
-          </div>
-          <div className={styles.InputBox}>
-            <InputControlled
-              control={control}
-              placeholder="●●●●●●●●●●●●"
-              type="password"
-              name="newPassword"
-              label="Nouveau mot de passe"
-              size="small"
-            />
-          </div>
-          <div className={styles.InputBox}>
-            <InputControlled
-              control={control}
-              placeholder="●●●●●●●●●●●●"
-              type="password"
-              name="confirmedPassword"
-              label="Confirmation du mot de passe"
-              size="small"
-            />
-          </div>
-        </div>
-      </ProfileCard>
+      <FormCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
+        <InputControlled
+          control={control}
+          placeholder="●●●●●●"
+          type="password"
+          name="password"
+          label="Ancien mot de passe"
+          size="small"
+        />
+        <InputControlled
+          control={control}
+          placeholder="●●●●●●●●●●●●"
+          type="password"
+          name="newPassword"
+          label="Nouveau mot de passe"
+          size="small"
+        />
+        <InputControlled
+          control={control}
+          placeholder="●●●●●●●●●●●●"
+          type="password"
+          name="confirmedPassword"
+          label="Confirmation du mot de passe"
+          size="small"
+        />
+      </FormCard>
     </div>
   );
 }

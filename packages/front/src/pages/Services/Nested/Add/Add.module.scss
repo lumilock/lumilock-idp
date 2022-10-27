@@ -4,5 +4,6 @@
     position: relative;
     width: 100%;
     display: flex;
-    flex: 1;
+    flex-direction: column;
+    gap: spacing-rem(3);
 }

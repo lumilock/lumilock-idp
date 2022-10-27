@@ -5,9 +5,4 @@
     display: flex;
     flex-direction: column;
     gap: spacing-rem(3);
-
-    & .FieldContainer {
-        position: relative;
-        padding: spacing-rem(2);
-    }
 }

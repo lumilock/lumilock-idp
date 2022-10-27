@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
+import { getRandomString } from '../utils';
 import { Client } from '../model/clients.entity';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { ClientsDTO } from './dto/clients.dto';
-import { ClientsFullDTO, ClientsLightDTO } from './dto';
+import { ClientsCreateDTO, ClientsFullDTO, ClientsLightDTO } from './dto';
 
 @Injectable()
 export class ClientsService {
@@ -89,5 +91,24 @@ export class ClientsService {
     return this.repo
       .save(dto.toEntity(false))
       .then((e) => ClientsDTO.fromEntity(e, false));
+  }
+
+  public async partialCreate(dto: ClientsCreateDTO) {
+    // Generate a secret
+    const secret = getRandomString(30);
+
+    // Hashing secret
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(secret, salt);
+
+    // adding the hashing secret
+    const client = ClientsCreateDTO.from({ ...dto, secret: hash });
+
+    return this.repo
+      .save(client.toEntity())
+      .then((e) =>
+        ClientsCreateDTO.from({ ...ClientsCreateDTO.fromEntity(e), secret }),
+      );
   }
 }

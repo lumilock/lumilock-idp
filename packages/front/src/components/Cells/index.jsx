@@ -10,4 +10,5 @@ export { default as ServiceButton } from './ServiceButton';
 export { default as ServicesActionBar } from './ServicesActionBar';
 export { default as UserSideBarContent } from './UserSideBarContent';
 export { default as UserRow } from './UserRow';
-export { default as ProfileCard } from './ProfileCard';
+export { default as FormCard } from './FormCard';
+export { default as InfoBox } from './InfoBox';

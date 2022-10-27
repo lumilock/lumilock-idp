@@ -4,7 +4,7 @@ import { IoIosImage } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { ProfileCard, TitleSection } from '../../Cells';
+import { FormCard, TitleSection } from '../../Cells';
 import { AvatarControlled } from '../../Molecules';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
@@ -58,17 +58,15 @@ function ProfilePictureForm() {
   return (
     <div className={styles.Root}>
       <TitleSection icon={IoIosImage} title="Image du profil" variant="underlined" />
-      <ProfileCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
-        <div className={styles.FieldContainer}>
-          <AvatarControlled
-            control={control}
-            name="file"
-            type="file"
-            accept="image/png, image/jpeg"
-            initialPicture={initialPicture}
-          />
-        </div>
-      </ProfileCard>
+      <FormCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
+        <AvatarControlled
+          control={control}
+          name="file"
+          type="file"
+          accept="image/png, image/jpeg"
+          initialPicture={initialPicture}
+        />
+      </FormCard>
     </div>
   );
 }

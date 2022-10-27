@@ -14,3 +14,4 @@ export { default as ServicesSection } from './ServicesSection';
 export { default as ServicesSideBar } from './ServicesSideBar';
 export { default as UsersSection } from './UsersSection';
 export { default as UsersSideBar } from './UsersSideBar';
+export { default as ServiceAddForm } from './ServiceAddForm';

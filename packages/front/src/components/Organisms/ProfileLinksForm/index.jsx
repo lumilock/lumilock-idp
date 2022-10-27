@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Auth } from '../../../services/Api';
 import { authInfoSelector } from '../../../store/auth/authSelector';
 import { InputControlled } from '../../Molecules';
-import { ProfileCard, TitleSection } from '../../Cells';
+import { FormCard, TitleSection } from '../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileLinksForm.module.scss';
@@ -74,30 +74,24 @@ function ProfileLinksForm() {
   return (
     <div className={styles.Root}>
       <TitleSection icon={IoIosGlobe} title="Données externes" variant="underlined" />
-      <ProfileCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
-        <div className={styles.InputsContainer}>
-          <div className={styles.InputBox}>
-            <InputControlled
-              control={control}
-              placeholder="https://leo-martin.com/profile"
-              type="url"
-              name="profile"
-              label="Profil"
-              size="small"
-            />
-          </div>
-          <div className={styles.InputBox}>
-            <InputControlled
-              control={control}
-              placeholder="https://leo-martin.com"
-              type="url"
-              name="website"
-              label="Site web"
-              size="small"
-            />
-          </div>
-        </div>
-      </ProfileCard>
+      <FormCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
+        <InputControlled
+          control={control}
+          placeholder="https://leo-martin.com/profile"
+          type="url"
+          name="profile"
+          label="Profil"
+          size="small"
+        />
+        <InputControlled
+          control={control}
+          placeholder="https://leo-martin.com"
+          type="url"
+          name="website"
+          label="Site web"
+          size="small"
+        />
+      </FormCard>
     </div>
   );
 }

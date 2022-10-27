@@ -13,6 +13,28 @@
         border-radius: spacing-rem(1);
         background-color: var(--color-background1);
 
+
+        & .InputsContainer {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: spacing-rem(1);
+
+            & .InputBox {
+                padding: 0 spacing-rem(2) spacing-rem(1) spacing-rem(2);
+
+                border-bottom: rem-calc(1) solid var(--color-background3);
+
+                &:last-child {
+                    border-color: transparent;
+                }
+
+                &:first-child {
+                    padding: spacing-rem(2) spacing-rem(2) spacing-rem(1) spacing-rem(2);
+                }
+            }
+        }
+
         & .Buttons {
             position: relative;
             display: flex;

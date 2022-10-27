@@ -6,29 +6,10 @@
     flex-direction: column;
     gap: spacing-rem(3);
 
-    & .InputsContainer {
+    & .RadioGroup {
         position: relative;
         display: flex;
-        flex-direction: column;
-        gap: spacing-rem(1);
-
-        & .InputBox {
-            padding: 0 spacing-rem(2) spacing-rem(1) spacing-rem(2);
-
-            &:not(:last-child) {
-                border-bottom: rem-calc(1) solid var(--color-background3);
-            }
-
-            &:first-child {
-                padding: spacing-rem(2) spacing-rem(2) spacing-rem(1) spacing-rem(2);
-            }
-
-            &>.RadioGroup {
-                position: relative;
-                display: flex;
-                justify-content: space-between;
-                gap: spacing-rem(2);
-            }
-        }
+        justify-content: space-between;
+        gap: spacing-rem(2);
     }
 }

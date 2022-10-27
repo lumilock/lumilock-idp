@@ -1,21 +1,25 @@
 import {
+  Body,
   Controller,
   Get,
-  HttpStatus,
   Param,
+  Post,
   Query,
   Req,
-  Res,
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
 
+import {
+  ClientsFullDTO,
+  ClientsLightDTO,
+  ClientsDTO,
+  ClientsCreateDTO,
+} from './dto';
 import { PermissionsGuard } from '../common/guards';
 import { Permission } from '../common/enums';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
 import { ClientsService } from './clients.service';
-import { ClientsFullDTO, ClientsLightDTO, ClientsDTO } from './dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -67,5 +71,18 @@ export class ClientsController {
     const clients = await this.serv.findById(id);
     // response
     return clients;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['clients'])
+  @UseGuards(PermissionsGuard)
+  @Post('/')
+  public async create(
+    @Body() body: ClientsCreateDTO,
+  ): Promise<ClientsCreateDTO> {
+    // store clients
+    const client = await this.serv.partialCreate(body);
+    // response
+    return client;
   }
 }

@@ -6,3 +6,5 @@ export { default as RadioField } from './RadioField';
 export { default as RadioControlled } from './RadioField/RadioControlled';
 export { default as SelectField } from './SelectField';
 export { default as SelectControlled } from './SelectField/SelectControlled';
+export { default as CheckboxField } from './CheckboxField';
+export { default as CheckboxControlled } from './CheckboxField/CheckboxControlled';

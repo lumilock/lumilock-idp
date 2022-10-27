@@ -66,7 +66,9 @@ function Toggle({
   }, [duration, state]);
 
   // at the mounted state we initialise the size of the component
-  useEffectOnce(() => setSize(getDimension()));
+  useEffectOnce(() => {
+    setSize(getDimension());
+  });
 
   // When the component is in the HIDDEN state we destoy it
   if (state === HIDDEN) return null;
@@ -80,9 +82,10 @@ function Toggle({
     if (from?.opacity !== undefined) {
       style.opacity = from.opacity;
     }
+    // eslint-disable-next-line no-unused-expressions
     style.transform = `translate3d(${remCalc(from?.x ?? 0)}, ${remCalc(from?.y ?? 0)}, ${remCalc(from?.z ?? 0)})`;
     if (orientation === 'vertical') {
-      style.maxHeight = 0;
+      style.maxHeight = remCalc(0.0001);
     } else {
       style.maxWidth = 0;
     }
