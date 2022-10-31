@@ -9,6 +9,7 @@ const Profile = React.lazy(() => import('../pages/Profile'));
 const Applications = React.lazy(() => import('../pages/Applications'));
 const Services = React.lazy(() => import('../pages/Services'));
 const ServicesAdd = React.lazy(() => import('../pages/Services/Nested/Add'));
+const ServicesUpdate = React.lazy(() => import('../pages/Services/Nested/Update'));
 const Users = React.lazy(() => import('../pages/Users'));
 const Keys = React.lazy(() => import('../pages/Keys'));
 const Settings = React.lazy(() => import('../pages/Settings'));
@@ -71,6 +72,12 @@ function AppRoutes() {
               path: 'add',
               element: (
                 <ServicesAdd />
+              ),
+            },
+            {
+              path: ':serviceId',
+              element: (
+                <ServicesUpdate />
               ),
             },
           ],

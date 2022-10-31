@@ -12,9 +12,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border-radius: 50%;
-        overflow: hidden;
-        background-color: var(--color-background3);
+
+        &.Circle {
+            border-radius: 50%;
+            background-color: var(--color-background3);
+            overflow: hidden;
+        }
 
         &.XXLarge {
             width: rem-calc(128);

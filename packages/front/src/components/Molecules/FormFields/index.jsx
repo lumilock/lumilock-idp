@@ -8,3 +8,4 @@ export { default as SelectField } from './SelectField';
 export { default as SelectControlled } from './SelectField/SelectControlled';
 export { default as CheckboxField } from './CheckboxField';
 export { default as CheckboxControlled } from './CheckboxField/CheckboxControlled';
+export { default as CheckboxGroup } from './CheckboxField/CheckboxGroup';

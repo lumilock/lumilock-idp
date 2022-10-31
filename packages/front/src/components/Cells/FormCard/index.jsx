@@ -6,18 +6,18 @@ import { Button } from '../../Atoms';
 import styles from './FormCard.module.scss';
 
 function FormCard({
-  handleSubmit, handleReset, resetTitle, submitTitle, resetIcon, submitIcon, children,
+  handleSubmit, handleReset, resetTitle, submitTitle, resetIcon, submitIcon, loading, children,
 }) {
   return (
-    <form className={styles.Form} method="path" action="#" onSubmit={handleSubmit}>
+    <form className={styles.Form} onSubmit={handleSubmit}>
       <div className={styles.Card}>
         <div className={styles.InputsContainer}>
           {Children.map(children, (child) => (
             isValidElement(child) ? <div className={styles.InputBox}><child.type {...child.props} /></div> : child))}
         </div>
         <div className={styles.Buttons}>
-          <Button type="button" variant="text" color="alert dark" startIcon={resetIcon} onClick={handleReset}>{resetTitle}</Button>
-          <Button type="submit" color="content1" startIcon={submitIcon}>{submitTitle}</Button>
+          <Button loading={loading} type="button" variant="text" color="alert dark" startIcon={resetIcon} onClick={handleReset}>{resetTitle}</Button>
+          <Button loading={loading} type="submit" color="content1" startIcon={submitIcon}>{submitTitle}</Button>
         </div>
       </div>
     </form>
@@ -35,6 +35,7 @@ FormCard.propTypes = {
   resetIcon: PropTypes.func,
   submitTitle: PropTypes.string,
   submitIcon: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 FormCard.defaultProps = {
@@ -44,6 +45,7 @@ FormCard.defaultProps = {
   resetIcon: IoIosRefresh,
   submitTitle: 'Modifier',
   submitIcon: IoIosSave,
+  loading: false,
 };
 
 export default React.memo(FormCard);

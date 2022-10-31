@@ -10,4 +10,5 @@ export { default as getInitials } from './getInitials';
 export { default as browser } from './browser';
 export { default as textToColor } from './textToColor';
 export { default as toStringDate } from './toStringDate';
+export { default as urlToObject } from './urlToObject';
 export * from './cssRem';

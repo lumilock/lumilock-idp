@@ -22,7 +22,8 @@ function AvatarControlled({
     <AvatarField
       onChange={onChange} // send value to hook form
       onBlur={onBlur} // notify when input is touched/blur
-      value={value || ''} // input value
+      value={undefined} // input value
+      files={value || undefined} // input value
       name={hookName} // send down the input name
       ref={ref} // send input ref, so we can focus on input when error appear
       error={error?.message || ''}

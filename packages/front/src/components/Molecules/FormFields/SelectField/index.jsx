@@ -4,9 +4,10 @@ import clsx from 'clsx';
 
 import { sizes } from '../../../../services/Theme';
 import {
-  Else, If, Then, Typography,
+  Else, If, Skeleton, Then, Typography,
 } from '../../../Electrons';
 import styles from './SelectField.module.scss';
+import { remCalc } from '../../../../services/Tools';
 
 function Options({ placeholder, options }) {
   return (
@@ -92,7 +93,7 @@ Options.defaultProps = {
 };
 
 const SelectField = React.forwardRef(({
-  className, error, label, size, variant, options, placeholder, ...rest
+  className, error, label, size, variant, options, placeholder, loading, disabled, ...rest
 }, ref) => {
   const fieldId = useId();
   const variantClasses = useMemo(() => ({
@@ -101,11 +102,19 @@ const SelectField = React.forwardRef(({
   }), []);
 
   return (
-    <div className={clsx(styles.Base, className, styles?.[sizes[size]], styles?.[variantClasses[variant]], rest?.disabled && styles.Disabled)}>
-      <Typography component="label" htmlFor={fieldId} variant="subtitle2" color="content3">{label}</Typography>
-      <Typography component="select" id={fieldId} variant="body1" color="content1" ref={ref} {...rest}>
-        <Options placeholder={placeholder} options={options} />
-      </Typography>
+    <div className={clsx(styles.Base, className, styles?.[sizes[size]], styles?.[variantClasses[variant]], (disabled || loading) && styles.Disabled)}>
+      <If condition={loading}>
+        <Then>
+          <Skeleton height={remCalc(15)} width="25%" animation="wave" />
+          <Skeleton variant="rounded" height={remCalc(24)} width="100%" animation="wave" />
+        </Then>
+        <Else>
+          <Typography component="label" htmlFor={fieldId} variant="subtitle2" color="content3">{label}</Typography>
+          <Typography component="select" id={fieldId} variant="body1" color="content1" ref={ref} {...rest} disabled={(disabled || loading) && 'disabled'}>
+            <Options placeholder={placeholder} options={options} />
+          </Typography>
+        </Else>
+      </If>
       <If condition={!!error}>
         <Typography variant="body2" color="alert">{error}</Typography>
       </If>
@@ -134,6 +143,14 @@ SelectField.propTypes = {
    * All class to pass to the input container div
    */
   className: PropTypes.string,
+  /**
+   * define if the component is loading
+   */
+  loading: PropTypes.bool,
+  /**
+   * define if the component is disabled
+   */
+  disabled: PropTypes.bool,
   /**
    * The placeholder of the current inupt
    */
@@ -169,6 +186,8 @@ SelectField.defaultProps = {
   variant: 'standard',
   error: '',
   className: '',
+  loading: false,
+  disabled: false,
   placeholder: '',
   options: [],
 };
