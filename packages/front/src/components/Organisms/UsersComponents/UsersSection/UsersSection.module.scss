@@ -27,6 +27,14 @@
             &>div:not(:last-child) {
                 border-bottom: rem-calc(1) solid var(--color-background3);
             }
+
+            & .NotFound {
+                background-color: var(--color-background1);
+                padding: spacing-rem(1);
+                min-height: spacing-rem(5);
+                display: flex;
+                align-items: center;
+            }
         }
 
     }

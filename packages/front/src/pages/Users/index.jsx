@@ -9,14 +9,17 @@ import styles from './Users.module.scss';
 function Users() {
   // States
   const [selected, setSelected] = useState('');
+  const [filter, setFilter] = useState('');
 
   // Context value
   const value = useMemo(
     () => ({
       selected,
       setSelected,
+      filter,
+      setFilter,
     }),
-    [selected],
+    [filter, selected],
   );
 
   return (

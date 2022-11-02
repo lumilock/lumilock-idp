@@ -9,6 +9,7 @@ export { default as ServiceSideBarContent } from './ServiceSideBarContent';
 export { default as ServiceButton } from './ServiceButton';
 export { default as ServicesActionBar } from './ServicesActionBar';
 export { default as UserSideBarContent } from './UserSideBarContent';
+export { default as UsersActionBar } from './UsersActionBar';
 export { default as UserRow } from './UserRow';
 export { default as FormCard } from './FormCard';
 export { default as InfoBox } from './InfoBox';

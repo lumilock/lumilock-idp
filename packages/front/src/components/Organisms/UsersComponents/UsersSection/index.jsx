@@ -1,12 +1,13 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 
 import UsersContext from '../../../../pages/Users/UsersContext';
 import { Users } from '../../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../../services/Hooks';
+
 import {
   Choose, OtherWise, Typography, When,
 } from '../../../Electrons';
-import { UserRow } from '../../../Cells';
+import { UserRow, UsersActionBar } from '../../../Cells';
 import styles from './UsersSection.module.scss';
 
 function UsersSection() {
@@ -22,9 +23,13 @@ function UsersSection() {
   ] = useRequestStates([]);
   // Context
   const {
-    // eslint-disable-next-line no-unused-vars
-    selected, setSelected,
+    selected, setSelected, filter,
   } = useContext(UsersContext);
+
+  // Filter by user full name
+  const filterByName = useCallback((u) => !filter || u?.name?.toLowerCase().includes(filter?.toLowerCase()), [filter]);
+  // new user list after filtering it
+  const filteredUsers = useMemo(() => users?.filter(filterByName), [filterByName, users]);
 
   const fetchUsers = useCallback(
     async () => {
@@ -60,6 +65,7 @@ function UsersSection() {
 
   return (
     <div className={styles.Root}>
+      <UsersActionBar />
       <div className={styles.UsersContainer}>
         <Choose>
           <When condition={!!loading}>
@@ -79,7 +85,7 @@ function UsersSection() {
           </When>
           <When condition={!!success && users.length > 0}>
             <div className={styles.Box}>
-              {users.map((user) => (
+              {filteredUsers?.length > 0 ? filteredUsers?.map((user) => (
                 <UserRow
                   key={user?.id}
                   image={user?.picture}
@@ -91,7 +97,7 @@ function UsersSection() {
                   selected={user?.id === selected}
                   setSelected={setSelected}
                 />
-              ))}
+              )) : <div className={styles.NotFound}><Typography variant="h3" color="alert dark">Aucun utilisateur trouvé</Typography></div>}
             </div>
           </When>
           <OtherWise>

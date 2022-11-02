@@ -1,0 +1,12 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    width: 100%;
+    gap: spacing-rem(1);
+
+    & .Search {
+        width: rem-calc(256);
+    }
+}
