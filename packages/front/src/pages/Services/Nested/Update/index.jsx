@@ -68,7 +68,7 @@ function Update() {
 
   const handleDownload = useCallback(async () => {
     const url = new URL(client?.redirectUris);
-    registerClient(`${url.origin}/api/register`);
+    registerClient(url.origin);
   }, [client?.redirectUris, registerClient]);
 
   /**
@@ -84,8 +84,9 @@ function Update() {
         }
         return Promise.reject(res);
       })
-      .then((clientData) => {
-        setClient(clientData);
+      .then(async (clientData) => {
+        const file = clientData?.logoUri && await urlToObject(clientData?.logoUri, 'icon.webp');
+        setClient({ ...clientData, file });
         // Todo success snackbar
         setLoading(false);
       })
@@ -122,7 +123,7 @@ function Update() {
         </div>
         <If condition={!errors}>
           <Then>
-            <ServicesUpdateForm loading={loading} clientData={client} />
+            <ServicesUpdateForm loading={loading} clientData={client} setClientData={setClient} serviceId={serviceId} />
           </Then>
           <Else>
             <Alert severity="error">

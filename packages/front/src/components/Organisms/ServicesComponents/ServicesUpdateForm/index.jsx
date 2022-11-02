@@ -11,9 +11,12 @@ import { FormCard } from '../../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import { useUpdate } from '../../../../services/Hooks';
+import { urlToObject } from '../../../../services/Tools';
 // import styles from './ServicesUpdateForm.module.scss';
 
-function ServicesUpdateForm({ loading, clientData }) {
+function ServicesUpdateForm({
+  loading, clientData, setClientData, serviceId,
+}) {
   // React hook form
   const {
     handleSubmit, reset, control, setError,
@@ -27,31 +30,39 @@ function ServicesUpdateForm({ loading, clientData }) {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-    return;
-    // eslint-disable-next-line no-unreachable
-    await Clients.create({
+    const formData = new FormData();
+    // Adding image file
+    formData.append('file', data?.file || null);
+    // adding all other data in a json stringify format, in order to not lost types
+    formData.append('data', JSON.stringify({
+      id: serviceId,
       clientName: data?.clientName || null,
-      redirectUris: data?.redirectUris || null,
-      applicationType: data?.applicationType || null,
+      appUrl: data?.appUrl || null,
       hide: !!data?.hide,
-    })
+      redirectUris: data?.redirectUris || null,
+      permissions: data?.permissions || null,
+      applicationType: data?.applicationType || null,
+      isActive: !!data?.isActive,
+      isArchived: !!data?.isArchived,
+    }));
+
+    // eslint-disable-next-line no-unreachable
+    await Clients.update(serviceId, formData)
       .then(async (res) => {
-        if (res.status === 201) {
+        if (res.status === 200) {
           return res.json();
         }
         return Promise.reject(res);
       })
-      .then((updatedData) => {
-        console.log('updatedData', updatedData);
-        // setOpen({ key: updatedData?.secret, id: clientData?.id });
-        handleReset();
+      .then(async (updatedData) => {
+        const file = updatedData?.logoUri && await urlToObject(updatedData?.logoUri, 'icon.webp');
+        setClientData({ ...updatedData, file });
         // Todo success snackbar
       })
       .catch(async (err) => {
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
-          console.error('ERROR: [onSubmit - Clients.create]', err);
+          console.error('ERROR: [onSubmit - Clients.update]', err);
         }
         if (err.status === 400) {
           const error = await err.json();
@@ -149,14 +160,21 @@ function ServicesUpdateForm({ loading, clientData }) {
         size="small"
         loading={loading}
       />
-      <InputControlled
-        control={control}
-        placeholder="test"
-        type="text"
-        name="logoUri"
-        label="Url du logo"
-        size="small"
+      <CheckboxGroup
+        label="État de l'application"
         loading={loading}
+        checkbox={[{
+          control,
+          name: 'isActive',
+          label: 'Actif',
+          size: 'small',
+        },
+        {
+          control,
+          name: 'isArchived',
+          label: 'Archivé',
+          size: 'small',
+        }]}
       />
     </FormCard>
 
@@ -172,12 +190,17 @@ ServicesUpdateForm.propTypes = {
     permissions: PropTypes.arrayOf(PropTypes.string),
     applicationType: PropTypes.string,
     logoUri: PropTypes.string,
+    isActive: PropTypes.bool,
+    isArchived: PropTypes.bool,
   }),
+  setClientData: PropTypes.func,
   loading: PropTypes.bool,
+  serviceId: PropTypes.string.isRequired,
 };
 
 ServicesUpdateForm.defaultProps = {
   clientData: {},
+  setClientData: () => {},
   loading: true,
 };
 

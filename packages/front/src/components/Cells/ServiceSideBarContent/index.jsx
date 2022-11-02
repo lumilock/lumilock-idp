@@ -107,8 +107,8 @@ function ServiceSideBarContent() {
               loading={loading}
               size="small"
               ionIcon={IoIosArchive}
-              color={service?.isArchive ? 'alert dark' : 'main'}
-              title={service?.isArchive ? 'Archivé' : 'Non archivé'}
+              color={service?.isArchived ? 'alert dark' : 'main'}
+              title={service?.isArchived ? 'Archivé' : 'Non archivé'}
             />
             <Icon
               loading={loading}

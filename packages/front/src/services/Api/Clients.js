@@ -14,7 +14,13 @@ const Clients = {
     },
     body: JSON.stringify(data),
   }),
-  register: (url) => fetch(url, {
+  // PUT Update a specific client
+  update: (id, data) => fetch(`/api/clients/${id}`, {
+    method: 'PUT',
+    body: data,
+  }),
+  // Retreave value from a client
+  register: (url) => fetch(`${url}/api/register`, {
     method: 'GET',
     mode: 'cors',
   }),

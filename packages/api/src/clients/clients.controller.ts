@@ -4,22 +4,29 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   SetMetadata,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import * as sharp from 'sharp';
 
 import {
   ClientsFullDTO,
   ClientsLightDTO,
   ClientsDTO,
   ClientsCreateDTO,
+  ClientsUpdateDTO,
 } from './dto';
 import { PermissionsGuard } from '../common/guards';
 import { Permission } from '../common/enums';
+import { FileFormDataInterceptor } from '../common/interceptors';
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard';
 import { ClientsService } from './clients.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('clients')
 export class ClientsController {
@@ -71,6 +78,43 @@ export class ClientsController {
     const clients = await this.serv.findById(id);
     // response
     return clients;
+  }
+
+  /**
+   * Method to update all client data
+   * @param {Express.Multer.File} file the logo object file
+   * @param {string} clientId id of the client
+   * @param {ClientsUpdateDTO} body new data of the client
+   * @returns {Promise<ClientsUpdateDTO | undefined>} the updated client data
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['clients'])
+  @UseGuards(PermissionsGuard)
+  @UseInterceptors(FileInterceptor('file'), new FileFormDataInterceptor('data'))
+  @Put(':id')
+  public async update(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') clientId: string,
+    @Body() body: ClientsUpdateDTO,
+  ): Promise<ClientsUpdateDTO | undefined> {
+    // converte and resize image
+    const sharpedFile = file?.buffer
+      ? // eslint-disable-next-line prettier/prettier
+      await sharp(file.buffer).resize(128, 128, { fit: 'cover', position: 'center' }).webp().toBuffer()
+      : null;
+
+    // generate the object path
+    const path = `clients/${clientId}/icon.webp`;
+
+    // update client
+    const client = await this.serv.update(
+      ClientsUpdateDTO.from(body),
+      sharpedFile,
+      path,
+    );
+
+    // response
+    return client;
   }
 
   @UseGuards(AuthenticatedGuard)

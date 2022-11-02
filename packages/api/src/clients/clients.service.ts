@@ -7,7 +7,12 @@ import { getRandomString } from '../utils';
 import { Client } from '../model/clients.entity';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { ClientsDTO } from './dto/clients.dto';
-import { ClientsCreateDTO, ClientsFullDTO, ClientsLightDTO } from './dto';
+import {
+  ClientsCreateDTO,
+  ClientsFullDTO,
+  ClientsLightDTO,
+  ClientsUpdateDTO,
+} from './dto';
 
 @Injectable()
 export class ClientsService {
@@ -85,6 +90,47 @@ export class ClientsService {
       }
       return client ? ClientsFullDTO.fromEntity(client) : undefined;
     });
+  }
+
+  /**
+   * Method to update client by id
+   * @param {ClientsFullDTO} param0 clients params to update
+   * @param {object} file client logo object file
+   * @param {string} path cleint logo path to store in s3
+   * @returns {ClientsUpdateDTO} all clients info stored
+   */
+  async update(
+    { id, ...client }: ClientsUpdateDTO,
+    file: object,
+    path: string,
+  ): Promise<ClientsUpdateDTO | undefined> {
+    // checking if there is a file
+    if (!file || !id) return undefined;
+
+    // upload to object storage
+    fileStorageSystem.putObject(file, path);
+
+    // update data in
+    const hasBeenSaved = await this.repo
+      .update(id, { ...({ ...client, logoUri: path } || {}) })
+      .then((client) => {
+        return client?.affected === 1;
+      });
+
+    // sign the path in order to return it in front
+    if (hasBeenSaved) {
+      let logoUri = '';
+      // signed path
+      const duration = 60; // 60 seconds
+      await fileStorageSystem
+        .signedUrl(path, duration)
+        .then((url) => (logoUri = url))
+        .catch(console.error);
+
+      return ClientsUpdateDTO.from({ ...client, id, logoUri });
+    }
+
+    return undefined;
   }
 
   public async create(dto: ClientsDTO): Promise<ClientsDTO> {
