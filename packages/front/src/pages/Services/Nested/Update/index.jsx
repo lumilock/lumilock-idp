@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { IoIosConstruct, IoIosDownload, IoIosSync } from 'react-icons/io';
 import { useParams } from 'react-router-dom';
 
-// import { urlToObject } from '../../../../services/Tools';
+import { urlToObject } from '../../../../services/Tools';
 import { Clients } from '../../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../../services/Hooks';
 import { Else, If, Then } from '../../../../components/Electrons';
@@ -41,9 +41,9 @@ function Update() {
       })
       .then(async (clientData) => {
         if (clientData?.logoUri) {
-          // const splittedUri = clientData?.logoUri?.split('/');
-          // const file = await urlToObject(clientData?.logoUri, splittedUri?.[(splittedUri?.length || 0) - 1]);
-          // setClient({ ...clientData, file });
+          const splittedUri = clientData?.logoUri?.split('/');
+          const file = await urlToObject(clientData?.logoUri, splittedUri?.[(splittedUri?.length || 0) - 1]);
+          setClient({ ...clientData, file });
         } else {
           setClient(clientData);
         }
@@ -84,7 +84,6 @@ function Update() {
         return Promise.reject(res);
       })
       .then((clientData) => {
-        console.log(clientData);
         setClient(clientData);
         // Todo success snackbar
         setLoading(false);

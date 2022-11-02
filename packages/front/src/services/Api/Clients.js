@@ -14,7 +14,10 @@ const Clients = {
     },
     body: JSON.stringify(data),
   }),
-  register: (url) => fetch(url),
+  register: (url) => fetch(url, {
+    method: 'GET',
+    mode: 'cors',
+  }),
 };
 
 export default Clients;
