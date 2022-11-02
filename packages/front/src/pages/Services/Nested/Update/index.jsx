@@ -54,10 +54,11 @@ function Update() {
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error('ERROR: [fetchClient - Clients.register]', err);
-        }
-        if (err.status === 400) {
-          const error = await err.json();
-          console.log('error', error);
+          if (err.status === 400) {
+            const error = await err.json();
+            // eslint-disable-next-line no-console
+            console.error('error', error);
+          }
         }
         setErrors('Impossible d\'enregister un nouveau client');
         // console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
@@ -92,10 +93,11 @@ function Update() {
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
           console.error('ERROR: [fetchClient - Clients.getById]', err);
-        }
-        if (err.status === 400) {
-          const error = await err.json();
-          console.log('error', error);
+          if (err.status === 400) {
+            const error = await err.json();
+            // eslint-disable-next-line no-console
+            console.error('error', error);
+          }
         }
         setErrors('Impossible charger les données du client');
         // console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
@@ -115,8 +117,9 @@ function Update() {
       <div className={styles.Root}>
         <TitleSection icon={IoIosSync} title="Mise à jour des données du service" variant="underlined" />
         {/* Box to informe the user */}
-        <Button type="button" variant="text" color="alert dark" startIcon={IoIosDownload} onClick={handleDownload} title="Récupération automatique à partir du service source.">Recupération</Button>
-
+        <div className={styles.ButtonContainer}>
+          <Button type="button" variant="contained" color="main" startIcon={IoIosDownload} onClick={handleDownload} title="Récupération automatique à partir du service source.">Récupération</Button>
+        </div>
         <If condition={!errors}>
           <Then>
             <ServicesUpdateForm loading={loading} clientData={client} />

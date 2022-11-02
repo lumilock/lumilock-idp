@@ -119,6 +119,7 @@ function ServicesUpdateForm({ loading, clientData }) {
           size: 'small',
         }]}
       />
+      {/* TODO Array chips field */}
       <InputControlled
         control={control}
         placeholder="https://192.168.99.1:3000/api/auth/callback"
@@ -128,6 +129,7 @@ function ServicesUpdateForm({ loading, clientData }) {
         size="small"
         loading={loading}
       />
+      {/* TODO Array chips field */}
       <InputControlled
         control={control}
         placeholder="users,clients"
