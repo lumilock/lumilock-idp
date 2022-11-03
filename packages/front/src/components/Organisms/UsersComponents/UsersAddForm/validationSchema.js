@@ -15,6 +15,8 @@ const schema = yup.object({
   zoneinfo: yup.string().required('Un fuseau horaire est requis'),
   locale: yup.string().required('Une langue est requise'),
   phoneNumber: yup.string().nullable(),
+  isActive: yup.bool().nullable(),
+  isArchived: yup.bool().nullable(),
 }).required();
 
 export default schema;

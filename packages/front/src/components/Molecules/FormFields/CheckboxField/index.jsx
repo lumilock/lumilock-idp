@@ -19,7 +19,7 @@ const CheckboxField = React.forwardRef(({
     <div className={clsx(styles.Base, className, styles?.[sizes[size]], (disabled || loading) && styles.Disabled)}>
       <If condition={loading}>
         <Then>
-          <Skeleton variant="rounded" height={remCalc(24)} width="100%" animation="wave" />
+          <Skeleton height={remCalc(24)} width="100%" animation="wave" />
           <Skeleton height={remCalc(24)} width="100%" animation="wave" style={{ marginLeft: remCalc(8) }} />
         </Then>
         <Else>

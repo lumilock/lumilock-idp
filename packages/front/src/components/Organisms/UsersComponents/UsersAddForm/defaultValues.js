@@ -13,6 +13,8 @@ const defaultValues = {
   zoneinfo: 'UTC',
   locale: 'fr-FR',
   phoneNumber: null,
+  isActive: false,
+  isArchived: false,
 };
 
 export default defaultValues;

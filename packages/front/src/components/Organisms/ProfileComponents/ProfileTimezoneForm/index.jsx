@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosClock } from 'react-icons/io';
 
 import { Auth } from '../../../../services/Api';
+import { updateUserPropsAction } from '../../../../store/auth/authAction';
 import { authInfoSelector } from '../../../../store/auth/authSelector';
 import locales from '../../../../assets/data/locales.json';
 import timezones from '../../../../assets/data/timezones.json';
@@ -13,7 +14,6 @@ import { FormCard, TitleSection } from '../../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileTimezoneForm.module.scss';
-import { updateUserPropsAction } from '../../../../store/auth/authAction';
 
 function ProfileTimezoneForm() {
   // Store

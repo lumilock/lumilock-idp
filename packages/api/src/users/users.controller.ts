@@ -1,7 +1,15 @@
-import { Controller, Get, Param, SetMetadata, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
-import { UsersLightDTO } from './dto';
+import { UsersCreateDTO, UsersLightDTO } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
 import { formattedUpsertUsers } from './helpers';
 import { UsersService } from './users.service';
@@ -37,6 +45,18 @@ export class UsersController {
     const users = await this.serv.findById(id);
     // Response
     return users;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Post('/')
+  public async create(@Body() body: UsersCreateDTO): Promise<UsersCreateDTO> {
+    // store clients
+    console.log('body', body);
+    // const client = await this.serv.partialCreate(body);
+    // response
+    return body;
   }
 
   /** *********************************
