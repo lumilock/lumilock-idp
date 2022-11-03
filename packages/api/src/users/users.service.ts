@@ -13,6 +13,7 @@ import {
   UsersIdentityDTO,
   UsersLinksDTO,
   UsersGeoDataDTO,
+  UsersCreateFullDTO,
 } from './dto';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
@@ -71,14 +72,15 @@ export class UsersService {
       .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
       .where(
         `
-        (user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
+        ((user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
         OR (user.login IS NOT NULL AND NULLIF(user.login, '') IS NOT NULL AND user.login = TRIM(:identity))
         OR (user.phone_number IS NOT NULL AND NULLIF(user.phone_number, '') IS NOT NULL AND user.phone_number = TRIM(:identity))
-        `,
+        )`,
         {
           identity,
         },
       )
+      .andWhere('user.is_active = true AND user.is_archived = false')
       .andWhere('uc.client_id = :clientId', {
         clientId: oidcConstants.clientLauncherId,
       })
@@ -338,5 +340,40 @@ export class UsersService {
     return this.repo.update(userId, userGeoData).then((user) => {
       return user?.affected === 1;
     });
+  }
+
+  // Store a new user
+  public async partialCreate(
+    dto: UsersCreateFullDTO,
+  ): Promise<UsersDetailedDTO> {
+    // We will count the number of identical login
+    const loginNumber = await this.repo
+      .createQueryBuilder('u')
+      .select(
+        // Replace by an empty string the login base (all except numbers at the end)
+        // like this only the numbers remain and we select the maximum between the number and 1
+        // 1 because the first login as no number so it will be skeep
+        // the surrounded coalesce is to prevent null value when the "where" clause result by a null value
+        `COALESCE(MAX(COALESCE(NULLIF(REPLACE(u.login, '${dto.login}', ''), '')::integer, 1)), 0) AS "max"`,
+      )
+      .where("login ~ CONCAT('^', :login::text, '[0-9]*')", {
+        login: dto.login,
+      })
+      .getRawOne();
+
+    // updating the admin with a unique auto increment number at the end
+    console.log('loginNumber?.max', loginNumber?.max);
+    dto.login = !loginNumber?.max
+      ? dto.login
+      : dto.login + (loginNumber?.max + 1);
+
+    // Hashing password
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    dto.password = bcrypt.hashSync(dto.password, salt);
+
+    return this.repo
+      .save(dto.toEntity())
+      .then((e) => UsersDetailedDTO.fromEntity(e));
   }
 }

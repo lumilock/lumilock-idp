@@ -86,8 +86,9 @@ function LoginForm({ setConsent }) {
         }
       })
       .catch((err) => {
-        if (err?.message === 'UNAUTHORIZED') {
-          setErrorMsg('Veuillez vous assurer de ne pas avoir fait d\'erreurs dans votre identifiant ou votre mot de passe.');
+        console.log('eerr', err);
+        if (err?.message === 'UNAUTHORIZED' || err?.statusText === 'Unauthorized') {
+          setErrorMsg('Votre identifiant ou votre mot de passe sont incorrects, ou votre compte est inactif.');
         }
         if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
           // eslint-disable-next-line no-console
