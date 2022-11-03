@@ -4,15 +4,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosAdd, IoIosMedal } from 'react-icons/io';
 
 import { Clients } from '../../../../services/Api';
+import { Typography } from '../../../Electrons';
 import {
   InputControlled, SelectControlled,
 } from '../../../Molecules';
 import { FormCard, InfoBox } from '../../../Cells';
+import CheckboxControlled from '../../../Molecules/FormFields/CheckboxField/CheckboxControlled';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ServicesAddForm.module.scss';
-import { Typography } from '../../../Electrons';
-import CheckboxControlled from '../../../Molecules/FormFields/CheckboxField/CheckboxControlled';
 
 function ServicesAddForm() {
   const [open, setOpen] = useState(null);

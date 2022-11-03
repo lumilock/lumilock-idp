@@ -578,6 +578,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('userinfo')
   public async getUserinfo(@Request() req, @Res() res: Response): Promise<any> {
+    console.log('============userinfo============');
     // Calling a service to retreave user info from a subject id (sub) and it's associated client id
     const { id, ...profile } = await this.serv.profile(
       req?.user?.sub,
@@ -591,6 +592,7 @@ export class AuthController {
   // @UseGuards(OidcAuthGuard)
   @Get('callback')
   public async callback() {
+    console.log('============callback============');
     // res.redirect('/');
     return true;
   }
@@ -614,7 +616,7 @@ export class AuthController {
     @Query() query: AuthorizeDTO,
     @Res() res: Response,
   ): Promise<any> {
-    console.log('<authorize> Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    console.log('============authorize============');
     // Just Cast from DTO to JSON
     const parsedQuery = JSON.parse(JSON.stringify(query));
 

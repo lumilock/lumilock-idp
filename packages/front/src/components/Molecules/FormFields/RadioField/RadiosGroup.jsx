@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useId } from 'react';
 import PropTypes from 'prop-types';
 
-import { remCalc } from '../../../../../services/Tools';
-import CheckboxControlled from '../CheckboxControlled';
+import { remCalc } from '../../../../services/Tools';
+import RadioControlled from './RadioControlled';
 import {
   Else, If, Skeleton, Then, Typography,
-} from '../../../../Electrons';
+} from '../../../Electrons';
 
-function CheckboxGroup({ label, loading, checkbox }) {
+function RadiosGroup({ label, loading, radios }) {
+  const compId = useId();
+
   return (
     <div>
       <If condition={!loading}>
@@ -18,29 +20,29 @@ function CheckboxGroup({ label, loading, checkbox }) {
           <Skeleton height={remCalc(15)} width="25%" animation="wave" />
         </Else>
       </If>
-      {checkbox?.map((c) => (
-        <CheckboxControlled
-          key={c?.name}
+      {radios?.map((r) => (
+        <RadioControlled
+          key={`${compId}${r?.name}-${r?.value}`}
           loading={loading}
-          {...c}
+          {...r}
         />
       ))}
     </div>
   );
 }
 
-CheckboxGroup.propTypes = {
+RadiosGroup.propTypes = {
   label: PropTypes.string,
   loading: PropTypes.bool,
-  checkbox: PropTypes.arrayOf(PropTypes.shape({
+  radios: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
   })),
 };
 
-CheckboxGroup.defaultProps = {
+RadiosGroup.defaultProps = {
   label: '',
   loading: false,
-  checkbox: [],
+  radios: [],
 };
 
-export default React.memo(CheckboxGroup);
+export default React.memo(RadiosGroup);

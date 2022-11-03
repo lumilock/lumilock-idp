@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
 export { default as Add } from './Add';
+export { default as Update } from './Update';

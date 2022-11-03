@@ -20,7 +20,7 @@ function NavBarItem({
     >
       <Icon
         ionIcon={icon}
-        size="xxsmall"
+        size="xsmall"
       />
       <p className={styles.Title}>{title}</p>
     </NavLink>

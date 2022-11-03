@@ -12,7 +12,7 @@ function Title({ icon, title, color }) {
     ].join(' ').trim()}
     >
       <Icon
-        size="xsmall"
+        size="1.25rem"
         ionIcon={icon}
         color={color}
       />
