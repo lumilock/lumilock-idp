@@ -83,7 +83,6 @@ function UsersAddForm() {
         return Promise.reject(res);
       })
       .then((userData) => {
-        console.log('userData', userData);
         setOpen(userData);
         handleReset();
       })

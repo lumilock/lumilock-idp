@@ -86,7 +86,6 @@ function LoginForm({ setConsent }) {
         }
       })
       .catch((err) => {
-        console.log('eerr', err);
         if (err?.message === 'UNAUTHORIZED' || err?.statusText === 'Unauthorized') {
           setErrorMsg('Votre identifiant ou votre mot de passe sont incorrects, ou votre compte est inactif.');
         }
