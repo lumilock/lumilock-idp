@@ -272,7 +272,7 @@ export class UsersService {
    * Method used to patch the personnal information of an user
    * @param {string} userId The id of the target user
    * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
-   * @returns {boolean} true if personnal information has been saved, false otherwise
+   * @returns {UsersPatchPersoInfoDTO | string} personnal information if had been saved, empty string otherwise
    */
   async patchPersonnalInformation(
     userId: string,
@@ -281,7 +281,7 @@ export class UsersService {
     // We format the data in order to generate the full name
     const formattedUserPersoInfo = UsersPatchPersoInfoDTO.from(userPersoInfo);
 
-    const hasBeenUpdated = this.repo
+    const hasBeenUpdated = await this.repo
       .update(userId, formattedUserPersoInfo)
       .then((user) => {
         return user?.affected === 1;
@@ -294,15 +294,21 @@ export class UsersService {
    * Method used to patch identity information of an user
    * @param {string} userId The id of the target user
    * @param {UsersIdentityDTO} userIdentity the new identity information to update
-   * @returns {boolean} true if identity has been saved, false otherwise
+   * @returns {UsersIdentityDTO | ''} identity if had been saved, empty string otherwise
    */
   async patchIdentity(
     userId: string,
     userIdentity: UsersIdentityDTO,
-  ): Promise<boolean> {
-    return this.repo.update(userId, userIdentity).then((user) => {
-      return user?.affected === 1;
-    });
+  ): Promise<UsersIdentityDTO | ''> {
+    // We format the data
+    const formattedUserIdentity = UsersIdentityDTO.from(userIdentity);
+
+    const hasBeenUpdated = await this.repo
+      .update(userId, formattedUserIdentity)
+      .then((user) => {
+        return user?.affected === 1;
+      });
+    return hasBeenUpdated ? formattedUserIdentity : '';
   }
 
   /**
@@ -326,27 +332,36 @@ export class UsersService {
    * Method used to patch external links profile and website
    * @param {string} userId The id of the target user
    * @param {UsersLinksDTO} userLinks new external links profile and website to update
-   * @returns {boolean} true if external links profile and website has been saved, false otherwise
+   * @returns {UsersLinksDTO | string} external links profile and website if had been saved, empty string otherwise
    */
-  async patchLinks(userId: string, userLinks: UsersLinksDTO): Promise<boolean> {
-    return this.repo.update(userId, userLinks).then((user) => {
-      return user?.affected === 1;
-    });
+  async patchLinks(
+    userId: string,
+    userLinks: UsersLinksDTO,
+  ): Promise<UsersLinksDTO | string> {
+    const hasBeenUpdated = await this.repo
+      .update(userId, userLinks)
+      .then((user) => {
+        return user?.affected === 1;
+      });
+    return hasBeenUpdated ? userLinks : '';
   }
 
   /**
    * Method used to patch geographique data zoneinfo and locale
    * @param {string} userId The id of the target user
    * @param {UsersGeoDataDTO} userGeoData new geographique data zoneinfo and locale to update
-   * @returns {boolean} true if geographique data zoneinfo and locale has been saved, false otherwise
+   * @returns {UsersGeoDataDTO | string} geographique data zoneinfo and locale if had been saved, empty string otherwise
    */
   async patchGeoData(
     userId: string,
     userGeoData: UsersGeoDataDTO,
-  ): Promise<boolean> {
-    return this.repo.update(userId, userGeoData).then((user) => {
-      return user?.affected === 1;
-    });
+  ): Promise<UsersGeoDataDTO | string> {
+    const hasBeenUpdated = await this.repo
+      .update(userId, userGeoData)
+      .then((user) => {
+        return user?.affected === 1;
+      });
+    return hasBeenUpdated ? userGeoData : '';
   }
 
   // Store a new user

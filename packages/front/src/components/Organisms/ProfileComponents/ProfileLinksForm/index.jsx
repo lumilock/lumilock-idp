@@ -1,24 +1,34 @@
-import React from 'react';
-import { IoIosGlobe } from 'react-icons/io';
-import { useForm } from 'react-hook-form';
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IoIosGlobe } from 'react-icons/io';
 
-import { Auth } from '../../../../services/Api';
+import { updateUserPropsAction } from '../../../../store/auth/authAction';
 import { authInfoSelector } from '../../../../store/auth/authSelector';
+import { Auth, Users } from '../../../../services/Api';
+import { requestCatch } from '../../../../services/JSXTools';
+import { useUpdate } from '../../../../services/Hooks';
 import { InputControlled } from '../../../Molecules';
 import { FormCard, TitleSection } from '../../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileLinksForm.module.scss';
-import { updateUserPropsAction } from '../../../../store/auth/authAction';
 
-function ProfileLinksForm() {
+function ProfileLinksForm({
+  userId, defaultData, setDefaultData, loading,
+}) {
   // Store
-  const {
-    profile, website,
-  } = useSelector(authInfoSelector);
+  const storeData = useSelector(authInfoSelector);
   const dispatch = useDispatch();
+  // Memos
+  const hasDefaultData = useMemo(() => (!!userId && !!defaultData && Object?.keys(defaultData)?.length > 0), [userId, defaultData]);
+  const {
+    profile,
+    website,
+  } = useMemo(() => (hasDefaultData ? defaultData : storeData), [hasDefaultData, defaultData, storeData]);
+
   // React hook form
   const {
     handleSubmit, reset, control, setError,
@@ -27,8 +37,15 @@ function ProfileLinksForm() {
   /**
    * Method used to reset all values
    */
-  const handleReset = () => {
-    reset({ ...defaultValues, ...{ profile, website } });
+  const handleReset = (_, values = undefined) => {
+    reset({
+      ...defaultValues,
+      ...(!values || Object.keys(values)?.length <= 0
+        ? { profile, website } : {
+          profile: values?.profile,
+          website: values?.website,
+        }),
+    });
   };
 
   /**
@@ -36,10 +53,16 @@ function ProfileLinksForm() {
    * path the user profile picture
    */
   const onSubmit = async (data) => {
-    await Auth.updateLinks({
+    // user info to patch
+    const options = {
       profile: data?.profile || null,
       website: data?.website || null,
-    })
+    };
+
+    // user api functions
+    const apiFunction = hasDefaultData ? Users.updateLinks(userId, options) : Auth.updateLinks(options);
+
+    await apiFunction
       .then(async (res) => {
         if (res.status === 200) {
           return res.json();
@@ -47,29 +70,26 @@ function ProfileLinksForm() {
         return Promise.reject(res);
       })
       .then((userLinks) => {
-        dispatch(updateUserPropsAction(userLinks));
+        if (!hasDefaultData) {
+          dispatch(updateUserPropsAction(userLinks));
+        } else {
+          setDefaultData((o) => ({ ...o, ...userLinks }));
+        }
+        handleReset(undefined, userLinks);
         // Todo success snackbar
       })
       .catch(async (err) => {
-        if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
-          // eslint-disable-next-line no-console
-          console.error('ERROR: [onSubmit - Auth.updateLinks]', err);
-        }
-        if (err.status === 400) {
-          const error = await err.json();
-
-          if (typeof error?.message === 'object' && Object.keys(error?.message)?.length > 0) {
-            Object.keys(error?.message).forEach((key) => {
-              setError(key, { type: 'custom', message: error?.message?.[key] });
-            });
-          } else {
-            // Todo snackbar error
-            // setErrors(error?.message);
-          }
-        }
-        // console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
+        const dbgMsg = `ERROR: [onSubmit - ${hasDefaultData ? 'Users' : 'Auth'}.updateLinks]`;
+        requestCatch(err, dbgMsg, setError);
       });
   };
+
+  /**
+   * Each time the form is loading we reset the form data
+   */
+  useUpdate(() => {
+    handleReset();
+  }, [loading]);
 
   return (
     <div className={styles.Root}>
@@ -81,6 +101,7 @@ function ProfileLinksForm() {
           type="url"
           name="profile"
           label="Profil"
+          loading={loading}
           size="small"
         />
         <InputControlled
@@ -89,11 +110,29 @@ function ProfileLinksForm() {
           type="url"
           name="website"
           label="Site web"
+          loading={loading}
           size="small"
         />
       </FormCard>
     </div>
   );
 }
+
+ProfileLinksForm.propTypes = {
+  userId: PropTypes.string,
+  defaultData: PropTypes.shape({
+    profile: PropTypes.string,
+    website: PropTypes.string,
+  }),
+  loading: PropTypes.bool,
+  setDefaultData: PropTypes.func,
+};
+
+ProfileLinksForm.defaultProps = {
+  userId: undefined,
+  defaultData: undefined,
+  loading: false,
+  setDefaultData: undefined,
+};
 
 export default React.memo(ProfileLinksForm);

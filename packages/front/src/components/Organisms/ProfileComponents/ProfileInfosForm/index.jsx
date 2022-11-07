@@ -10,16 +10,15 @@ import { authInfoSelector } from '../../../../store/auth/authSelector';
 import { requestCatch } from '../../../../services/JSXTools';
 import { Auth, Users } from '../../../../services/Api';
 import { toStringDate } from '../../../../services/Tools';
-import { Alert, InputControlled, RadiosGroup } from '../../../Molecules';
+import { InputControlled, RadiosGroup } from '../../../Molecules';
 import { FormCard, TitleSection } from '../../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileInfosForm.module.scss';
 import { useUpdate } from '../../../../services/Hooks';
-import { If } from '../../../Electrons';
 
 function ProfileInfosForm({
-  userId, defaultData, errorMsg, loading,
+  userId, defaultData, setDefaultData, loading,
 }) {
   // Store
   const storeData = useSelector(authInfoSelector);
@@ -101,8 +100,11 @@ function ProfileInfosForm({
       .then((userInfo) => {
         if (!hasDefaultData) {
           dispatch(updateUserPropsAction(userInfo));
+        } else {
+          setDefaultData((o) => ({ ...o, ...userInfo }));
         }
         handleReset(undefined, userInfo);
+        // Todo success snackbar
       })
       .catch(async (err) => {
         const debuMsg = `ERROR: [onSubmit - ${hasDefaultData ? 'Users' : 'Auth'}.updatePersonnalInfo]`;
@@ -120,9 +122,6 @@ function ProfileInfosForm({
   return (
     <div className={styles.Root}>
       <TitleSection icon={IoIosInformationCircle} title="Informations personnelles" variant="underlined" />
-      <If condition={!!errorMsg}>
-        <Alert severity="error" variant="rounded" title="Erreur:" className={styles.Error}>{errorMsg}</Alert>
-      </If>
       <FormCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
         <InputControlled
           control={control}
@@ -233,14 +232,14 @@ ProfileInfosForm.propTypes = {
     preferredUsername: PropTypes.string,
   }),
   loading: PropTypes.bool,
-  errorMsg: PropTypes.string,
+  setDefaultData: PropTypes.func,
 };
 
 ProfileInfosForm.defaultProps = {
   userId: undefined,
   defaultData: undefined,
   loading: false,
-  errorMsg: '',
+  setDefaultData: undefined,
 };
 
 export default React.memo(ProfileInfosForm);

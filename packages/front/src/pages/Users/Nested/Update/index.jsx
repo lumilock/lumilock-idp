@@ -5,7 +5,11 @@ import { IoIosPerson } from 'react-icons/io';
 import { Users } from '../../../../services/Api';
 import { requestCatch } from '../../../../services/JSXTools';
 import { useEffectOnce, useRequestStates } from '../../../../services/Hooks';
-import { ProfileInfosForm } from '../../../../components/Organisms';
+import { If } from '../../../../components/Electrons';
+import { Alert } from '../../../../components/Molecules';
+import {
+  ProfileIdentityForm, ProfileInfosForm, ProfileLinksForm, ProfileTimezoneForm,
+} from '../../../../components/Organisms';
 import { HeaderWrapper } from '../../../../components/Species';
 import styles from './Update.module.scss';
 
@@ -22,6 +26,7 @@ function Update() {
     setLoading,
   } = useRequestStates(undefined, '', '', true);
 
+  // ProfileInfosForm -> data
   const infoData = useMemo(() => (user ? {
     name: user?.name,
     familyName: user?.familyName,
@@ -31,6 +36,22 @@ function Update() {
     middleName: user?.middleName,
     nickname: user?.nickname,
     preferredUsername: user?.preferredUsername,
+  } : undefined), [user]);
+  // ProfileIdentityForm -> data
+  const identityData = useMemo(() => (user ? {
+    login: user?.login,
+    email: user?.email,
+    phoneNumber: user?.phoneNumber,
+  } : undefined), [user]);
+  // ProfileLinksForm -> data
+  const linkData = useMemo(() => (user ? {
+    profile: user?.profile,
+    website: user?.website,
+  } : undefined), [user]);
+  // ProfileTimezoneForm -> data
+  const timezoneData = useMemo(() => (user ? {
+    zoneinfo: user?.zoneinfo,
+    locale: user?.locale,
   } : undefined), [user]);
 
   const fetchUser = useCallback(async () => {
@@ -67,12 +88,13 @@ function Update() {
   return (
     <HeaderWrapper icon={IoIosPerson} title="Mise à jour d'un utilisateur">
       <div className={styles.Root}>
-        <ProfileInfosForm userId={userId} defaultData={infoData} errorMsg={errors} loading={loading} />
-
-        {/* <ProfileIdentityForm /> */}
-        {/* <ProfilePasswordsForm /> */}
-        {/* <ProfileLinksForm /> */}
-        {/* <ProfileTimezoneForm /> */}
+        <If condition={!!errors}>
+          <Alert severity="error" variant="rounded" title="Erreur:" className={styles.Error}>{errors}</Alert>
+        </If>
+        <ProfileInfosForm userId={userId} defaultData={infoData} setDefaultData={setUser} loading={loading} />
+        <ProfileIdentityForm userId={userId} defaultData={identityData} setDefaultData={setUser} loading={loading} />
+        <ProfileLinksForm userId={userId} defaultData={linkData} setDefaultData={setUser} loading={loading} />
+        <ProfileTimezoneForm userId={userId} defaultData={timezoneData} setDefaultData={setUser} loading={loading} />
         {/* <ProfileOtherInfos /> */}
       </div>
     </HeaderWrapper>

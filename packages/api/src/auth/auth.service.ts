@@ -424,12 +424,12 @@ export class AuthService {
     });
 
     // patch identity in db
-    const hasBeenSaved = await this.usersService.patchIdentity(
+    const savedUserIdentity = await this.usersService.patchIdentity(
       userId,
       formattedUserIdentity,
     );
 
-    return hasBeenSaved ? formattedUserIdentity : '';
+    return savedUserIdentity;
   }
 
   /**
@@ -486,9 +486,9 @@ export class AuthService {
     if (!userLinks || !userId) return undefined;
 
     // patch external links in db
-    const hasBeenSaved = await this.usersService.patchLinks(userId, userLinks);
+    const savedData = await this.usersService.patchLinks(userId, userLinks);
 
-    return hasBeenSaved ? userLinks : '';
+    return savedData;
   }
 
   /**
@@ -505,12 +505,9 @@ export class AuthService {
     if (!userGeoData || !userId) return undefined;
 
     // patch external links in db
-    const hasBeenSaved = await this.usersService.patchGeoData(
-      userId,
-      userGeoData,
-    );
+    const savedData = await this.usersService.patchGeoData(userId, userGeoData);
 
-    return hasBeenSaved ? userGeoData : '';
+    return savedData;
   }
 
   /**

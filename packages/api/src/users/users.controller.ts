@@ -14,7 +14,10 @@ import {
   UsersCreateDTO,
   UsersCreateFullDTO,
   UsersDetailedDTO,
+  UsersGeoDataDTO,
+  UsersIdentityDTO,
   UsersLightDTO,
+  UsersLinksDTO,
   UsersPatchPersoInfoDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
@@ -44,7 +47,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthenticatedGuard)
-  @SetMetadata('permissions', ['clients'])
+  @SetMetadata('permissions', ['users'])
   @UseGuards(PermissionsGuard)
   @Get(':id')
   public async getById(@Param('id') id: string) {
@@ -60,7 +63,7 @@ export class UsersController {
    * @returns {UsersPatchPersoInfoDTO | undefined} the updated and formatted personnal information or nothing
    */
   @UseGuards(AuthenticatedGuard)
-  @SetMetadata('permissions', ['clients'])
+  @SetMetadata('permissions', ['users'])
   @UseGuards(PermissionsGuard)
   @Patch(':id/personnal-information')
   public async patchPersonnalInformation(
@@ -74,6 +77,95 @@ export class UsersController {
     if (patchedUserPersoInfo && typeof patchedUserPersoInfo === 'object') {
       return patchedUserPersoInfo;
     }
+    return undefined;
+  }
+
+  /**
+   * Method used to patch identity information of a specific user
+   * @param {UsersIdentityDTO} userIdentity new identity information to update
+   * @returns {UsersIdentityDTO | undefined} the updated and formatted identity information or nothing
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Patch(':id/identity')
+  public async patchIdentity(
+    @Param('id') userId: string,
+    @Body() userIdentity: UsersIdentityDTO,
+  ): Promise<UsersIdentityDTO | undefined> {
+    // Get users
+    const {
+      email: cEmail,
+      emailVerified: cEmailVerified,
+      phoneNumber: cPhoneNumber,
+      phoneNumberVerified: cPhoneNumberVerified,
+    } = await this.serv.findById(userId);
+
+    // Formatted current identity data
+    const formattedIdentity = UsersIdentityDTO.from({
+      email: userIdentity?.email,
+      emailVerified: userIdentity?.email !== cEmail ? false : cEmailVerified,
+      phoneNumber: userIdentity?.phoneNumber,
+      phoneNumberVerified:
+        userIdentity?.phoneNumber !== cPhoneNumber
+          ? false
+          : cPhoneNumberVerified,
+    });
+
+    // Patch in db
+    const patchedUserIdentity = await this.serv.patchIdentity(
+      userId,
+      formattedIdentity,
+    );
+
+    if (patchedUserIdentity && typeof patchedUserIdentity === 'object') {
+      return patchedUserIdentity;
+    }
+    return undefined;
+  }
+
+  /**
+   * Method used to patch external links profile and website of a specific user
+   * @param {UsersLinksDTO} userLinks external links profile and website to update
+   * @returns {UsersLinksDTO | undefined} determine if external links profile and website has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Patch(':id/links')
+  public async patchLinks(
+    @Param('id') userId: string,
+    @Body() userLinks: UsersLinksDTO,
+  ): Promise<UsersLinksDTO | undefined> {
+    // Patch in db
+    const patchedUserLinks = await this.serv.patchLinks(userId, userLinks);
+
+    if (patchedUserLinks && typeof patchedUserLinks === 'object') {
+      return patchedUserLinks;
+    }
+    return undefined;
+  }
+
+  /**
+   * Method used to patch geographique data zoneinfo and locale of a specific user
+   * @param {UsersGeoDataDTO} userGeoData geographique data zoneinfo and locale to update
+   * @returns {UsersGeoDataDTO | undefined} determine if geographique data zoneinfo and locale has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Patch(':id/geo-data')
+  public async patchGeoData(
+    @Param('id') userId: string,
+    @Body() userGeoData: UsersGeoDataDTO,
+  ): Promise<UsersGeoDataDTO | undefined> {
+    // Patch in db
+    const patchedGeoData = await this.serv.patchGeoData(userId, userGeoData);
+
+    if (patchedGeoData && typeof patchedGeoData === 'object') {
+      return patchedGeoData;
+    }
+
     return undefined;
   }
 
