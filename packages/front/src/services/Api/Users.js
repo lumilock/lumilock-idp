@@ -12,6 +12,15 @@ const Users = {
     },
     body: JSON.stringify(data),
   }),
+  // PATCH personnal information of a specific user
+  updatePersonnalInfo: (id, data) => fetch(`/api/users/${id}/personnal-information`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
 };
 
 export default Users;

@@ -277,10 +277,17 @@ export class UsersService {
   async patchPersonnalInformation(
     userId: string,
     userPersoInfo: UsersPatchPersoInfoDTO,
-  ): Promise<boolean> {
-    return this.repo.update(userId, userPersoInfo).then((user) => {
-      return user?.affected === 1;
-    });
+  ): Promise<UsersPatchPersoInfoDTO | string> {
+    // We format the data in order to generate the full name
+    const formattedUserPersoInfo = UsersPatchPersoInfoDTO.from(userPersoInfo);
+
+    const hasBeenUpdated = this.repo
+      .update(userId, formattedUserPersoInfo)
+      .then((user) => {
+        return user?.affected === 1;
+      });
+
+    return hasBeenUpdated ? formattedUserPersoInfo : '';
   }
 
   /**

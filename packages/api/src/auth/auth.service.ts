@@ -384,15 +384,11 @@ export class AuthService {
     if (!userPersoInfo || Object.keys(userPersoInfo)?.length <= 0 || !userId)
       return undefined;
 
-    // We format the data in order to generate the full name
-    const formattedUserPersoInfo = UsersPatchPersoInfoDTO.from(userPersoInfo);
     // patch personnal information in db
-    const hasBeenSaved = await this.usersService.patchPersonnalInformation(
-      userId,
-      formattedUserPersoInfo,
-    );
+    const formattedUserPersoInfo =
+      await this.usersService.patchPersonnalInformation(userId, userPersoInfo);
 
-    return hasBeenSaved ? formattedUserPersoInfo : '';
+    return formattedUserPersoInfo;
   }
 
   /**

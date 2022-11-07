@@ -114,7 +114,7 @@ function Update() {
   });
 
   return (
-    <HeaderWrapper icon={IoIosConstruct} title="Création d'un service">
+    <HeaderWrapper icon={IoIosConstruct} title="Mise à jour d'un service">
       <div className={styles.Root}>
         <TitleSection icon={IoIosSync} title="Mise à jour des données du service" variant="underlined" />
         {/* Box to informe the user */}

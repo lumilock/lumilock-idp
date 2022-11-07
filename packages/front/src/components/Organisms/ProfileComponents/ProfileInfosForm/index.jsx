@@ -1,26 +1,42 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IoIosInformationCircle } from 'react-icons/io';
 
+import { updateUserPropsAction } from '../../../../store/auth/authAction';
 import { authInfoSelector } from '../../../../store/auth/authSelector';
-import { Auth } from '../../../../services/Api';
+import { requestCatch } from '../../../../services/JSXTools';
+import { Auth, Users } from '../../../../services/Api';
 import { toStringDate } from '../../../../services/Tools';
-import { Typography } from '../../../Electrons';
-import { InputControlled, RadioControlled } from '../../../Molecules';
+import { Alert, InputControlled, RadiosGroup } from '../../../Molecules';
 import { FormCard, TitleSection } from '../../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileInfosForm.module.scss';
-import { updateUserPropsAction } from '../../../../store/auth/authAction';
+import { useUpdate } from '../../../../services/Hooks';
+import { If } from '../../../Electrons';
 
-function ProfileInfosForm() {
+function ProfileInfosForm({
+  userId, defaultData, errorMsg, loading,
+}) {
   // Store
-  const {
-    familyName, gender, birthdate, givenName, middleName, name, nickname, preferredUsername,
-  } = useSelector(authInfoSelector);
+  const storeData = useSelector(authInfoSelector);
   const dispatch = useDispatch();
+  // Memos
+  const hasDefaultData = useMemo(() => (!!userId && !!defaultData && Object?.keys(defaultData)?.length > 0), [userId, defaultData]);
+  const {
+    familyName,
+    gender,
+    birthdate,
+    givenName,
+    middleName,
+    name,
+    nickname,
+    preferredUsername,
+  } = useMemo(() => (hasDefaultData ? defaultData : storeData), [hasDefaultData, defaultData, storeData]);
+
   // React hook form
   const {
     handleSubmit, reset, control, setError,
@@ -37,12 +53,22 @@ function ProfileInfosForm() {
   /**
    * Method used to reset all values
    */
-  const handleReset = () => {
+  const handleReset = (_, values = undefined) => {
     reset({
       ...defaultValues,
-      ...{
-        familyName, gender, birthdate: toStringDate(birthdate), givenName, middleName, name, nickname, preferredUsername,
-      },
+      ...(!values || Object.keys(values)?.length <= 0
+        ? {
+          familyName, gender, birthdate: toStringDate(birthdate), givenName, middleName, name, nickname, preferredUsername,
+        } : {
+          familyName: values?.familyName,
+          gender: values?.gender,
+          birthdate: toStringDate(values?.birthdate),
+          givenName: values?.givenName,
+          middleName: values?.middleName,
+          name: values?.name,
+          nickname: values?.nickname,
+          preferredUsername: values?.preferredUsername,
+        }),
     });
   };
 
@@ -51,7 +77,8 @@ function ProfileInfosForm() {
    * path the user profile picture
    */
   const onSubmit = async (data) => {
-    await Auth.updatePersonnalInfo({
+    // user info to patch
+    const options = {
       familyName: data?.familyName || null,
       gender: data?.gender || null,
       birthdate: data?.birthdate?.toISOString() || null,
@@ -59,7 +86,12 @@ function ProfileInfosForm() {
       middleName: data?.middleName || null,
       nickname: data?.nickname || null,
       preferredUsername: data?.preferredUsername || null,
-    })
+    };
+
+    // user api functions
+    const apiFunction = hasDefaultData ? Users.updatePersonnalInfo(userId, options) : Auth.updatePersonnalInfo(options);
+
+    await apiFunction
       .then(async (res) => {
         if (res.status === 200) {
           return res.json();
@@ -67,32 +99,30 @@ function ProfileInfosForm() {
         return Promise.reject(res);
       })
       .then((userInfo) => {
-        dispatch(updateUserPropsAction(userInfo));
+        if (!hasDefaultData) {
+          dispatch(updateUserPropsAction(userInfo));
+        }
+        handleReset(undefined, userInfo);
       })
       .catch(async (err) => {
-        if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
-          // eslint-disable-next-line no-console
-          console.error('ERROR: [onSubmit - Auth.updatePersonnalInfo]', err);
-        }
-        if (err.status === 400) {
-          const error = await err.json();
-
-          if (typeof error?.message === 'object' && Object.keys(error?.message)?.length > 0) {
-            Object.keys(error?.message).forEach((key) => {
-              setError(key, { type: 'custom', message: error?.message?.[key] });
-            });
-          } else {
-            // Todo snackbar error
-            // setErrors(error?.message);
-          }
-        }
-        // console.log({ severity: 'error', message: 'Impossible de mettre à jour l\'image du profil.' });
+        const debuMsg = `ERROR: [onSubmit - ${hasDefaultData ? 'Users' : 'Auth'}.updatePersonnalInfo]`;
+        requestCatch(err, debuMsg, setError);
       });
   };
+
+  /**
+   * Each time the form is loading we reset the form data
+   */
+  useUpdate(() => {
+    handleReset();
+  }, [loading]);
 
   return (
     <div className={styles.Root}>
       <TitleSection icon={IoIosInformationCircle} title="Informations personnelles" variant="underlined" />
+      <If condition={!!errorMsg}>
+        <Alert severity="error" variant="rounded" title="Erreur:" className={styles.Error}>{errorMsg}</Alert>
+      </If>
       <FormCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
         <InputControlled
           control={control}
@@ -101,6 +131,7 @@ function ProfileInfosForm() {
           name="name"
           label="Nom complet"
           size="small"
+          loading={loading}
           disabled
         />
         <InputControlled
@@ -109,6 +140,7 @@ function ProfileInfosForm() {
           type="text"
           name="givenName"
           label="Prenom"
+          loading={loading}
           size="small"
         />
         <InputControlled
@@ -117,6 +149,7 @@ function ProfileInfosForm() {
           type="text"
           name="middleName"
           label="Deuxième nom (optionel)"
+          loading={loading}
           size="small"
         />
         <InputControlled
@@ -125,6 +158,7 @@ function ProfileInfosForm() {
           type="text"
           name="familyName"
           label="Nom de famille"
+          loading={loading}
           size="small"
         />
         <InputControlled
@@ -133,6 +167,7 @@ function ProfileInfosForm() {
           type="text"
           name="preferredUsername"
           label="Nom d'utilisateur (optionnel)"
+          loading={loading}
           size="small"
         />
         <InputControlled
@@ -141,47 +176,71 @@ function ProfileInfosForm() {
           type="text"
           name="nickname"
           label="Surnom (optionel)"
+          loading={loading}
           size="small"
         />
-        <>
-          <Typography component="p" variant="subtitle2" color="content3">Sexe</Typography>
-          <div className={styles.RadioGroup}>
-            <RadioControlled
-              control={control}
-              name="gender"
-              label="Homme"
-              value="male"
-              size="small"
-            />
-            <RadioControlled
-              control={control}
-              name="gender"
-              label="Femme"
-              value="female"
-              size="small"
-              hideError
-            />
-            <RadioControlled
-              control={control}
-              name="gender"
-              label="Autre"
-              value="other"
-              size="small"
-              hideError
-            />
-          </div>
-        </>
+        <RadiosGroup
+          label="Sexe"
+          loading={loading}
+          radios={[{
+            control,
+            name: 'gender',
+            label: 'Homme',
+            value: 'male',
+            size: 'small',
+          },
+          {
+            control,
+            name: 'gender',
+            label: 'Femme',
+            value: 'female',
+            size: 'small',
+            hideError: true,
+          },
+          {
+            control,
+            name: 'gender',
+            label: 'Autre',
+            value: 'other',
+            size: 'small',
+            hideError: true,
+          }]}
+        />
         <InputControlled
           control={control}
           placeholder="15/10/1969"
           type="date"
           name="birthdate"
           label="Date de naissance"
+          loading={loading}
           size="small"
         />
       </FormCard>
     </div>
   );
 }
+
+ProfileInfosForm.propTypes = {
+  userId: PropTypes.string,
+  defaultData: PropTypes.shape({
+    familyName: PropTypes.string,
+    gender: PropTypes.oneOf(['male', 'female', 'other']),
+    birthdate: PropTypes.string,
+    givenName: PropTypes.string,
+    middleName: PropTypes.string,
+    name: PropTypes.string,
+    nickname: PropTypes.string,
+    preferredUsername: PropTypes.string,
+  }),
+  loading: PropTypes.bool,
+  errorMsg: PropTypes.string,
+};
+
+ProfileInfosForm.defaultProps = {
+  userId: undefined,
+  defaultData: undefined,
+  loading: false,
+  errorMsg: '',
+};
 
 export default React.memo(ProfileInfosForm);

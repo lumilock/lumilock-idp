@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   SetMetadata,
   UseGuards,
@@ -14,6 +15,7 @@ import {
   UsersCreateFullDTO,
   UsersDetailedDTO,
   UsersLightDTO,
+  UsersPatchPersoInfoDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
 import { formattedUpsertUsers } from './helpers';
@@ -50,6 +52,29 @@ export class UsersController {
     const users = await this.serv.findById(id);
     // Response
     return users;
+  }
+
+  /**
+   * Method used to update personal information of a specific user
+   * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
+   * @returns {UsersPatchPersoInfoDTO | undefined} the updated and formatted personnal information or nothing
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['clients'])
+  @UseGuards(PermissionsGuard)
+  @Patch(':id/personnal-information')
+  public async patchPersonnalInformation(
+    @Param('id') userId: string,
+    @Body() userPersoInfo: UsersPatchPersoInfoDTO,
+  ): Promise<UsersPatchPersoInfoDTO | undefined> {
+    const patchedUserPersoInfo = await this.serv.patchPersonnalInformation(
+      userId,
+      userPersoInfo,
+    );
+    if (patchedUserPersoInfo && typeof patchedUserPersoInfo === 'object') {
+      return patchedUserPersoInfo;
+    }
+    return undefined;
   }
 
   @UseGuards(AuthenticatedGuard)

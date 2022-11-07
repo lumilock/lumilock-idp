@@ -12,4 +12,18 @@
         justify-content: space-between;
         gap: spacing-rem(2);
     }
+
+    & .Error {
+        margin: 0 spacing-rem(3);
+        width: calc(100% - spacing-rem(6));
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .Root {
+        & .Error {
+            width: rem-calc(512); // 24 * 2 because of the padding 
+        }
+    }
 }
