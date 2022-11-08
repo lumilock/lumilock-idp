@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useEffectOnce } from '../../../services/Hooks';
+import { Spinner, Typography } from '../../Electrons';
 
 import styles from './RedirectLayout.module.scss';
 
@@ -16,7 +17,8 @@ function RedirectLayout({ path }) {
 
   return (
     <div className={styles.Root}>
-      <h3>Redirecting...</h3>
+      <Spinner size="medium" />
+      <Typography variant="subtitle1" color="content1">Redirecting...</Typography>
     </div>
   );
 }

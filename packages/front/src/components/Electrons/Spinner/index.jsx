@@ -1,11 +1,13 @@
-import clsx from 'clsx';
 import React from 'react';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
+import { colors, sizes } from '../../../services/Theme';
 import styles from './Spinner.module.scss';
 
-function Spinner() {
+function Spinner({ color, size }) {
   return (
-    <div className={styles.CubeGrid}>
+    <div className={clsx(styles.CubeGrid, styles?.[sizes?.[size]], styles?.[colors?.[color]])}>
       <div className={clsx(styles.Cube, styles.Cube1)} />
       <div className={clsx(styles.Cube, styles.Cube2)} />
       <div className={clsx(styles.Cube, styles.Cube3)} />
@@ -18,5 +20,15 @@ function Spinner() {
     </div>
   );
 }
+
+Spinner.propTypes = {
+  color: PropTypes.oneOf(colors),
+  size: PropTypes.oneOf(sizes),
+};
+
+Spinner.defaultProps = {
+  size: 'small',
+  color: 'content1',
+};
 
 export default React.memo(Spinner);
