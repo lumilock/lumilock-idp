@@ -79,7 +79,6 @@ function ProfilePermissionsForm({
    * patch the user states
    */
   const onSubmit = async (data) => {
-    console.log(data);
     // user update
     const options = {
       clientId: data?.clientId || null,

@@ -26,13 +26,15 @@ import {
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
 import { formattedUpsertUsers } from './helpers';
 import { UsersClientsService } from '../users-clients/users-clients.service';
+import { ClientsService } from '../clients/clients.service';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly serv: UsersService,
-    private readonly usersClientServ: UsersClientsService,
+    private readonly usersClientsServ: UsersClientsService,
+    private readonly clientsServ: ClientsService,
   ) {}
 
   /** ****************************************************
@@ -248,10 +250,20 @@ export class UsersController {
     @Param('id') userId: string,
     @Body() userPermissions: UsersPatchPermissionsDTO,
   ): Promise<UsersPatchPermissionsDTO | undefined> {
-    // TODO check usersClients permissions
+    // Retrieve only available permissions from the client
+    const clientsPermissions = await this.clientsServ.findPermissions(
+      userPermissions?.clientId,
+    );
     // Patch in db
-    const patchedPermissions = await this.usersClientServ.patchPermissions(
-      UsersPatchPermissionsDTO.from({ ...userPermissions, id: userId }),
+    const patchedPermissions = await this.usersClientsServ.patchPermissions(
+      UsersPatchPermissionsDTO.from({
+        ...userPermissions,
+        permissions:
+          userPermissions?.permissions?.filter((p) =>
+            clientsPermissions?.permissions?.includes(p),
+          ) || [], // filter permissions to be sure to only accept availables permissions
+        id: userId,
+      }),
     );
     if (patchedPermissions && typeof patchedPermissions === 'object') {
       return patchedPermissions;

@@ -5,10 +5,15 @@ import { Client } from '../model/clients.entity';
 import { User } from '../model/users.entity';
 import { UsersController } from './users.controller';
 import { UsersClientsModule } from '../users-clients/users-clients.module';
+import { ClientsModule } from '../clients/clients.module';
 import { UsersService } from './users.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Client]), UsersClientsModule],
+  imports: [
+    TypeOrmModule.forFeature([User, Client]),
+    UsersClientsModule,
+    ClientsModule,
+  ],
   providers: [UsersService],
   exports: [UsersService],
   controllers: [UsersController],

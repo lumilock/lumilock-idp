@@ -97,9 +97,23 @@ export class ClientsService {
   async findPermissions(
     id: string,
   ): Promise<ClientsPermissionsDTO | undefined> {
-    return this.repo.findOne(id).then((client) => {
-      return client ? ClientsPermissionsDTO.fromEntity(client) : undefined;
-    });
+    return this.repo
+      .find({
+        select: ['permissions'],
+        where: {
+          id,
+        },
+        order: {
+          permissions: 'ASC',
+        },
+        take: 1,
+        cache: true,
+      })
+      .then((client) => {
+        return client?.[0]
+          ? ClientsPermissionsDTO.fromEntity(client?.[0])
+          : undefined;
+      });
   }
 
   /**
