@@ -1,8 +1,16 @@
 @import "../../../../assets/styles/toolkit.scss";
 
-// .Root {
-//     position: relative;
-//     display: flex;
-//     flex-direction: column;
-//     gap: spacing-rem(3);
-// }
+.Title {
+    position: relative;
+    display: grid;
+    grid-template-columns: spacing-rem(4) 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    column-gap: spacing-rem(1);
+
+    &>* {
+        &:first-child {
+            grid-column: 1;
+            grid-row: 1 / 3;
+        }
+    }
+}

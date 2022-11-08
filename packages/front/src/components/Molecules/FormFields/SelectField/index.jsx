@@ -37,7 +37,7 @@ function Options({ placeholder, options }) {
                 color="content2"
                 label={option?.label}
               >
-                {option?.value?.map((o) => (
+                {Array.isArray(option?.value) && option?.value?.map((o) => (
                   <Typography
                     component="option"
                     variant="body1"

@@ -405,14 +405,12 @@ export class UsersService {
       .select([
         'c.id AS id',
         'c.client_name AS "clientName"',
-        'c.is_active AS "isActive"',
-        'c.is_archived AS "isArchived"',
         'c.permissions AS permissions',
+        'c.logo_uri AS "logoUri"',
         'u.id AS "userId"',
         'u.name AS "userName"',
         'uc.id AS "usersClientsId"',
         'uc.role AS "usersClientsRole"',
-        'uc.authorization AS "usersClientsAuthorization"',
         'uc.permissions AS "usersClientsPermissions"',
       ])
       .orderBy('c.client_name', 'ASC')
@@ -420,7 +418,19 @@ export class UsersService {
       .andWhere('c.is_archived = false')
       .getRawMany()
       .then((permissions) =>
-        permissions.map((p) => UsersPermissionsDTO.from(p)),
+        Promise.all(
+          permissions.map(async (p) => {
+            if (p?.logoUri) {
+              const duration = 60; // 60s
+              // get signed url from the object storage system
+              await fileStorageSystem
+                .signedUrl(p?.logoUri, duration)
+                .then((url) => (p.logoUri = url))
+                .catch(console.error);
+            }
+            return UsersPermissionsDTO.from(p);
+          }),
+        ),
       );
   }
 

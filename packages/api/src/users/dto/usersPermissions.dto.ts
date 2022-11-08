@@ -7,6 +7,7 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
+import { Column } from 'typeorm';
 
 import { UserRole } from '../../model/users_clients.entity';
 
@@ -26,28 +27,20 @@ export class UsersPermissionsDTO implements Readonly<UsersPermissionsDTO> {
   @IsString()
   clientName: string;
 
+  @Column({
+    name: 'logo_uri',
+    type: 'varchar',
+    nullable: true,
+    length: 300,
+  })
+  logoUri: string;
+
   /**
    * List of possibles permissions of the client
    */
   @ApiProperty({ required: true })
   @IsString({ each: true })
   permissions: string[];
-
-  /**
-   * Active state of the client
-   */
-  @ApiProperty({ required: true })
-  @IsOptional()
-  @IsBoolean()
-  isActive: boolean;
-
-  /**
-   * Archived state of the client
-   */
-  @ApiProperty({ required: true })
-  @IsOptional()
-  @IsBoolean()
-  isArchived: boolean;
 
   /**
    * Id of the user
@@ -82,14 +75,6 @@ export class UsersPermissionsDTO implements Readonly<UsersPermissionsDTO> {
   usersClientsRole: UserRole;
 
   /**
-   * This defines whether a user gives permission to a client to access their own data
-   */
-  @ApiProperty({ required: false, default: false })
-  @IsOptional()
-  @IsBoolean()
-  usersClientsAuthorization: boolean;
-
-  /**
    * All permissions according to a user for this client
    */
   @ApiProperty({ required: false })
@@ -106,13 +91,11 @@ export class UsersPermissionsDTO implements Readonly<UsersPermissionsDTO> {
     userPermissions.id = dto.id;
     userPermissions.clientName = dto.clientName;
     userPermissions.permissions = permissions;
-    userPermissions.isActive = dto.isActive;
-    userPermissions.isArchived = dto.isArchived;
+    userPermissions.logoUri = dto.logoUri;
     userPermissions.userId = dto.userId;
     userPermissions.userName = dto.userName;
     userPermissions.usersClientsId = dto.usersClientsId;
     userPermissions.usersClientsRole = dto.usersClientsRole;
-    userPermissions.usersClientsAuthorization = dto.usersClientsAuthorization;
     userPermissions.usersClientsPermissions = usersClientsPermissions;
     return userPermissions;
   }

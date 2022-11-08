@@ -11,9 +11,14 @@ import {
 import styles from './CheckboxField.module.scss';
 
 const CheckboxField = React.forwardRef(({
-  className, error, label, size, hideError, loading, disabled, ...rest
+  className, error, label, size, hideError, loading, onChange, disabled, callback, ...rest
 }, ref) => {
   const fieldId = useId();
+
+  const handleChange = (e) => {
+    onChange(e);
+    callback(e);
+  };
 
   return (
     <div className={clsx(styles.Base, className, styles?.[sizes[size]], (disabled || loading) && styles.Disabled)}>
@@ -31,7 +36,7 @@ const CheckboxField = React.forwardRef(({
                 color={rest?.checked ? 'content1' : 'content3'}
                 className={styles.RadioIcon}
               />
-              <Typography component="input" id={fieldId} variant="body1" color="content1" ref={ref} {...rest} type="checkbox" disabled={(disabled || loading) && 'disabled'} />
+              <Typography component="input" id={fieldId} variant="body1" color="content1" ref={ref} onChange={handleChange} {...rest} type="checkbox" disabled={(disabled || loading) && 'disabled'} />
             </div>
             <Typography component="label" htmlFor={fieldId} variant="subtitle1" color={rest?.checked ? 'content1' : 'content3'}>{label}</Typography>
           </>
@@ -73,6 +78,8 @@ CheckboxField.propTypes = {
    * define if the component is disabled
    */
   disabled: PropTypes.bool,
+  onChange: PropTypes.func,
+  callback: PropTypes.func,
 };
 
 CheckboxField.defaultProps = {
@@ -83,6 +90,8 @@ CheckboxField.defaultProps = {
   hideError: false,
   loading: false,
   disabled: false,
+  onChange: undefined,
+  callback: undefined,
 };
 
 export default React.memo(CheckboxField);

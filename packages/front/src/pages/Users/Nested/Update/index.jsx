@@ -6,7 +6,9 @@ import { IoShieldCheckmark } from 'react-icons/io5';
 import { Users } from '../../../../services/Api';
 import { requestCatch } from '../../../../services/JSXTools';
 import { useEffectOnce, useRequestStates } from '../../../../services/Hooks';
-import { If } from '../../../../components/Electrons';
+import {
+  Else, If, Then, Typography,
+} from '../../../../components/Electrons';
 import { Alert } from '../../../../components/Molecules';
 import { TitleSection } from '../../../../components/Cells';
 import {
@@ -138,8 +140,6 @@ function Update() {
     fetchUserPermissions();
   });
 
-  console.log(loadingPermissions);
-
   return (
     <HeaderWrapper icon={IoIosPerson} title="Mise à jour d'un utilisateur">
       <div className={styles.Root}>
@@ -158,9 +158,18 @@ function Update() {
           <If condition={!!errorsPermissions}>
             <Alert severity="error" variant="rounded" title="Erreur:" className={styles.ErrorPermissions}>{errorsPermissions}</Alert>
           </If>
-          {permissions?.map((permission) => (
-            <ProfilePermissionsForm key={permission?.id} userId={userId} defaultData={permission} setDefaultData={setPermissions} />
-          ))}
+          <If condition={loadingPermissions}>
+            <Then>
+              <Typography variant="h3" className={styles.LoadingPermissions}>Chargement...</Typography>
+            </Then>
+            <Else>
+              {permissions?.length > 0 ? permissions?.map((permission) => (
+                <ProfilePermissionsForm key={permission?.id} userId={userId} defaultData={permission} setDefaultData={setPermissions} />
+              )) : (
+                <Typography variant="h3" className={styles.LoadingPermissions}>Auncun services</Typography>
+              )}
+            </Else>
+          </If>
         </div>
       </div>
     </HeaderWrapper>

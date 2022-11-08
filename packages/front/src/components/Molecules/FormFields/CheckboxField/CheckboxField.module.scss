@@ -43,7 +43,8 @@
         & input {
             left: rem-calc(0);
             opacity: 0;
-            width: spacing-rem(2);
+            width: 100%;
+            height: 100%;
         }
     }
 
