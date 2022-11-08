@@ -3,29 +3,16 @@ import PropTypes from 'prop-types';
 import { IoIosConstruct } from 'react-icons/io';
 
 import { capitalize, pascalCase } from '../../../services/Tools';
-import { loadingAnimations } from '../../../services/Theme';
+import { loadingAnimations, sizes } from '../../../services/Theme';
 import Icon from '../../Electrons/Icon';
 import Choose, { OtherWise, When } from '../../Electrons/Choose';
 import styles from './Squircle.module.scss';
 import If from '../../Electrons/If';
 
-const sizesTypes = ['xxsmall', 'xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge', 'xxxlarge'];
-
 function Squircle({
   image, variant, className, size, icon, loading, animation,
 }) {
   const id = useId();
-
-  const sizeClasses = useMemo(() => ({
-    xxsmall: 'XXSmall',
-    xsmall: 'XSmall',
-    small: 'Small',
-    medium: 'Medium',
-    large: 'Large',
-    xlarge: 'XLarge',
-    xxlarge: 'XXLarge',
-    xxxlarge: 'XXXLarge',
-  }), []);
 
   const imageFilter = useMemo(() => {
     if (loading) {
@@ -43,7 +30,7 @@ function Squircle({
       viewBox="0 0 100 100"
       className={[
         styles.Root,
-        styles?.[sizeClasses?.[size]] || '',
+        styles?.[sizes?.[size]] || '',
         styles?.[capitalize(variant)] || '',
         loading ? styles.Loading : '',
         loading && !!animation ? styles?.[pascalCase(animation)] : '',
@@ -167,7 +154,7 @@ Squircle.propTypes = {
   image: PropTypes.string,
   className: PropTypes.string,
   icon: PropTypes.func,
-  size: PropTypes.oneOf(sizesTypes),
+  size: PropTypes.oneOf(sizes),
   variant: PropTypes.oneOf(['standard', 'dashed']),
   animation: PropTypes.oneOf(loadingAnimations),
   loading: PropTypes.bool,

@@ -29,7 +29,9 @@ function ProfilePermissionsForm({
   const initialValues = useMemo(() => ({
     clientId: id,
     role: usersClientsRole,
-    ...(permissions?.reduce((accu, p) => ({ ...accu, [p]: usersClientsPermissions?.includes(p) }), {}) || {}),
+    allPermissions: {
+      ...(permissions?.reduce((accu, p) => ({ ...accu, [p]: usersClientsPermissions?.includes(p) }), {}) || {}),
+    },
     permissions: usersClientsPermissions,
   }), [id, permissions, usersClientsPermissions, usersClientsRole]);
 
@@ -59,8 +61,17 @@ function ProfilePermissionsForm({
   /**
    * Method used to reset all values
    */
-  const handleReset = () => {
-    reset({ ...defaultValues });
+  const handleReset = (_, values = undefined) => {
+    reset({
+      ...defaultValues,
+      ...(!values || Object.keys(values)?.length <= 0
+        ? initialValues : {
+          clientId: values?.clientId,
+          role: values?.role,
+          allPermissions: values?.allPermissions,
+          permissions: values?.permissions,
+        }),
+    });
   };
 
   /**
@@ -75,7 +86,6 @@ function ProfilePermissionsForm({
       role: data?.role || null,
       permissions: data?.permissions || null,
     };
-
     await Users.updatePermissions(userId, options)
       .then(async (res) => {
         if (res.status === 200) {
@@ -84,8 +94,19 @@ function ProfilePermissionsForm({
         return Promise.reject(res);
       })
       .then((userStateData) => {
-        setDefaultData((o) => ({ ...o, ...userStateData }));
-        handleReset(undefined, userStateData);
+        setDefaultData((oldData) => oldData.map((o) => (o?.id === userStateData?.clientId ? {
+          ...o,
+          usersClientsRole: userStateData?.role,
+          usersClientsPermissions: userStateData?.permissions,
+        } : o)));
+        handleReset(undefined, {
+          ...initialValues,
+          role: userStateData?.role,
+          permissions: userStateData?.permissions,
+          allPermissions: {
+            ...(permissions?.reduce((accu, p) => ({ ...accu, [p]: userStateData?.permissions?.includes(p) }), {}) || {}),
+          },
+        });
         // Todo success snackbar
       })
       .catch(async (err) => {
@@ -97,8 +118,8 @@ function ProfilePermissionsForm({
   const handleChange = useCallback(
     (e, key) => {
       if (e?.target?.checked) {
-        if (!watchPermissions?.includes(key)) {
-          setValue('permissions', [...watchPermissions, key], { shouldValidate: true });
+        if (!watchPermissions || !watchPermissions?.includes(key)) {
+          setValue('permissions', [...(watchPermissions || []), key], { shouldValidate: true });
         }
       } else {
         setValue('permissions', watchPermissions?.filter((p) => p !== key), { shouldValidate: true });
@@ -126,7 +147,7 @@ function ProfilePermissionsForm({
         label="Permissions"
         checkbox={permissions?.map((p) => ({
           control,
-          name: p,
+          name: `allPermissions.${p}`,
           label: p,
           size: 'small',
           callback: (e) => handleChange(e, p),
@@ -142,7 +163,7 @@ ProfilePermissionsForm.propTypes = {
     id: PropTypes.string,
     clientName: PropTypes.string,
     permissions: PropTypes.arrayOf(PropTypes.string),
-    logoUri: PropTypes.bool,
+    logoUri: PropTypes.string,
     usersClientsRole: PropTypes.oneOf(['none', 'admin', 'user', 'guest']),
     usersClientsPermissions: PropTypes.arrayOf(PropTypes.string),
   }),

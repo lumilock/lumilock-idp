@@ -11,6 +11,7 @@ import {
   ClientsCreateDTO,
   ClientsFullDTO,
   ClientsLightDTO,
+  ClientsPermissionsDTO,
   ClientsUpdateDTO,
 } from './dto';
 
@@ -89,6 +90,15 @@ export class ClientsService {
           .catch(console.error);
       }
       return client ? ClientsFullDTO.fromEntity(client) : undefined;
+    });
+  }
+
+  // Retrieve all permissions of a specific client
+  async findPermissions(
+    id: string,
+  ): Promise<ClientsPermissionsDTO | undefined> {
+    return this.repo.findOne(id).then((client) => {
+      return client ? ClientsPermissionsDTO.fromEntity(client) : undefined;
     });
   }
 

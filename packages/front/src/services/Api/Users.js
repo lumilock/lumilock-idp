@@ -50,8 +50,17 @@ const Users = {
     },
     body: JSON.stringify(data),
   }),
-  // PATCH states data: iasActive and isArchived of a specific user
+  // PATCH states data: isActive and isArchived of a specific user
   updateStates: (id, data) => fetch(`/api/users/${id}/states`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
+  // PATCH permissions of a specific user for a specific application
+  updatePermissions: (id, data) => fetch(`/api/users/${id}/permissions`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

@@ -3,3 +3,4 @@ export * from './clientsLight.dto';
 export * from './clients.dto';
 export * from './clientsCreate.dto';
 export * from './clientsUpdate.dto';
+export * from './clientsPermissions.dto';

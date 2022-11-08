@@ -1,12 +1,6 @@
 // userPermissions.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsUUID,
-  IsBoolean,
-  IsEnum,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsUUID, IsEnum, IsOptional } from 'class-validator';
 import { Column } from 'typeorm';
 
 import { UserRole } from '../../model/users_clients.entity';

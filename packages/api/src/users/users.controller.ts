@@ -18,17 +18,22 @@ import {
   UsersIdentityDTO,
   UsersLightDTO,
   UsersLinksDTO,
+  UsersPatchPermissionsDTO,
   UsersPatchPersoInfoDTO,
   UsersPermissionsDTO,
   UsersStatesDataDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
 import { formattedUpsertUsers } from './helpers';
+import { UsersClientsService } from '../users-clients/users-clients.service';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly serv: UsersService) {}
+  constructor(
+    private readonly serv: UsersService,
+    private readonly usersClientServ: UsersClientsService,
+  ) {}
 
   /** ****************************************************
    * [getAll]: Retreave all clients infos
@@ -224,6 +229,32 @@ export class UsersController {
       typeof userPermissions?.[0] === 'object'
     ) {
       return userPermissions;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Method used to patch states data isArchived and isActive of a specific user
+   * @param {UsersStatesDataDTO} userStatesData states data isArchived and isActive to update
+   * @param {string} userId id of the user
+   * @returns {UsersStatesDataDTO | undefined} determine if states data isArchived and isActive has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Patch(':id/permissions')
+  public async patchPermissions(
+    @Param('id') userId: string,
+    @Body() userPermissions: UsersPatchPermissionsDTO,
+  ): Promise<UsersPatchPermissionsDTO | undefined> {
+    // TODO check usersClients permissions
+    // Patch in db
+    const patchedPermissions = await this.usersClientServ.patchPermissions(
+      UsersPatchPermissionsDTO.from({ ...userPermissions, id: userId }),
+    );
+    if (patchedPermissions && typeof patchedPermissions === 'object') {
+      return patchedPermissions;
     }
 
     return undefined;

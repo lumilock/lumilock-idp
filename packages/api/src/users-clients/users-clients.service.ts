@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UsersClients } from '../model/users_clients.entity';
+
+import { UsersPatchPermissionsDTO } from '../users/dto';
 import { UsersClientsDTO } from './users-clients.dto';
+import { UsersClients } from '../model/users_clients.entity';
 
 @Injectable()
 export class UsersClientsService {
@@ -30,6 +32,29 @@ export class UsersClientsService {
       )
       .execute();
     return;
+  }
+
+  /**
+   * Method used to insert or update permissions for a given user and client
+   * @param {UsersPatchPermissionsDTO} userPermissions permissions data to upsert
+   * @returns {Promise<UsersPatchPermissionsDTO | undefined>} upserted data
+   */
+  async patchPermissions(
+    userPermissions: UsersPatchPermissionsDTO,
+  ): Promise<UsersPatchPermissionsDTO | undefined> {
+    // Upsert usersClients
+    // update role and permissions if there is conflict on the unique pair (user_id, client_id)
+    await this.repo
+      .createQueryBuilder('userClient')
+      .insert()
+      .into(UsersClients)
+      .values(userPermissions.toEntity())
+      .orUpdate(['role', 'permissions'], ['user_id', 'client_id'], {
+        skipUpdateIfNoValuesChanged: true,
+      })
+      .returning('*')
+      .execute();
+    return userPermissions;
   }
 
   // Store a new userClient
