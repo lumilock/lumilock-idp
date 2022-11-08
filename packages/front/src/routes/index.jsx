@@ -15,6 +15,7 @@ const UsersAdd = React.lazy(() => import('../pages/Users/Nested/Add'));
 const UsersUpdate = React.lazy(() => import('../pages/Users/Nested/Update'));
 const Keys = React.lazy(() => import('../pages/Keys'));
 const Settings = React.lazy(() => import('../pages/Settings'));
+const NotFound = React.lazy(() => import('../pages/NotFound'));
 
 function AppRoutes() {
   const routes = [
@@ -127,6 +128,12 @@ function AppRoutes() {
             <RequireAuth>
               <Settings />
             </RequireAuth>
+          ),
+        },
+        {
+          path: '*',
+          element: (
+            <NotFound />
           ),
         },
       ],

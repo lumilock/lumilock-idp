@@ -46,12 +46,12 @@ export const logoutAction = (navigate) => async (dispatch) => {
       }
       return Promise.reject(res);
     })
-    .then(async (url) => {
+    .then(async () => {
       await dispatch({
         type: LOGOUT_AUTH,
         payload: null,
       });
-      navigate(url);
+      navigate('/');
     })
     // eslint-disable-next-line no-console
     .catch((err) => {
