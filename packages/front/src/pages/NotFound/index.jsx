@@ -18,7 +18,7 @@ function NotFound() {
       <div className={styles?.Box}>
         <img src={Logo} alt="" />
         <Typography variant="h1">404 Not found</Typography>
-        <Typography variant="subtitle1">Vous vous êtes égaré, cette page n&apos;existe pas, vous pouvez retourner sur le site en cliquant sur le bouton si dessous</Typography>
+        <Typography variant="subtitle1" color="content3">Vous vous êtes égaré, cette page n&apos;existe pas, vous pouvez retourner sur le site en cliquant sur le bouton si dessous</Typography>
         <Button
           variant="contained"
           color="main"

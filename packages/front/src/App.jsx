@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
 } from 'react-router-dom';
 
+import { LoadingLayout, SuspenseTrigger } from './components';
 import AppRoutes from './routes';
 import './App.css';
 
@@ -13,16 +14,18 @@ function App() {
   return (
     <main className="App">
       <Router>
-        <Suspense fallback={<span>Initialisation...</span>}>
-          <FetchInterceptor>
-            <Suspense fallback={<span>Connection...</span>}>
-              <Main>
-                <Suspense fallback={<span>Loading...</span>}>
-                  <AppRoutes />
-                </Suspense>
-              </Main>
-            </Suspense>
-          </FetchInterceptor>
+        <Suspense fallback={<LoadingLayout message="Initialisation..." />}>
+          <SuspenseTrigger>
+            <FetchInterceptor>
+              <Suspense fallback={<LoadingLayout message="Connection..." />}>
+                <Main>
+                  <Suspense fallback={<LoadingLayout message="Chargement..." />}>
+                    <AppRoutes />
+                  </Suspense>
+                </Main>
+              </Suspense>
+            </FetchInterceptor>
+          </SuspenseTrigger>
         </Suspense>
       </Router>
     </main>
