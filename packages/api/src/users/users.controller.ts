@@ -19,6 +19,7 @@ import {
   UsersLightDTO,
   UsersLinksDTO,
   UsersPatchPersoInfoDTO,
+  UsersStatesDataDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
 import { formattedUpsertUsers } from './helpers';
@@ -164,6 +165,32 @@ export class UsersController {
 
     if (patchedGeoData && typeof patchedGeoData === 'object') {
       return patchedGeoData;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Method used to patch states data isArchived and isActive of a specific user
+   * @param {UsersStatesDataDTO} userStatesData states data isArchived and isActive to update
+   * @returns {UsersStatesDataDTO | undefined} determine if states data isArchived and isActive has been patched
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Patch(':id/states')
+  public async patchStatesData(
+    @Param('id') userId: string,
+    @Body() userStatesData: UsersStatesDataDTO,
+  ): Promise<UsersStatesDataDTO | undefined> {
+    // Patch in db
+    const patchedStatesData = await this.serv.patchStatesData(
+      userId,
+      userStatesData,
+    );
+
+    if (patchedStatesData && typeof patchedStatesData === 'object') {
+      return patchedStatesData;
     }
 
     return undefined;

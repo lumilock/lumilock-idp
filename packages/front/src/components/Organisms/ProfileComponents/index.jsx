@@ -5,3 +5,4 @@ export { default as ProfilePasswordsForm } from './ProfilePasswordsForm';
 export { default as ProfileLinksForm } from './ProfileLinksForm';
 export { default as ProfileTimezoneForm } from './ProfileTimezoneForm';
 export { default as ProfileOtherInfos } from './ProfileOtherInfos';
+export { default as ProfileStateForm } from './ProfileStateForm';

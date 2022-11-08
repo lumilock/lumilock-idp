@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  IoIosArchive, IoIosCheckmark, IoIosClose, IoIosCreate, IoIosGlobe, IoIosPerson,
+  IoIosArchive, IoIosBed, IoIosCheckmark, IoIosCreate, IoIosGlobe, IoIosPerson,
 } from 'react-icons/io';
 
 import { Users } from '../../../services/Api';
@@ -154,7 +154,7 @@ function UserSideBarContent() {
               <Icon
                 loading={loading}
                 size="small"
-                ionIcon={user?.isActive ? IoIosCheckmark : IoIosClose}
+                ionIcon={user?.isActive ? IoIosCheckmark : IoIosBed}
                 color={user?.isActive ? 'main' : 'alert dark'}
                 title={user?.isActive ? 'Actif' : 'Inactif'}
               />
@@ -162,8 +162,8 @@ function UserSideBarContent() {
                 loading={loading}
                 size="small"
                 ionIcon={IoIosArchive}
-                color={user?.isArchive ? 'alert dark' : 'main'}
-                title={user?.isArchive ? 'Archivé' : 'Non archivé'}
+                color={user?.isArchived ? 'alert dark' : 'main'}
+                title={user?.isArchived ? 'Archivé' : 'Non archivé'}
               />
               <Icon
                 loading={loading}

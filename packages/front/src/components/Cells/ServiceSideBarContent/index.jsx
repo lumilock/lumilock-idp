@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  IoIosArchive, IoIosCheckmark, IoIosClose, IoIosCreate, IoIosEye, IoIosEyeOff,
+  IoIosArchive, IoIosCheckmark, IoIosBed, IoIosCreate, IoIosEye, IoIosEyeOff,
 } from 'react-icons/io';
 
 import ServicesContext from '../../../pages/Services/ServicesContext';
@@ -99,7 +99,7 @@ function ServiceSideBarContent() {
             <Icon
               loading={loading}
               size="small"
-              ionIcon={service?.isActive ? IoIosCheckmark : IoIosClose}
+              ionIcon={service?.isActive ? IoIosCheckmark : IoIosBed}
               color={service?.isActive ? 'main' : 'alert dark'}
               title={service?.isActive ? 'Actif' : 'Inactif'}
             />

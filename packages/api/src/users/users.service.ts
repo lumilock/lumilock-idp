@@ -14,6 +14,7 @@ import {
   UsersLinksDTO,
   UsersGeoDataDTO,
   UsersCreateFullDTO,
+  UsersStatesDataDTO,
 } from './dto';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { oidcConstants } from '../auth/oidcConstants';
@@ -362,6 +363,24 @@ export class UsersService {
         return user?.affected === 1;
       });
     return hasBeenUpdated ? userGeoData : '';
+  }
+
+  /**
+   * Method used to patch states data isArchived and isActive of a specific user
+   * @param {string} userId The id of the target user
+   * @param {UsersGeoDataDTO} userStatesData new states data isArchived and isActive to update
+   * @returns {UsersStatesDataDTO | string} states data isArchived and isActive if had been saved, empty string otherwise
+   */
+  async patchStatesData(
+    userId: string,
+    userStatesData: UsersStatesDataDTO,
+  ): Promise<UsersStatesDataDTO | string> {
+    const hasBeenUpdated = await this.repo
+      .update(userId, userStatesData)
+      .then((user) => {
+        return user?.affected === 1;
+      });
+    return hasBeenUpdated ? userStatesData : '';
   }
 
   // Store a new user

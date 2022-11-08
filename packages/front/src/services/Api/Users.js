@@ -48,6 +48,15 @@ const Users = {
     },
     body: JSON.stringify(data),
   }),
+  // PATCH states data: iasActive and isArchived of a specific user
+  updateStates: (id, data) => fetch(`/api/users/${id}/states`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(data),
+  }),
 };
 
 export default Users;

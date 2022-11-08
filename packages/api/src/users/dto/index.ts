@@ -8,4 +8,5 @@ export * from './usersLinks.dto';
 export * from './usersGeoData.dto';
 export * from './usersCreate.dto';
 export * from './usersCreateFull.dto';
+export * from './usersStatesData.dto';
 export * from './users.dto';

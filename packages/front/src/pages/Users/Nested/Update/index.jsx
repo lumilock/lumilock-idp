@@ -8,7 +8,7 @@ import { useEffectOnce, useRequestStates } from '../../../../services/Hooks';
 import { If } from '../../../../components/Electrons';
 import { Alert } from '../../../../components/Molecules';
 import {
-  ProfileIdentityForm, ProfileInfosForm, ProfileLinksForm, ProfileTimezoneForm,
+  ProfileIdentityForm, ProfileInfosForm, ProfileLinksForm, ProfileOtherInfos, ProfileStateForm, ProfileTimezoneForm,
 } from '../../../../components/Organisms';
 import { HeaderWrapper } from '../../../../components/Species';
 import styles from './Update.module.scss';
@@ -53,6 +53,18 @@ function Update() {
     zoneinfo: user?.zoneinfo,
     locale: user?.locale,
   } : undefined), [user]);
+  // ProfileStateForm -> data
+  const stateData = useMemo(() => (user ? {
+    isActive: user?.isActive,
+    isArchived: user?.isArchived,
+  } : undefined), [user]);
+  // ProfileOtherInfos -> data
+  const otherInfosData = useMemo(() => (user ? {
+    isActive: user?.isActive,
+    isArchived: user?.isArchived,
+    createDateTime: user?.createDateTime,
+    lastChangedDateTime: user?.lastChangedDateTime,
+  } : undefined), [user]);
 
   const fetchUser = useCallback(async () => {
     setLoading(true);
@@ -95,7 +107,8 @@ function Update() {
         <ProfileIdentityForm userId={userId} defaultData={identityData} setDefaultData={setUser} loading={loading} />
         <ProfileLinksForm userId={userId} defaultData={linkData} setDefaultData={setUser} loading={loading} />
         <ProfileTimezoneForm userId={userId} defaultData={timezoneData} setDefaultData={setUser} loading={loading} />
-        {/* <ProfileOtherInfos /> */}
+        <ProfileStateForm userId={userId} defaultData={stateData} setDefaultData={setUser} loading={loading} />
+        <ProfileOtherInfos defaultData={otherInfosData} loading={loading} />
       </div>
     </HeaderWrapper>
   );
