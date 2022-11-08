@@ -17,6 +17,7 @@ const Auth = {
       body: null,
     });
   },
+  logout: () => fetch('/api/auth/logout'),
   // Post Reset Password
   reset: (params) => fetch('/api/auth/reset-password', {
     method: 'POST',

@@ -37,6 +37,31 @@ export const updateAction = () => async (dispatch) => {
     });
 };
 
+export const logoutAction = (navigate) => async (dispatch) => {
+  await Auth.logout()
+    .then((res) => {
+      if (res.status !== 200) return Promise.reject(res);
+      if (res.status === 200 && res?.redirected && res?.url) {
+        return res?.url;
+      }
+      return Promise.reject(res);
+    })
+    .then(async (url) => {
+      await dispatch({
+        type: LOGOUT_AUTH,
+        payload: null,
+      });
+      navigate(url);
+    })
+    // eslint-disable-next-line no-console
+    .catch((err) => {
+      if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('ERROR: [Store - Auth.logout]', err);
+      }
+    });
+};
+
 export const softUpdateAction = (payload) => async (dispatch) => {
   // Starting to update store
   await dispatch({
@@ -56,11 +81,6 @@ export const softUpdateAction = (payload) => async (dispatch) => {
 export const updateUserPropsAction = (payload) => ({
   type: UPDATE_USER_PROPS,
   payload,
-});
-
-export const logoutAction = () => ({
-  type: LOGOUT_AUTH,
-  payload: null,
 });
 
 export const initAction = () => ({

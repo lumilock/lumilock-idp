@@ -645,4 +645,20 @@ export class AuthController {
     );
     return true;
   }
+
+  /**
+   * Method used to logout a user and destroy his session
+   */
+  @Get('logout')
+  async logout(@Req() req: Express.Request, @Res() res: Response) {
+    req.logout((err) => {
+      if (!err) {
+        req.session.destroy(async (error) => {
+          if (!error) {
+            res.redirect(oidcConstants?.frontUrl);
+          }
+        });
+      }
+    });
+  }
 }

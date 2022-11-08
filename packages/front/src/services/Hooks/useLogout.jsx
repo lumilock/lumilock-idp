@@ -1,10 +1,13 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { logoutAction } from '../../store/auth/authAction';
 import { authStateSelector } from '../../store/auth/authSelector';
 
 function useLogout() {
+  // Router
+  const navigate = useNavigate();
   // store
   const { loading, loaded, hasData } = useSelector(authStateSelector);
   const dispatch = useDispatch();
@@ -13,10 +16,10 @@ function useLogout() {
   const logout = useCallback(
     async () => {
       if (!loading && loaded && hasData) {
-        await dispatch(logoutAction());
+        await dispatch(logoutAction(navigate));
       }
     },
-    [dispatch, hasData, loaded, loading],
+    [dispatch, hasData, loaded, loading, navigate],
   );
 
   return logout;

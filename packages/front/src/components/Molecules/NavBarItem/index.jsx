@@ -7,7 +7,7 @@ import { Icon } from '../../Electrons';
 import styles from './NavBarItem.module.scss';
 
 function NavBarItem({
-  icon, title, className, path,
+  icon, title, className, path, ...rest
 }) {
   return (
     <NavLink
@@ -17,6 +17,7 @@ function NavBarItem({
         styles?.Base,
         className,
       ].join(' ').trim())}
+      {...rest}
     >
       <Icon
         ionIcon={icon}

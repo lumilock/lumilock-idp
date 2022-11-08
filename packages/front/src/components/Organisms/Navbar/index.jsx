@@ -6,8 +6,18 @@ import { NavBarAccount, NavBarMenu } from '../../Cells';
 import { NavBarItem } from '../../Molecules';
 
 import styles from './Navbar.module.scss';
+import { useLogout } from '../../../services/Hooks';
 
 function Navbar() {
+  // Store
+  const logout = useLogout();
+
+  const handleLogout = (e) => {
+    logout();
+    e.preventDefault();
+    return false;
+  };
+
   return (
     <div className={styles.Root}>
       <div className={styles.Navigation}>
@@ -16,7 +26,7 @@ function Navbar() {
         <NavBarMenu />
       </div>
       <div className={styles.Disconnection}>
-        <NavBarItem title="Déconnexion" icon={IoIosPower} path="/logout" />
+        <NavBarItem title="Déconnexion" icon={IoIosPower} path="/logout" onClick={handleLogout} />
       </div>
     </div>
   );
