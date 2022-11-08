@@ -1,14 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { IoIosPerson } from 'react-icons/io';
+import { IoShieldCheckmark } from 'react-icons/io5';
 
 import { Users } from '../../../../services/Api';
 import { requestCatch } from '../../../../services/JSXTools';
 import { useEffectOnce, useRequestStates } from '../../../../services/Hooks';
 import { If } from '../../../../components/Electrons';
 import { Alert } from '../../../../components/Molecules';
+import { TitleSection } from '../../../../components/Cells';
 import {
-  ProfileIdentityForm, ProfileInfosForm, ProfileLinksForm, ProfileOtherInfos, ProfileStateForm, ProfileTimezoneForm,
+  ProfileIdentityForm, ProfileInfosForm, ProfileLinksForm, ProfileOtherInfos, ProfileStateForm, ProfileTimezoneForm, ProfilePermissionsForm,
 } from '../../../../components/Organisms';
 import { HeaderWrapper } from '../../../../components/Species';
 import styles from './Update.module.scss';
@@ -24,6 +26,14 @@ function Update() {
     setData: setUser,
     setErrors,
     setLoading,
+  } = useRequestStates(undefined, '', '', true);
+  const {
+    data: permissions,
+    errors: errorsPermissions,
+    loading: loadingPermissions,
+    setData: setPermissions,
+    setErrors: setErrorsPermissions,
+    setLoading: setLoadingPermissions,
   } = useRequestStates(undefined, '', '', true);
 
   // ProfileInfosForm -> data
@@ -66,6 +76,9 @@ function Update() {
     lastChangedDateTime: user?.lastChangedDateTime,
   } : undefined), [user]);
 
+  /**
+   * Method to retrieve user general informations
+   */
   const fetchUser = useCallback(async () => {
     setLoading(true);
     setErrors('');
@@ -91,11 +104,41 @@ function Update() {
   }, [setErrors, setLoading, setUser, userId]);
 
   /**
+   * Method to retrieve user permissions for each services
+   */
+  const fetchUserPermissions = useCallback(async () => {
+    setLoadingPermissions(true);
+    setErrorsPermissions('');
+    await Users.getPermissions(userId)
+      .then(async (res) => {
+        if (res.status === 200) {
+          return res.json();
+        }
+        return Promise.reject(res);
+      })
+      .then(async (userPermissions) => {
+        setPermissions(userPermissions);
+        setLoadingPermissions(false);
+      })
+      .catch(async (err) => {
+        const debuMsg = 'ERROR: [fetchUser - Users.getById]';
+        const mainClbck = () => {
+          setErrorsPermissions('Impossible charger les données de l\'utilisateur');
+          setLoadingPermissions(false);
+        };
+        requestCatch(err, debuMsg, undefined, undefined, mainClbck);
+      });
+  }, [setErrorsPermissions, setLoadingPermissions, setPermissions, userId]);
+
+  /**
    * At the mounted state load the current client data
    */
   useEffectOnce(() => {
     fetchUser();
+    fetchUserPermissions();
   });
+
+  console.log(loadingPermissions);
 
   return (
     <HeaderWrapper icon={IoIosPerson} title="Mise à jour d'un utilisateur">
@@ -109,6 +152,16 @@ function Update() {
         <ProfileTimezoneForm userId={userId} defaultData={timezoneData} setDefaultData={setUser} loading={loading} />
         <ProfileStateForm userId={userId} defaultData={stateData} setDefaultData={setUser} loading={loading} />
         <ProfileOtherInfos defaultData={otherInfosData} loading={loading} />
+        {/* All Clients */}
+        <div className={styles.Root}>
+          <TitleSection icon={IoShieldCheckmark} title="Permissions" variant="underlined" />
+          <If condition={!!errorsPermissions}>
+            <Alert severity="error" variant="rounded" title="Erreur:" className={styles.ErrorPermissions}>{errorsPermissions}</Alert>
+          </If>
+          {permissions?.map((permission) => (
+            <ProfilePermissionsForm key={permission?.id} userId={userId} defaultData={permission} setDefaultData={setPermissions} />
+          ))}
+        </div>
       </div>
     </HeaderWrapper>
   );

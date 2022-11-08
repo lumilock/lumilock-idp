@@ -20,7 +20,7 @@ function CheckboxGroup({ label, loading, checkbox }) {
       </If>
       {checkbox?.map((c) => (
         <CheckboxControlled
-          key={c?.name}
+          key={`${c?.name}-${c?.label}`}
           loading={loading}
           {...c}
         />

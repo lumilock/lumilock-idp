@@ -19,6 +19,7 @@ import {
   UsersLightDTO,
   UsersLinksDTO,
   UsersPatchPersoInfoDTO,
+  UsersPermissionsDTO,
   UsersStatesDataDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
@@ -61,6 +62,7 @@ export class UsersController {
   /**
    * Method used to update personal information of a specific user
    * @param {UsersPatchPersoInfoDTO} userPersoInfo the new personnal information to update
+   * @param {string} userId id of the user
    * @returns {UsersPatchPersoInfoDTO | undefined} the updated and formatted personnal information or nothing
    */
   @UseGuards(AuthenticatedGuard)
@@ -84,6 +86,7 @@ export class UsersController {
   /**
    * Method used to patch identity information of a specific user
    * @param {UsersIdentityDTO} userIdentity new identity information to update
+   * @param {string} userId id of the user
    * @returns {UsersIdentityDTO | undefined} the updated and formatted identity information or nothing
    */
   @UseGuards(AuthenticatedGuard)
@@ -128,6 +131,7 @@ export class UsersController {
   /**
    * Method used to patch external links profile and website of a specific user
    * @param {UsersLinksDTO} userLinks external links profile and website to update
+   * @param {string} userId id of the user
    * @returns {UsersLinksDTO | undefined} determine if external links profile and website has been patched
    */
   @UseGuards(AuthenticatedGuard)
@@ -150,6 +154,7 @@ export class UsersController {
   /**
    * Method used to patch geographique data zoneinfo and locale of a specific user
    * @param {UsersGeoDataDTO} userGeoData geographique data zoneinfo and locale to update
+   * @param {string} userId id of the user
    * @returns {UsersGeoDataDTO | undefined} determine if geographique data zoneinfo and locale has been patched
    */
   @UseGuards(AuthenticatedGuard)
@@ -173,6 +178,7 @@ export class UsersController {
   /**
    * Method used to patch states data isArchived and isActive of a specific user
    * @param {UsersStatesDataDTO} userStatesData states data isArchived and isActive to update
+   * @param {string} userId id of the user
    * @returns {UsersStatesDataDTO | undefined} determine if states data isArchived and isActive has been patched
    */
   @UseGuards(AuthenticatedGuard)
@@ -191,6 +197,33 @@ export class UsersController {
 
     if (patchedStatesData && typeof patchedStatesData === 'object') {
       return patchedStatesData;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Method used to retrieve permissions of a specific users for all clients
+   * @param {string} userId id of the user
+   * @returns {UsersStatesDataDTO | undefined} permissions if founded
+   */
+  @UseGuards(AuthenticatedGuard)
+  @SetMetadata('permissions', ['users'])
+  @UseGuards(PermissionsGuard)
+  @Get(':id/permissions')
+  public async getPermissions(
+    @Param('id') userId: string,
+  ): Promise<UsersPermissionsDTO[] | undefined> {
+    // Patch in db
+    const userPermissions = await this.serv.getPermissions(userId);
+
+    if (
+      userPermissions &&
+      Array.isArray(userPermissions) &&
+      userPermissions?.length > 0 &&
+      typeof userPermissions?.[0] === 'object'
+    ) {
+      return userPermissions;
     }
 
     return undefined;

@@ -11,12 +11,19 @@
         margin: spacing-rem(3) spacing-rem(3) 0 spacing-rem(3);
         width: calc(100% - spacing-rem(6));
     }
+
+    & .ErrorPermissions {
+        margin: 0 spacing-rem(3);
+        width: calc(100% - spacing-rem(6));
+    }
 }
 
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
     .Root {
+
+        & .ErrorPermissions,
         & .Error {
             width: rem-calc(512); // 24 * 2 because of the padding 
         }

@@ -4,6 +4,8 @@ import { EntityManager, Repository } from 'typeorm';
 import * as format from 'pg-format';
 import * as bcrypt from 'bcrypt';
 
+import fileStorageSystem from '../config/fileStorageSystem';
+import { oidcConstants } from '../auth/oidcConstants';
 import {
   UsersDTO,
   UsersDetailedDTO,
@@ -15,17 +17,18 @@ import {
   UsersGeoDataDTO,
   UsersCreateFullDTO,
   UsersStatesDataDTO,
+  UsersPermissionsDTO,
 } from './dto';
-import fileStorageSystem from '../config/fileStorageSystem';
-import { oidcConstants } from '../auth/oidcConstants';
-import { User } from '../model/users.entity';
 import { SubjectDTO } from './subject.dto';
 import { disableUsers, upsertUsers } from './queries';
+import { User } from '../model/users.entity';
+import { Client } from '../model/clients.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly repo: Repository<User>,
+    @InjectRepository(Client) private readonly clientsRepo: Repository<Client>,
     @InjectEntityManager()
     private readonly entityManager: EntityManager,
   ) {}
@@ -113,10 +116,10 @@ export class UsersService {
       .set({ password: hash })
       .where(
         `
-        (user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
+        ((user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
         OR (user.login IS NOT NULL AND NULLIF(user.login, '') IS NOT NULL AND user.login = TRIM(:identity))
         OR (user.phone_number IS NOT NULL AND NULLIF(user.phone_number, '') IS NOT NULL AND user.phone_number = TRIM(:identity))
-        `,
+        )`,
         { identity },
       )
       // Used to check if data has already been updated
@@ -381,6 +384,44 @@ export class UsersService {
         return user?.affected === 1;
       });
     return hasBeenUpdated ? userStatesData : '';
+  }
+
+  /**
+   * Method used to patch states data isArchived and isActive of a specific user
+   * @param {string} userId The id of the target user
+   * @returns {UsersPermissionsDTO | string} permissions of a user for all clients if founded else undefined
+   */
+  async getPermissions(
+    userId: string,
+  ): Promise<UsersPermissionsDTO[] | undefined> {
+    return this.clientsRepo
+      .createQueryBuilder('c')
+      .leftJoinAndSelect(
+        'c.usersClients',
+        'uc',
+        `uc.user_id = '${userId}'::uuid`,
+      )
+      .leftJoinAndSelect('uc.user', 'u', `u.id = '${userId}'::uuid`)
+      .select([
+        'c.id AS id',
+        'c.client_name AS "clientName"',
+        'c.is_active AS "isActive"',
+        'c.is_archived AS "isArchived"',
+        'c.permissions AS permissions',
+        'u.id AS "userId"',
+        'u.name AS "userName"',
+        'uc.id AS "usersClientsId"',
+        'uc.role AS "usersClientsRole"',
+        'uc.authorization AS "usersClientsAuthorization"',
+        'uc.permissions AS "usersClientsPermissions"',
+      ])
+      .orderBy('c.client_name', 'ASC')
+      .where('c.is_active = true')
+      .andWhere('c.is_archived = false')
+      .getRawMany()
+      .then((permissions) =>
+        permissions.map((p) => UsersPermissionsDTO.from(p)),
+      );
   }
 
   // Store a new user

@@ -3,6 +3,8 @@ const Users = {
   all: () => fetch('/api/users'),
   // Get a specific user by it's id
   getById: (id) => fetch(`/api/users/${id}`),
+  // Get permissions for a specific user
+  getPermissions: (id) => fetch(`/api/users/${id}/permissions`),
   // POST Create a new user
   create: (data) => fetch('/api/users', {
     method: 'POST',

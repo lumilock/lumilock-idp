@@ -9,4 +9,5 @@ export * from './usersGeoData.dto';
 export * from './usersCreate.dto';
 export * from './usersCreateFull.dto';
 export * from './usersStatesData.dto';
+export * from './usersPermissions.dto';
 export * from './users.dto';

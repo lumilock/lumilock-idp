@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { IoIosPerson } from 'react-icons/io';
+import { IoIdCardSharp } from 'react-icons/io5';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { authInfoSelector } from '../../../../store/auth/authSelector';
 import { updateUserPropsAction } from '../../../../store/auth/authAction';
+import { requestCatch } from '../../../../services/JSXTools';
 import { useUpdate } from '../../../../services/Hooks';
 import { Auth, Users } from '../../../../services/Api';
 import { InputControlled } from '../../../Molecules';
@@ -14,7 +15,6 @@ import { FormCard, TitleSection } from '../../../Cells';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
 import styles from './ProfileIdentityForm.module.scss';
-import { requestCatch } from '../../../../services/JSXTools';
 
 function ProfileIdentityForm({
   userId, defaultData, setDefaultData, loading,
@@ -93,7 +93,7 @@ function ProfileIdentityForm({
 
   return (
     <div className={styles.Root}>
-      <TitleSection icon={IoIosPerson} title="Identité" variant="underlined" />
+      <TitleSection icon={IoIdCardSharp} title="Identité" variant="underlined" />
       <FormCard handleSubmit={handleSubmit(onSubmit)} handleReset={handleReset}>
         <InputControlled
           control={control}
