@@ -1,0 +1,104 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+  position: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.XXSmall,
+  &.XXSmall>svg {
+    height: rem-calc(12);
+    width: rem-calc(12);
+  }
+
+
+  &.XSmall,
+  &.XSmall>svg {
+    height: spacing-rem(2);
+    width: spacing-rem(2);
+  }
+
+  &.Small,
+  &.Small>svg {
+    height: spacing-rem(3);
+    width: spacing-rem(3);
+  }
+
+  &.Regular,
+  &.Regular>svg {
+    height: spacing-rem(4);
+    width: spacing-rem(4);
+  }
+
+  &.Medium,
+  &.Medium>svg {
+    height: spacing-rem(6);
+    width: spacing-rem(6);
+  }
+
+  &.Large,
+  &.Large>svg {
+    height: spacing-rem(8);
+    width: spacing-rem(8);
+  }
+
+  &.Main {
+    color: var(--color-main);
+  }
+
+  &.Content1 {
+    color: var(--color-content1);
+  }
+
+  &.Content2 {
+    color: var(--color-content2);
+  }
+
+  &.Content3 {
+    color: var(--color-content3);
+  }
+
+  &.Background1 {
+    color: var(--color-background1);
+  }
+
+  &.Background2 {
+    color: var(--color-background2);
+  }
+
+  &.Background3 {
+    color: var(--color-background3);
+  }
+
+  &.Standard {
+    color: var(--color-content1);
+  }
+
+  &.Alert {
+    color: var(--color-alert);
+  }
+
+  &.AlertDark {
+    color: var(--color-alert-dark);
+  }
+
+  &.Info {
+    color: var(--color-info);
+  }
+
+  &.Loading {
+    animation: rotateKeyframe 1.5s linear infinite;
+  }
+}
+
+
+@keyframes rotateKeyframe {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
+}

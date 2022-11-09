@@ -1,0 +1,57 @@
+@use "sass:math";
+
+// Main colors
+$color-main: #3854E9;
+$color-content1: #101524;
+$color-content2: #2F3033;
+$color-content3: #6F727B;
+$color-background1: #FFFFFF;
+$color-background2: #F6F8FF;
+$color-background2-5: #ECEEF5;
+$color-background3: #ECEEF5;
+$color-background3-5: #F0F2F9;
+$color-gradient: linear-gradient(#101524, #3854E9);
+
+// Alert colors
+$color-alert: #f44336;
+$color-alert-light: #e57373;
+$color-alert-dark: #d32f2f;
+$color-alert-text: #7e0f0f;
+
+// Warning colors
+$color-warning: #ffa726;
+$color-warning-light: #ffb74d;
+$color-warning-dark: #f57c00;
+
+// Info colors
+$color-info: #29b6f6;
+$color-info-light: #4fc3f7;
+$color-info-dark: #0288d1;
+
+// Success colors
+$color-success: #66bb6a;
+$color-success-light: #98db9b;
+$color-success-dark: #2b6a2e;
+
+// Transitions
+$transitionInOut: cubic-bezier(0.645, 0.045, 0.355, 1);
+$transitionIn: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+$transitionOut: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+$base-font-size: 16px;
+
+@function trim-unit($value) {
+    @return math.div($value, ($value * 0 + 1));
+}
+
+@function rem-calc($value) {
+    @return math.div($value, trim-unit($base-font-size)) * 1rem;
+}
+
+@function spacing($value) {
+    @return $value * 8px;
+}
+
+@function spacing-rem($value) {
+    @return rem-calc($value * 8);
+}

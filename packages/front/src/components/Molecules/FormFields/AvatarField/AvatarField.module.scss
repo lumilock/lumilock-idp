@@ -1,0 +1,103 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: spacing-rem(1);
+
+    & .Avatar {
+
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &.Circle {
+            border-radius: 50%;
+            background-color: var(--color-background3);
+            overflow: hidden;
+        }
+
+        &.XXLarge {
+            width: rem-calc(128);
+            height: rem-calc(128);
+        }
+
+        &.XLarge {
+            width: rem-calc(64);
+            height: rem-calc(64);
+        }
+
+        &.Large {
+            width: rem-calc(48);
+            height: rem-calc(48);
+        }
+
+        &.Medium {
+            width: rem-calc(40);
+            height: rem-calc(40);
+        }
+
+        &.Regular {
+            width: rem-calc(32);
+            height: rem-calc(32);
+        }
+
+        &.Small {
+            width: rem-calc(24);
+            height: rem-calc(24);
+        }
+
+        & img {
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        &>*:last-child {
+            pointer-events: none;
+        }
+
+        & input {
+            position: absolute;
+            z-index: 0;
+            top: 0;
+            left: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+
+            &:not(:disabled) {
+                cursor: pointer;
+            }
+        }
+
+        &:after {
+            position: absolute;
+            content: '';
+            top: spacing-rem(0);
+            left: spacing-rem(0);
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: spacing-rem(0) solid var(--color-background1);
+            outline: spacing-rem(0) solid var(--color-background1);
+            outline-offset: spacing-rem(0);
+            transition: .25s $transitionInOut;
+            padding: 0;
+            pointer-events: none;
+        }
+
+        &:hover:after {
+            width: calc(100% - spacing-rem(2));
+            height: calc(100% - spacing-rem(2));
+            top: spacing-rem(1);
+            left: spacing-rem(1);
+            border: spacing-rem(1) solid var(--color-background1);
+        }
+    }
+}

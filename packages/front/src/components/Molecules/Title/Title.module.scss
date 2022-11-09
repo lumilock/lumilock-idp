@@ -1,0 +1,8 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    gap: spacing-rem(2);
+    align-items: center;
+}

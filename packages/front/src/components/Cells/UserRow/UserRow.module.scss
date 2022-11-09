@@ -1,0 +1,47 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: spacing-rem(1);
+
+    &:not(.Loading) {
+        background-color: var(--color-background1);
+    }
+
+    &:not([disabled]) {
+        cursor: pointer;
+
+        &:hover:not(.Active) {
+            background-color: var(--color-background3);
+        }
+    }
+
+    &.Active {
+        background-color: var(--color-main);
+    }
+
+    & .Head {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: spacing-rem(1);
+
+        & .Name {
+            position: relative;
+            display: flex;
+            gap: rem-calc(2);
+        }
+    }
+
+
+    & .Locality {
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: rem-calc(2);
+    }
+}

@@ -1,0 +1,110 @@
+{
+  "name": "front",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@hookform/resolvers": "^2.9.8",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "as-bind": "^0.4.0",
+    "axios": "^0.27.2",
+    "clsx": "^1.2.1",
+    "lodash": "^4.17.21",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.35.0",
+    "react-icons": "^4.4.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.4.0",
+    "react-scripts": "5.0.1",
+    "react-transition-group": "^4.4.5",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.1",
+    "reselect": "^4.1.6",
+    "sass": "^1.54.9",
+    "web-vitals": "^2.1.0",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@redux-devtools/extension": "^3.2.2",
+    "assemblyscript": "^0.21.6",
+    "eslint": "^8.23.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-app": "^6.2.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "http-proxy-middleware": "^2.0.6",
+    "process": "^0.11.10"
+  },
+  "scripts": {
+    "start": "set PORT=3001 && react-scripts start",
+    "build:react": "react-scripts build",
+    "build:wasm": "asc ./node_modules/as-bind/lib/assembly/as-bind.ts --config assembly/tsconfig.json --target release",
+    "build": "yarn build:wasm && yarn build:react",
+    "test": "react-scripts test",
+    "lint": "npx eslint --ignore-pattern '**/node_modules/*' --ignore-pattern '**/*.test.js' --fix ./src --ext .js --ext .jsx",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es6": true,
+      "jest": true
+    },
+    "extends": [
+      "react-app",
+      "airbnb",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 8
+    },
+    "plugins": [
+      "jsx-a11y",
+      "react-hooks"
+    ],
+    "rules": {
+      "consistent-return": 1,
+      "strict": [
+        1
+      ],
+      "max-len": [
+        "warn",
+        200
+      ],
+      "no-underscore-dangle": [
+        1
+      ],
+      "no-console": "warn",
+      "react/jsx-props-no-spreading": "off",
+      "no-unused-vars": "error",
+      "import/no-named-as-default": 0,
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": true
+        }
+      ]
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,238 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.XXSmall {
+        padding: spacing-rem(0.5) spacing-rem(0.25);
+    }
+
+    &.XSmall {
+        padding: spacing-rem(1) spacing-rem(0.5);
+    }
+
+    &.Small {
+        padding: rem-calc(12) spacing-rem(1);
+    }
+
+    &.Medium {
+        padding: spacing-rem(3) spacing-rem(2);
+    }
+
+    &.Large {
+        padding: spacing-rem(4) spacing-rem(3);
+    }
+
+    &.XLarge {
+        padding: spacing-rem(5) spacing-rem(4);
+    }
+
+    &.XXLarge {
+        padding: spacing-rem(6) spacing-rem(5);
+    }
+
+    border-radius: spacing-rem(1);
+    border: none;
+    min-height: rem-calc(40);
+
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        filter: grayscale(1);
+    }
+
+    & .Content {
+        position: relative;
+        display: flex;
+        gap: spacing-rem(1);
+        justify-content: center;
+        align-items: center;
+    }
+
+    // Variant Text
+    &.Text {
+        background-color: transparent;
+
+        &.Alert {
+            color: var(--color-alert);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-alert-light}10;
+            }
+        }
+
+        &.AlertDark {
+            color: var(--color-alert-dark);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-alert-light}10;
+            }
+        }
+
+        &.Info {
+            color: var(--color-info);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-info-light}10;
+            }
+        }
+
+        &.Standard,
+        &.Content1 {
+            color: var(--color-content1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-content1}10;
+            }
+        }
+
+        &.Main {
+            color: var(--color-main);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-main}10;
+            }
+        }
+
+        &.Content2 {
+            color: var(--color-content2);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-content2}10;
+            }
+        }
+
+        &.Content3 {
+            color: var(--color-content3);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-content3}10;
+            }
+        }
+
+        &.Background1 {
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-background1}10;
+            }
+        }
+
+        &.Background2 {
+            color: var(--color-background2);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-background2}10;
+            }
+        }
+
+        &.Background3 {
+            color: var(--color-background2);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-background2}10;
+            }
+        }
+    }
+
+    // Variant Contained
+    &.Contained {
+        &.Alert {
+            background-color: var(--color-alert);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-alert}D9;
+            }
+        }
+
+        &.AlertDark {
+            background-color: var(--color-alert-dark);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-alert-dark}D9;
+            }
+        }
+
+        &.Info {
+            background-color: var(--color-info);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-info}D9;
+            }
+        }
+
+        &.Main {
+            background-color: var(--color-main);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-main}D9;
+            }
+        }
+
+        &.Standard,
+        &.Content1 {
+            background-color: var(--color-content1);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-content1}D9;
+            }
+        }
+
+        &.Content2 {
+            background-color: var(--color-content2);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-content2}D9;
+            }
+        }
+
+        &.Content3 {
+            background-color: var(--color-content3);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-content3}D9;
+            }
+        }
+
+        &.Background1 {
+            background-color: var(--color-background1);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-background1}D9;
+            }
+        }
+
+        &.Background2 {
+            background-color: var(--color-background2);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-background2}D9;
+            }
+        }
+
+        &.Background3 {
+            background-color: var(--color-background3);
+            color: var(--color-background1);
+
+            &:not(:disabled):hover {
+                background-color: #{$color-background3}D9;
+            }
+        }
+
+    }
+}

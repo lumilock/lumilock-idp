@@ -1,0 +1,133 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-content3);
+    border-radius: 50%;
+    overflow: hidden;
+    color: var(--color-background1);
+    text-align: center;
+
+    & .Icon {
+        color: var(--color-background1);
+    }
+
+    & .Image {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        aspect-ratio: 1/1;
+    }
+
+    &.XXLarge {
+        width: rem-calc(128);
+        height: rem-calc(128);
+
+        & .Icon {
+            width: rem-calc(64);
+            height: rem-calc(64);
+        }
+
+        font-family: "Lexend Bold",
+        sans-serif;
+        font-size: rem-calc(40);
+        font-weight: 100;
+        letter-spacing: -0.06rem;
+    }
+
+    &.XLarge {
+        width: rem-calc(64);
+        height: rem-calc(64);
+
+        & .Icon {
+            width: rem-calc(32);
+            height: rem-calc(32);
+        }
+
+        font-family: "Lexend SemiBold",
+        sans-serif;
+        font-size: rem-calc(24);
+        font-weight: 100;
+        letter-spacing: -0.04rem;
+    }
+
+    &.Large {
+        width: rem-calc(48);
+        height: rem-calc(48);
+
+        & .Icon {
+            width: rem-calc(24);
+            height: rem-calc(24);
+        }
+
+        font-family: "Lexend Medium",
+        sans-serif;
+        font-size: rem-calc(14);
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: -0.04rem;
+        line-height: 150%;
+    }
+
+    &.Medium {
+        width: rem-calc(40);
+        height: rem-calc(40);
+
+        & .Icon {
+            width: rem-calc(18);
+            height: rem-calc(18);
+        }
+
+        font-family: "Lexend Medium",
+        sans-serif;
+        font-size: rem-calc(12);
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: -0.02rem;
+        line-height: 150%;
+    }
+
+    &.Regular {
+        width: rem-calc(32);
+        height: rem-calc(32);
+
+        & .Icon {
+            width: rem-calc(16);
+            height: rem-calc(16);
+        }
+
+
+        font-family: "Lexend Regular",
+        sans-serif;
+        font-size: rem-calc(10);
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: -0.02rem;
+        line-height: 150%;
+    }
+
+    &.Small {
+        width: rem-calc(24);
+        height: rem-calc(24);
+
+        & .Icon {
+            width: rem-calc(12);
+            height: rem-calc(12);
+        }
+
+        font-family: "Lexend Regular",
+        sans-serif;
+        font-size: rem-calc(8);
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: -0.02rem;
+        line-height: 125%;
+    }
+
+
+}

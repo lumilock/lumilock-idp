@@ -1,0 +1,81 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &.Disabled {
+        opacity: 0.5;
+    }
+
+    & .Input {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: var(--color-background1);
+        gap: spacing-rem(1);
+
+        & input {
+            height: 100%;
+            max-height: 100%;
+
+            &[disabled] {
+                background-color: transparent;
+            }
+        }
+    }
+
+
+    &.Standard {
+        & .Input {
+            border: rem-calc(1) solid transparent;
+
+            & input {
+                border: none;
+                outline: none;
+                flex: 1;
+            }
+        }
+
+        &:focus-within {
+            outline: var(--color-content1) auto rem-calc(1);
+            outline-offset: rem-calc(2);
+        }
+    }
+
+    &.Outlined {
+        & .Input {
+            border: rem-calc(1) solid var(--color-background3);
+            border-radius: spacing-rem(1);
+            padding: 0 spacing-rem(1);
+
+            & input {
+                border: none;
+                outline: none;
+                flex: 1;
+            }
+
+            &:focus-within {
+                outline: var(--color-content1) auto rem-calc(1);
+                outline-offset: rem-calc(2);
+            }
+        }
+
+    }
+
+
+    &.Regular {
+        & .Input {
+            height: spacing-rem(5);
+            max-height: spacing-rem(5);
+        }
+    }
+
+    &.Small {
+        & .Input {
+            height: spacing-rem(3);
+            max-height: spacing-rem(3);
+        }
+    }
+}

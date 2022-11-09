@@ -1,0 +1,9 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    background-color: var(--color-alert-light);
+    color: var(--color-alert-text);
+    padding: spacing-rem(1);
+    border-radius: spacing-rem(1);
+}

@@ -1,0 +1,6 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Container {
+    position: relative;
+    transition-timing-function: $transitionInOut;
+}

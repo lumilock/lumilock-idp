@@ -1,0 +1,34 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    border-style: solid;
+    border-bottom: none;
+
+    &.Background1 {
+        border-color: var(--color-background1);
+    }
+
+    &.Background2 {
+        border-color: var(--color-background2);
+    }
+
+    &.Background3 {
+        border-color: var(--color-background3);
+    }
+
+    &.Main {
+        border-color: var(--color-main);
+    }
+
+    &.Content1 {
+        border-color: var(--color-content1);
+    }
+
+    &.Content2 {
+        border-color: var(--color-content2);
+    }
+
+    &.Content3 {
+        border-color: var(--color-content3);
+    }
+}
