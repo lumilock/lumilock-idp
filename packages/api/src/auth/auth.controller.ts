@@ -160,6 +160,7 @@ export class AuthController {
           // code_verifier: query?.code,
           response_type: 'code',
         };
+
         const sessionOptions = {
           secure: false, // TODO true when it will be secure
           path: '/',
@@ -173,6 +174,7 @@ export class AuthController {
           code, // RP authorization code
           ...state, // will add state if exist
         });
+
         // * Response redirection
         return res
           .cookie(sessionKey, sessionValue, sessionOptions)

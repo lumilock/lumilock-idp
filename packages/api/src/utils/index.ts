@@ -5,3 +5,5 @@ export { default as noTilde } from './noTilde';
 export * from './noTilde';
 export { default as num2Char } from './num2Char';
 export { default as base64Encode } from './base64Encode';
+export { default as decrypt } from './decrypt';
+export { default as encrypt } from './encrypt';
