@@ -14,6 +14,7 @@ import {
 
 import { noTildes } from '../../utils';
 import { User, UserGender } from '../../model/users.entity';
+import { Type } from 'class-transformer';
 
 export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
   @ApiProperty({ required: true })
@@ -146,6 +147,7 @@ export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   birthdate: Date;
 
   /**
