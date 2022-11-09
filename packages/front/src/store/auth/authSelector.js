@@ -28,3 +28,15 @@ export const authProfileSelector = createSelector(
     };
   },
 );
+
+// Get only permissions and roles
+export const permissionsSelector = createSelector(
+  authInfoSelector,
+  (user) => {
+    if (!user) return 'none';
+    return {
+      permissions: user?.permissions,
+      role: user?.role,
+    };
+  },
+);

@@ -59,7 +59,7 @@ function AppRoutes() {
         {
           path: 'services',
           element: (
-            <RequireAuth>
+            <RequireAuth permissions={['clients']}>
               <Outlet />
             </RequireAuth>
           ),
@@ -88,7 +88,7 @@ function AppRoutes() {
         {
           path: 'users',
           element: (
-            <RequireAuth>
+            <RequireAuth permissions={['users']}>
               <Outlet />
             </RequireAuth>
           ),
