@@ -11,7 +11,7 @@ import {
 import styles from './AppLink.module.scss';
 
 function AppLink({
-  ghost, path, picture, icon, variant, name, className, ...rest
+  ghost, path, picture, icon, variant, name, className, loading, ...rest
 }) {
   const pathname = useMemo(() => (path || '/#'), [path]);
   const Component = useMemo(() => (path ? 'a' : NavLink), [path]);
@@ -30,6 +30,8 @@ function AppLink({
         {...(picture ? { image: picture } : {})}
         {...(icon ? { icon } : {})}
         {...(variant ? { variant } : {})}
+        loading={loading}
+        animation="wave"
       />
       <If condition={!ghost}>
         <Then>
@@ -37,8 +39,8 @@ function AppLink({
         </Then>
         <Else>
           <div className={styles.GhostSkeleton}>
-            <Skeleton width="100%" animation={false} />
-            <Skeleton width="50%" animation={false} />
+            <Skeleton width="100%" animation={loading ? 'wave' : false} />
+            <Skeleton width="50%" animation={loading ? 'wave' : false} />
           </div>
         </Else>
       </If>
@@ -54,6 +56,7 @@ AppLink.propTypes = {
   icon: PropTypes.func,
   variant: PropTypes.oneOf(['standard', 'dashed']),
   name: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 AppLink.defaultProps = {
@@ -64,6 +67,7 @@ AppLink.defaultProps = {
   icon: undefined,
   variant: 'standard',
   name: '',
+  loading: false,
 };
 
 export default React.memo(AppLink);

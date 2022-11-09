@@ -3,25 +3,21 @@ import { IoIosBasket } from 'react-icons/io';
 
 import { Clients } from '../../../services/Api';
 import { useEffectOnce, useRequestStates } from '../../../services/Hooks';
-import { Else, If, Then } from '../../Electrons';
+import { Choose, OtherWise, When } from '../../Electrons';
 import { AppLink } from '../../Molecules';
 import { TitleSection } from '../../Cells';
 import styles from './ApplicationsSection.module.scss';
 
 function ApplicationsSection() {
   // Request states
-  const [
-    apps,
-    errors,
-    success,
+  const {
+    data: apps,
     loading,
-    setApps,
+    setData: setApps,
     setErrors,
     setSuccess,
     setLoading,
-  ] = useRequestStates([]);
-
-  console.log('apps=', apps, 'errors=', errors, 'success=', success, 'loading=', loading);
+  } = useRequestStates([]);
 
   const fetchApps = useCallback(
     async () => {
@@ -66,8 +62,13 @@ function ApplicationsSection() {
         icon={IoIosBasket}
       />
       <div className={styles.AppContainer}>
-        <If condition={apps.length > 0}>
-          <Then>
+        <Choose>
+          <When condition={loading}>
+            {Array.from({ length: 5 }, (v, k) => k).map((v) => (
+              <AppLink key={v} variant="dashed" ghost loading />
+            ))}
+          </When>
+          <When condition={apps.length > 0}>
             {apps.map((app) => (
               <AppLink
                 key={app?.id}
@@ -77,11 +78,11 @@ function ApplicationsSection() {
                 name={app?.clientName}
               />
             ))}
-          </Then>
-          <Else>
+          </When>
+          <OtherWise>
             <AppLink variant="dashed" ghost />
-          </Else>
-        </If>
+          </OtherWise>
+        </Choose>
       </div>
 
     </div>
