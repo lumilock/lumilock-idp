@@ -1,0 +1,70 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    z-index: 1;
+    align-items: flex-end;
+    height: spacing-rem(8);
+    width: 100%;
+    padding: spacing-rem(3) spacing-rem(3) spacing-rem(2) spacing-rem(3);
+
+    &.Standard {
+        background-color: transparent;
+    }
+
+    &.Gradient {
+        background: linear-gradient(#{$color-content1}80, #{$color-content1}00);
+    }
+
+    &.Underlined {
+        background-color: transparent;
+        border-bottom: rem-calc(1) solid;
+
+        &.Main {
+            border-color: var(--color-main);
+        }
+
+        &.Content1 {
+            border-color: var(--color-content1);
+        }
+
+        &.Content2 {
+            border-color: var(--color-content2);
+        }
+
+        &.Content3 {
+            border-color: var(--color-content3);
+        }
+
+        &.Background1 {
+            border-color: var(--color-background1);
+        }
+
+        &.Background2 {
+            border-color: var(--color-background2);
+        }
+
+        &.Background3 {
+            border-color: var(--color-background3);
+        }
+
+        &.Standard {
+            border-color: var(--color-content1);
+        }
+
+        &.Alert {
+            border-color: var(--color-alert);
+        }
+
+        &.AlertDark {
+            border-color: var(--color-alert-dark);
+        }
+
+        &.Info {
+            border-color: var(--color-info);
+        }
+    }
+}

@@ -1,47 +1,23 @@
 // scripts/seed.ts
-import * as _ from 'lodash';
 import { createConnection, ConnectionOptions } from 'typeorm';
+
 import { configService } from '../config/config.service';
-// import { User } from '../user.decorator';
-import { UsersService } from '../users/users.service';
-import { User } from '../model/users.entity';
-import { UsersDTO } from '../users/users.dto';
+import { clientSeeds, usersClientsSeeds, userSeeds } from './seeds';
 
 async function run() {
-  // const seedUser: User = { id: 'seed-user' };
-
-  const seedId = Date.now()
-    .toString()
-    .split('')
-    .reverse()
-    .join('')
-    .substring(0, 4);
-
   const opt = {
     ...configService.getTypeOrmConfig(),
     debug: true,
   };
 
   const connection = await createConnection(opt as ConnectionOptions);
-  const usersService = new UsersService(connection.getRepository(User));
 
-  const work = _.range(1, 10)
-    .map((n) =>
-      UsersDTO.from({
-        first_name: `first_name-${seedId}-${n}`,
-        last_name: `last_name-${seedId}-${n}`,
-        email: `${seedId}-${n}@test.fr`,
-        login: `${seedId}_${n}_${seedId}-${n}`,
-        password: '123456',
-      }),
-    )
-    .map((dto) =>
-      usersService
-        .create(dto)
-        .then((r) => (console.log('done ->', r.login), r)),
-    );
+  // All seed
+  const usrSeeds = await userSeeds(connection);
+  const cltSeeds = await clientSeeds(connection);
+  await usersClientsSeeds(connection, usrSeeds[0].id, cltSeeds[0].id);
 
-  return await Promise.all(work);
+  // return await Promise.all([usrSeeds, cltSeeds]);
 }
 
 run()

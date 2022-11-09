@@ -1,0 +1,112 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+    & .Form {
+        position: relative;
+        display: flex;
+        gap: spacing-rem(2);
+        width: rem-calc(400);
+        flex-direction: column;
+
+        & .Header {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            margin-bottom: spacing-rem(1);
+
+            h4 {
+                font-family: "Lexend Bold", sans-serif;
+            }
+
+            .Subtitle {
+                font-family: "Lexend Light", sans-serif;
+                color: var(--color-content3);
+            }
+        }
+
+        & .AppSection {
+            position: relative;
+            background-color: var(--color-content3);
+            padding: spacing-rem(1);
+            border-radius: spacing-rem(2);
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            align-items: center;
+            gap: spacing-rem(1);
+
+            & .AppIcon {
+                position: relative;
+                width: rem-calc(64);
+                height: rem-calc(64);
+            }
+
+            & .Infos {
+                position: relative;
+                display: grid;
+                grid-template-rows: repeat(2, max-content);
+                align-items: center;
+                height: max-content;
+
+                & p {
+                    color: var(--color-content3);
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    width: 100%;
+                    display: block;
+                }
+            }
+        }
+
+        & .SharingSection {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: spacing-rem(1);
+
+            & .SharingItem {
+                padding-left: spacing-rem(2);
+
+                & li {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    gap: spacing-rem(1);
+                    color: var(--color-content3);
+                    list-style: none;
+                }
+            }
+        }
+
+        & .Disclaimer {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+
+            & p:first-child {
+                font-family: 'Lexend Regular';
+            }
+
+            & p:last-child {
+                color: var(--color-content3);
+                font-family: 'Lexend light';
+            }
+        }
+
+        & .Actions {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: spacing-rem(2);
+        }
+    }
+}

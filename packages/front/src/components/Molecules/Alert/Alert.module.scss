@@ -1,0 +1,43 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+    padding: spacing-rem(1);
+
+    &.Default {
+        background-color: var(--color-content3);
+        color: var(--color-grey-dark);
+    }
+
+    &.Error {
+        background-color: var(--color-alert-light);
+        color: var(--color-alert-text);
+    }
+
+    &.Info {
+        background-color: var(--color-info-light);
+        color: var(--color-info-dark);
+    }
+
+    &.Warning {
+        background-color: var(--color-warning-light);
+        color: var(--color-warning-dark);
+    }
+
+    &.Success {
+        background-color: var(--color-success-light);
+        color: var(--color-success-dark);
+    }
+
+    &.Squared {
+        border-radius: 0;
+    }
+
+    &.Rounded {
+        border-radius: spacing-rem(1);
+    }
+}

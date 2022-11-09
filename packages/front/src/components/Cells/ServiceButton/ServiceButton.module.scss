@@ -1,0 +1,25 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: block;
+    border: rem-calc(1) solid var(--color-background3);
+    padding: spacing-rem(1);
+    border-radius: spacing-rem(1);
+
+    &:not(.Loading) {
+        background-color: var(--color-background1);
+    }
+
+    &:not([disabled]) {
+        cursor: pointer;
+
+        &:hover:not(.Active) {
+            background-color: var(--color-background3);
+        }
+    }
+
+    &.Active {
+        background-color: var(--color-main);
+    }
+}

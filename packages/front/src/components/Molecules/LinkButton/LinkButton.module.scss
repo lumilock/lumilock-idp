@@ -1,0 +1,26 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    text-decoration: none;
+    background-color: var(--color-background2);
+    border-radius: spacing-rem(.5);
+
+    &[disabled] {
+        opacity: .5;
+    }
+
+    &:not([disabled]) {
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--color-background3);
+        }
+    }
+
+}

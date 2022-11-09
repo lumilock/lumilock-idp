@@ -1,0 +1,11 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: block;
+    width: rem-calc(320);
+    height: 100%;
+    background-color: var(--color-background1);
+    border-left: 1px solid var(--color-background3);
+    flex: initial;
+}

@@ -1,0 +1,27 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+
+    & .Card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border: rem-calc(1) solid var(--color-background3);
+        border-radius: spacing-rem(1);
+        background-color: var(--color-background1);
+        gap: spacing-rem(1);
+
+        & .ButtonContainer {
+            position: relative;
+            display: flex;
+            padding: spacing-rem(2);
+            width: 100%;
+
+            & .Button {
+                flex: 1;
+            }
+        }
+    }
+}

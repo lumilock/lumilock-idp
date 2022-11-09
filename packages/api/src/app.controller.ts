@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
+import { oidcConfiguration } from './auth/oidcConfiguration';
 
 @Controller()
 export class AppController {
@@ -13,5 +14,10 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Get('.well-known/openid-configuration')
+  public async openidConfiguration() {
+    return oidcConfiguration;
   }
 }

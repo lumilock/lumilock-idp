@@ -1,0 +1,14 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    &.Badge {
+        transform: translateY(-25%);
+        top: 0;
+        right: 0;
+    }
+}

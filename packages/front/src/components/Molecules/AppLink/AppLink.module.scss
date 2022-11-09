@@ -1,0 +1,51 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Base {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+    gap: spacing-rem(0.5);
+
+    &>p {
+        color: var(--color-content1);
+        z-index: 1;
+        height: rem-calc(30);
+        text-align: center;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    & .GhostSkeleton {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: rem-calc(30);
+
+        &>* {
+            flex: 1;
+        }
+    }
+
+    &[disabled] {
+        pointer-events: none;
+    }
+
+    &:not([disabled]) {
+        transition: .25s $transitionInOut transform;
+        transform: scale(1);
+    }
+
+    &:not([disabled]):hover {
+        transform: scale(1.1);
+
+    }
+}

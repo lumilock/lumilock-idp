@@ -1,0 +1,47 @@
+@import "../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+    & .Form {
+        position: relative;
+        display: flex;
+        gap: spacing-rem(2);
+        width: rem-calc(400);
+        flex-direction: column;
+
+        & .Header {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: spacing-rem(1);
+
+            h4 {
+                font-family: "Lexend Bold", sans-serif;
+            }
+
+            .Subtitle {
+                font-family: "Lexend Light", sans-serif;
+                color: var(--color-content3);
+            }
+
+            & img {
+                margin-bottom: spacing-rem(3);
+                width: rem-calc(64);
+                height: rem-calc(64);
+            }
+        }
+
+        & .Link {
+            color: var(--color-content1);
+            text-align: center;
+        }
+    }
+}

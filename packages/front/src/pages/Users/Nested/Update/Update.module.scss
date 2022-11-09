@@ -1,0 +1,36 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: spacing-rem(3);
+    padding-bottom: spacing-rem(2);
+
+    & .Error {
+        margin: spacing-rem(3) spacing-rem(3) 0 spacing-rem(3);
+        width: calc(100% - spacing-rem(6));
+    }
+
+    & .ErrorPermissions {
+        margin: 0 spacing-rem(3);
+        width: calc(100% - spacing-rem(6));
+    }
+
+    & .LoadingPermissions {
+        padding-left: spacing-rem(3);
+    }
+}
+
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .Root {
+
+        & .ErrorPermissions,
+        & .Error {
+            width: rem-calc(512); // 24 * 2 because of the padding 
+        }
+    }
+}

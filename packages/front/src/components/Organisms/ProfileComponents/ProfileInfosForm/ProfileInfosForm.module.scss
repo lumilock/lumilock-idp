@@ -1,0 +1,15 @@
+@import "../../../../assets/styles/toolkit.scss";
+
+.Root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: spacing-rem(3);
+
+    & .RadioGroup {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        gap: spacing-rem(2);
+    }
+}
