@@ -22,9 +22,9 @@ import {
   UsersPatchPersoInfoDTO,
   UsersPermissionsDTO,
   UsersStatesDataDTO,
+  UsersTCPUpsertDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
-import { formattedUpsertUsers } from './helpers';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { ClientsService } from '../clients/clients.service';
 import { UsersService } from './users.service';
@@ -304,22 +304,38 @@ export class UsersController {
 
   @MessagePattern({ role: 'user', cmd: 'upsert-multiple' })
   public async upsertUsers({
-    // TODO
     data,
     clientId,
   }: {
-    data: any[];
+    data: UsersTCPUpsertDTO[];
     clientId: string;
   }) {
+    const tmp = {
+      password: '27041995',
+      name: 'Thibaud PERRIN',
+      givenName: 'Thibaud',
+      familyName: 'PERRIN',
+      email: '',
+      birthdate: new Date('1995-04-27 00:00:00'),
+      phoneNumber: '0685551259',
+      addresses: [],
+      isActive: true,
+      isArchived: false,
+      other: JSON.parse(JSON.stringify({ uniqueId: '1/0351' })),
+    };
     // formatting data
-    const [upsertUsers, addresses] = await formattedUpsertUsers(data);
+    const updsertUsers =
+      {
+        usersDTO: [UsersTCPUpsertDTO.from(tmp)],
+        ids: [],
+        logins: { 'thibaud.perrin': 1 },
+      } || UsersTCPUpsertDTO.fromMultiple(data);
     // calling the services in order to upsert data
-    const users = await this.serv.upsertBySubIds(
-      upsertUsers,
-      addresses,
-      clientId,
-    );
-    return users;
+    const users = await this.serv.upsertBySubIds(updsertUsers, clientId);
+
+    console.log('data', users[0]);
+    throw new Error('stop');
+    return updsertUsers;
   }
 
   @MessagePattern({ role: 'item', cmd: 'get-by-id' })

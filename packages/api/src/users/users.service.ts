@@ -18,6 +18,7 @@ import {
   UsersCreateFullDTO,
   UsersStatesDataDTO,
   UsersPermissionsDTO,
+  UsersTCPUpsertDTO,
 } from './dto';
 import { SubjectDTO } from './subject.dto';
 import { disableUsers, upsertUsers } from './queries';
@@ -242,16 +243,41 @@ export class UsersService {
 
   // Upsert all users link to the subject_id and the client_id
   async upsertBySubIds(
-    // TODO
-    users: any[],
-    addresses: any[],
+    users: {
+      usersDTO: UsersTCPUpsertDTO[];
+      ids: string[];
+      logins: object;
+    },
     clientId: string,
   ): Promise<UsersDTO[] | undefined> {
+    console.log('users?.usersDTO', users?.usersDTO);
+    console.log('users?.ids', users?.ids);
+    console.log('users?.logins', users?.logins);
+    // const test = await this.repo
+    //   .createQueryBuilder()
+    //   .update(User)
+    //   .set(tmp)
+    //   .where('code NOT IN (:...code)', { code: allContactsCodes || [null] })
+    //   .andWhere('(is_active != false OR is_archived != true)')
+    //   .returning("code as annotation, 'Breeder' as name")
+    //   .getMany();
+
+    // const test = await this.repo
+    //   .createQueryBuilder()
+    //   .update(User)
+    //   .set(tmp)
+    //   .where('code NOT IN (:...code)', { code: allContactsCodes || [null] })
+    //   .andWhere('(is_active != false OR is_archived != true)')
+    //   .returning("code as annotation, 'Breeder' as name")
+    //   .execute();
+
+    console.log('test', test);
+    throw new Error('stop');
+
     // Generate the sql query
     const sql = format(
       upsertUsers,
       users,
-      addresses,
       clientId,
       oidcConstants.clientLauncherId,
     );
