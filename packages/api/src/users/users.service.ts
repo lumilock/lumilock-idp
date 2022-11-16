@@ -253,14 +253,24 @@ export class UsersService {
     console.log('users?.usersDTO', users?.usersDTO);
     console.log('users?.ids', users?.ids);
     console.log('users?.logins', users?.logins);
+    const logins = Object.keys(users?.logins);
+    console.log(logins);
     // const test = await this.repo
     //   .createQueryBuilder()
-    //   .update(User)
-    //   .set(tmp)
-    //   .where('code NOT IN (:...code)', { code: allContactsCodes || [null] })
-    //   .andWhere('(is_active != false OR is_archived != true)')
-    //   .returning("code as annotation, 'Breeder' as name")
-    //   .getMany();
+    //   .select(
+    //     `
+    //       count(id) AS repetitions,
+    //       MAX(COALESCE(substring(login from '[0-9]+$')::int, 1)) AS max_number,
+    //       substring(login from '[a-z-]+\.[a-z-]+') AS base_login
+    //     `,
+    //   )
+    //   .where("substring(login from '[a-z-]+.[a-z-]+') IN (:...logins)", {
+    //     logins: logins?.length > 0 ? logins : [null],
+    //   })
+    //   .groupBy('base_login')
+    //   .addSelect('u.*')
+    //   .from(users?.usersDTO, 'u')
+    //   .getRawMany();
 
     // const test = await this.repo
     //   .createQueryBuilder()

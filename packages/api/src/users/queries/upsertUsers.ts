@@ -1,10 +1,11 @@
 export default `
-    WITH left_side_users AS (
+    WITH incoming_users AS (
     -- Left side (comming data that represente the new users state of the db)
     SELECT
       row_number() OVER (ORDER BY unique_id ASC) as rn,
       unique_id,
       id::uuid,
+      login,
       password,
       given_name,
       family_name,
@@ -27,6 +28,7 @@ export default `
     FROM (VALUES %1$L) AS v (
       unique_id,
       id,
+      login,
       password,
       given_name,
       family_name,
@@ -48,70 +50,41 @@ export default `
       is_archived
     ) WHERE unique_id IS NOT NULL
   ),
-  left_side_addresses AS (
-    -- Left side (comming data that represente the new addresses state of the db)
-    SELECT
-      row_number() OVER (ORDER BY unique_id ASC) as rn,
-      unique_id,
-      user_unique_id,
-      id,
-      street_address,
-      locality,
-      region,
-      postal_code,
-      country,
-      user_id,
-      is_active::boolean,
-      is_archived::boolean
-    FROM (VALUES %2$L) AS v (
-      unique_id,
-      user_unique_id,
-      id,
-      street_address,
-      locality,
-      region,
-      postal_code,
-      country,
-      user_id,
-      is_active,
-      is_archived
-    ) WHERE unique_id IS NOT NULL
-  ),
-  right_side_users AS (
+  existing_users AS (
     -- Right side (db data)
     SELECT uc.id as subject_id, u.* FROM users u
     LEFT JOIN users_clients uc ON u.id = uc.user_id
-    WHERE uc.client_id = %3$L::uuid  AND uc.id in (SELECT lsu.id from left_side_users lsu WHERE lsu.id IS NOT null) -- we only want affect data that comes from parameters
+    WHERE uc.client_id = %3$L::uuid AND uc.id in (SELECT iu.id from incoming_users iu WHERE iu.id IS NOT null) -- we only want affect data that comes from parameters
   ),
   to_insert_users_v1 AS (
     -- Part that is only on the left side (incoming data we want to insert)
     SELECT
-      ls.rn,
-      NULLIF(ls.unique_id, '$undefined$') as unique_id,
-      ls.id,
-      NULLIF(ls.password, '$undefined$') as password,
-      NULLIF(ls.given_name, '$undefined$') as given_name,
-      NULLIF(ls.family_name, '$undefined$') as family_name,
-      NULLIF(ls.middle_name, '$undefined$') as middle_name,
-      NULLIF(ls.nickname, '$undefined$') as nickname,
-      NULLIF(ls.preferred_username, '$undefined$') as preferred_username,
-      NULLIF(ls.profile, '$undefined$') as profile,
-      NULLIF(ls.picture, '$undefined$') as picture,
-      NULLIF(ls.website, '$undefined$') as website,
-      NULLIF(NULLIF(ls.email, ''), '$undefined$') as email,
-      NULLIF(ls.email_verified, '$undefined$') as email_verified,
-      NULLIF(ls.gender, '$undefined$') as gender,
-      NULLIF(ls.birthdate, '$undefined$') as birthdate,
-      NULLIF(ls.zoneinfo, '$undefined$') as zoneinfo,
-      NULLIF(ls.locale, '$undefined$') as locale,
-      NULLIF(ls.phone_number, '$undefined$') as phone_number,
-      NULLIF(ls.phone_number_verified, '$undefined$') as phone_number_verified,
-      NULLIF(ls.is_active, '$undefined$') as is_active,
-      NULLIF(ls.is_archived, '$undefined$') as is_archived
-    FROM left_side_users ls
-    LEFT JOIN right_side_users rs ON ls.id = rs.subject_id
-    WHERE rs.subject_id IS NULL -- so here we only get rows where rs.id is NULL because it's data we want to insert
-    ORDER BY ls.unique_id ASC
+      iu.rn,
+      NULLIF(iu.unique_id, '$undefined$') as unique_id,
+      iu.id,
+      NULLIF(iu.password, '$undefined$') as password,
+      NULLIF(iu.given_name, '$undefined$') as given_name,
+      NULLIF(iu.family_name, '$undefined$') as family_name,
+      NULLIF(iu.middle_name, '$undefined$') as middle_name,
+      NULLIF(iu.nickname, '$undefined$') as nickname,
+      NULLIF(iu.preferred_username, '$undefined$') as preferred_username,
+      NULLIF(iu.profile, '$undefined$') as profile,
+      NULLIF(iu.picture, '$undefined$') as picture,
+      NULLIF(iu.website, '$undefined$') as website,
+      NULLIF(NULLIF(iu.email, ''), '$undefined$') as email,
+      NULLIF(iu.email_verified, '$undefined$') as email_verified,
+      NULLIF(iu.gender, '$undefined$') as gender,
+      NULLIF(iu.birthdate, '$undefined$') as birthdate,
+      NULLIF(iu.zoneinfo, '$undefined$') as zoneinfo,
+      NULLIF(iu.locale, '$undefined$') as locale,
+      NULLIF(iu.phone_number, '$undefined$') as phone_number,
+      NULLIF(iu.phone_number_verified, '$undefined$') as phone_number_verified,
+      NULLIF(iu.is_active, '$undefined$') as is_active,
+      NULLIF(iu.is_archived, '$undefined$') as is_archived
+    FROM incoming_users iu
+    LEFT JOIN existing_users eu ON iu.id = eu.subject_id
+    WHERE eu.subject_id IS NULL -- so here we only get rows where eu.id is NULL because it's data we want to insert
+    ORDER BY iu.unique_id ASC
   ),
   login_to_insert_formatted AS (
     SELECT
@@ -129,6 +102,15 @@ export default `
       FROM to_insert_users_v1 u2
       ) u3 ON u3.unique_id = u.unique_id
   ),
+  -- WITH current_login_info AS (
+  --   SELECT
+  --     count(id) AS repetitions,
+  --     MAX(COALESCE(substring(login from '[0-9]+$')::int, 1)) AS max_number,
+  --     substring(login from '[a-z-]+\.[a-z-]+') AS base_login FROM users
+  --   -- WHERE substring(login from '[a-z-]+\.[a-z-]+') IN ('thibaud.perrin', 'admin.admin')
+  --   GROUP BY base_login
+  -- ),
+  SELECT * FROM current_login_info
   login_to_insert_number AS (
     SELECT
       l.*,
@@ -164,8 +146,8 @@ export default `
   ),
   to_update_users AS (
     -- Part that is common to the left and rigth side (data we want update if there are change)
-    SELECT ls.*, rs.subject_id as right_side_id, rs.id as user_id FROM left_side_users ls
-    INNER JOIN right_side_users rs ON ls.id = rs.subject_id
+    SELECT ls.*, rs.subject_id as right_side_id, rs.id as user_id FROM incoming_users ls
+    INNER JOIN existing_users rs ON ls.id = rs.subject_id
     ORDER BY ls.unique_id ASC
   ),
   users_upd AS (
