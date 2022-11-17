@@ -311,6 +311,7 @@ export class UsersController {
     clientId: string;
   }) {
     const tmp = {
+      uniqueId: '1/0351',
       password: '27041995',
       name: 'Thibaud PERRIN',
       givenName: 'Thibaud',
@@ -321,14 +322,14 @@ export class UsersController {
       addresses: [],
       isActive: true,
       isArchived: false,
-      other: JSON.parse(JSON.stringify({ uniqueId: '1/0351' })),
     };
     // formatting data
     const updsertUsers =
       {
-        usersDTO: [UsersTCPUpsertDTO.from(tmp)],
-        ids: [],
-        logins: { 'thibaud.perrin': 1 },
+        usersArray: [UsersTCPUpsertDTO.format(UsersTCPUpsertDTO.from(tmp))],
+        addressesArray: [
+          [null, null, null, null, null, null, null, null, null, null, null],
+        ],
       } || UsersTCPUpsertDTO.fromMultiple(data);
     // calling the services in order to upsert data
     const users = await this.serv.upsertBySubIds(updsertUsers, clientId);
