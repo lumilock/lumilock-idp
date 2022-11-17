@@ -21,7 +21,6 @@ import {
   UsersTCPUpsertDTO,
 } from './dto';
 import { SubjectDTO } from './subject.dto';
-import { AddressesDTO } from '../addresses/addresses.dto';
 import { disableUsers, upsertUsers } from './queries';
 import { User } from '../model/users.entity';
 import { Client } from '../model/clients.entity';
@@ -249,7 +248,7 @@ export class UsersService {
       addressesArray: any[];
     },
     clientId: string,
-  ): Promise<UsersDTO[] | undefined> {
+  ): Promise<UsersTCPUpsertDTO[] | undefined> {
     console.log('users?.usersDTO', users?.usersArray);
     console.log('users?.addresses', users?.addressesArray);
 
@@ -261,8 +260,6 @@ export class UsersService {
       clientId,
       oidcConstants.clientLauncherId,
     );
-    console.log('sql', sql);
-    throw new Error('stop');
 
     const usersData = await this.entityManager.query(sql);
     return usersData;

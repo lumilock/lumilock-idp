@@ -309,34 +309,12 @@ export class UsersController {
   }: {
     data: UsersTCPUpsertDTO[];
     clientId: string;
-  }) {
-    const tmp = {
-      uniqueId: '1/0351',
-      password: '27041995',
-      name: 'Thibaud PERRIN',
-      givenName: 'Thibaud',
-      familyName: 'PERRIN',
-      email: '',
-      birthdate: new Date('1995-04-27 00:00:00'),
-      phoneNumber: '0685551259',
-      addresses: [],
-      isActive: true,
-      isArchived: false,
-    };
+  }): Promise<UsersTCPUpsertDTO[]> {
     // formatting data
-    const updsertUsers =
-      {
-        usersArray: [UsersTCPUpsertDTO.format(UsersTCPUpsertDTO.from(tmp))],
-        addressesArray: [
-          [null, null, null, null, null, null, null, null, null, null, null],
-        ],
-      } || UsersTCPUpsertDTO.fromMultiple(data);
+    const updsertUsers = UsersTCPUpsertDTO.fromMultiple(data);
     // calling the services in order to upsert data
     const users = await this.serv.upsertBySubIds(updsertUsers, clientId);
-
-    console.log('data', users[0]);
-    throw new Error('stop');
-    return updsertUsers;
+    return users;
   }
 
   @MessagePattern({ role: 'item', cmd: 'get-by-id' })
