@@ -249,9 +249,6 @@ export class UsersService {
     },
     clientId: string,
   ): Promise<UsersTCPUpsertDTO[] | undefined> {
-    console.log('users?.usersDTO', users?.usersArray);
-    console.log('users?.addresses', users?.addressesArray);
-
     // Generate the sql query
     const sql = format(
       upsertUsers,
@@ -459,7 +456,6 @@ export class UsersService {
       .getRawOne();
 
     // updating the admin with a unique auto increment number at the end
-    console.log('loginNumber?.max', loginNumber?.max);
     dto.login = !loginNumber?.max
       ? dto.login
       : dto.login + (loginNumber?.max + 1);
