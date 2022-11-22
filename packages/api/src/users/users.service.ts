@@ -257,7 +257,6 @@ export class UsersService {
       clientId,
       oidcConstants.clientLauncherId,
     );
-
     const usersData = await this.entityManager.query(sql);
     return usersData;
   }

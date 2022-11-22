@@ -225,6 +225,7 @@ export class UsersTCPUpsertDTO implements Readonly<UsersTCPUpsertDTO> {
     typeof dto.uniqueId !== 'undefined'
       ? (user.uniqueId = dto.uniqueId)
       : '$undefined$';
+    typeof dto.id !== 'undefined' ? (user.id = dto.id) : '$undefined$';
     user.login =
       dto.login ||
       noTildes([dto?.givenName, dto.familyName]) // no special char
