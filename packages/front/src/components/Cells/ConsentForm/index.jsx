@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IoIosArrowRoundBack, IoIosCheckmark, IoIosPerson } from 'react-icons/io';
+import { IoIosArrowRoundBack, IoIosCheckmark } from 'react-icons/io';
 
+import { IoIdCardSharp } from 'react-icons/io5';
 import { Auth } from '../../../services/Api';
+import { getAllQuery } from '../../../services/Tools';
 import {
-  If, Else, Then, Icon,
+  If, Icon, Typography,
 } from '../../Electrons';
 import {
-  Squircle, CheckboxControlled, Button,
+  Squircle, Button,
 } from '../../Atoms';
-import { Alert } from '../../Molecules';
+import { Alert, CheckboxControlled } from '../../Molecules';
 import validationSchema from './validationSchema';
 import defaultValues from './defaultValues';
-import Logo from '../../../assets/images/Logo.svg';
 
 import styles from './ConsentForm.module.scss';
-import { getAllQuery } from '../../../services/Tools';
 
 function ConsentForm({ values, setConsent }) {
   // Router
@@ -97,8 +97,8 @@ function ConsentForm({ values, setConsent }) {
       <form className={styles.Form} method="post" onSubmit={handleSubmit(onSubmit)}>
         {/* Title section */}
         <div className={styles.Header}>
-          <h4>Consentement</h4>
-          <p className={`${styles.Subtitle} subtitle1`}>Une application tierce requiert votre consentement.</p>
+          <Typography variant="h2">Consentement</Typography>
+          <Typography variant="subtitle1" color="content3">Une application tierce requiert votre consentement.</Typography>
         </div>
         <If condition={!!errorMsg}>
           <Alert severity="error" variant="rounded" title="Erreur:">{errorMsg}</Alert>
@@ -107,50 +107,44 @@ function ConsentForm({ values, setConsent }) {
         {/* App section */}
         <div className={styles.AppSection}>
           <div className={styles.AppIcon}>
-            <If>
-              <Then>
-                <Squircle image={clientInfos?.logoUri || ''} size="L" />
-              </Then>
-              <Else>
-                <img src={Logo} alt="lumilock logo" />
-              </Else>
-            </If>
+            <Squircle image={clientInfos?.logoUri || ''} size="large" />
           </div>
           <div className={styles.Infos}>
-            <h6>{clientInfos?.clientName}</h6>
-            <p className="body2">Demande votre autorisation.</p>
+            <Typography variant="h3" color="content1">{clientInfos?.clientName}</Typography>
+            <Typography variant="body2" color="content3">Demande votre autorisation.</Typography>
           </div>
         </div>
 
         {/* Sharing data scition */}
         <div className={styles.SharingSection}>
-          <p className="subtitle1">Données partagées:</p>
+          <Typography variant="subtitle1">Données partagées:</Typography>
           <ul className={styles.SharingItem}>
             <li>
               <Icon
-                ionIcon={IoIosPerson}
+                ionIcon={IoIdCardSharp}
                 size="small"
+                color="content3"
               />
-              <p className="body2">Informations utilisateur</p>
+              <Typography variant="body2" color="content3">Toutes les informations du profil</Typography>
             </li>
           </ul>
         </div>
         <CheckboxControlled control={control} label="J'accepte de partager ces données" name="consent" />
         {/* Info */}
         <div className={styles.Disclaimer}>
-          <p className="subtitle1">
+          <Typography variant="subtitle1">
             Assurez-vous de connaître
             {' '}
             <strong>{clientInfos?.clientName}</strong>
-          </p>
-          <p className="body2">
+          </Typography>
+          <Typography variant="body2" color="content3">
             Vous partagez peut-être des informations sensibles avec ce site ou cette application.
             Mais vous pourrez désactiver le partage de données dans les paramètres de votre profil.
-          </p>
+          </Typography>
         </div>
         <div className={styles.Actions}>
           <Button
-            color="content1"
+            color="alert dark"
             loading={isSubmitting || loading}
             variant="text"
             type="button"
@@ -163,7 +157,7 @@ function ConsentForm({ values, setConsent }) {
             color="content1"
             loading={isSubmitting || loading}
             type="submit"
-            endIcon={IoIosCheckmark}
+            startIcon={IoIosCheckmark}
           >
             Consentir
           </Button>

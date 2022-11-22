@@ -69,7 +69,7 @@ function UsersAddForm() {
       website: data?.website || null,
       email: data?.email || null,
       gender: data?.gender || null,
-      birthdate: data?.birthdate || null,
+      birthdate: data?.birthdate?.toISOString() || null,
       zoneinfo: data?.zoneinfo || null,
       locale: data?.locale || null,
       phoneNumber: data?.phoneNumber || null,

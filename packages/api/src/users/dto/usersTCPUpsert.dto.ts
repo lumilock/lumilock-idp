@@ -10,13 +10,24 @@ import {
   Matches,
   IsOptional,
   IsUUID,
+  IsJSON,
+  ValidateNested,
 } from 'class-validator';
-
-import { noTildes } from '../../utils';
-import { User, UserGender } from '../../model/users.entity';
 import { Type } from 'class-transformer';
 
-export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
+import { hashPassword, noTildes } from '../../utils';
+import { User, UserGender } from '../../model/users.entity';
+import { AddressesDTO } from '../../addresses/addresses.dto';
+
+export class UsersTCPUpsertDTO implements Readonly<UsersTCPUpsertDTO> {
+  /**
+   * A unique id string used to login in the end-user
+   */
+  @ApiProperty({ required: true })
+  @IsOptional() // optional when create a new one
+  @IsString()
+  uniqueId: string;
+
   @ApiProperty({ required: true })
   @IsOptional() // optional when create a new one
   @IsUUID()
@@ -26,13 +37,15 @@ export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
    * A unique id string used to login in the end-user
    */
   @ApiProperty({ required: true })
+  @IsOptional() // optional when create a new one
   @IsString()
   login: string;
 
   /**
    * Password used to login in the end-user
    */
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   @MinLength(6)
   password: string;
@@ -185,6 +198,15 @@ export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
   @IsBoolean()
   phoneNumberVerified: boolean;
 
+  /**
+   * A JSON object describing the end-user's preferred postal address.
+   */
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsJSON()
+  @ValidateNested()
+  addresses: AddressesDTO[];
+
   // ******
   // Base
   // ******
@@ -198,41 +220,158 @@ export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
   @IsBoolean()
   isArchived: boolean;
 
-  public static from(dto: Partial<UsersCreateFullDTO>): UsersCreateFullDTO {
-    const user = new UsersCreateFullDTO();
+  public static from(dto: Partial<UsersTCPUpsertDTO>): UsersTCPUpsertDTO {
+    const user = new UsersTCPUpsertDTO();
+    typeof dto.uniqueId !== 'undefined'
+      ? (user.uniqueId = dto.uniqueId)
+      : '$undefined$';
+    typeof dto.id !== 'undefined' ? (user.id = dto.id) : '$undefined$';
     user.login =
       dto.login ||
       noTildes([dto?.givenName, dto.familyName]) // no special char
         ?.join('.')
         ?.toLowerCase(); // all lowercase // removing multiple space
-    user.password = dto.password;
+    typeof dto.password !== 'undefined'
+      ? (user.password = dto.password)
+      : '$undefined$';
     user.name = [dto.givenName, dto.middleName, dto.familyName]
       .join(' ')
       .replace(/ +(?= )/g, '')
       .trim();
-    user.givenName = dto.givenName;
-    user.familyName = dto.familyName;
-    user.middleName = dto.middleName;
-    user.nickname = dto.nickname;
-    user.preferredUsername = dto.preferredUsername;
-    user.profile = dto.profile;
-    user.picture = dto.picture;
-    user.website = dto.website;
-    user.email = dto.email;
-    user.emailVerified = dto.emailVerified;
-    user.gender = dto.gender;
-    user.birthdate = dto.birthdate;
-    user.zoneinfo = dto.zoneinfo;
-    user.locale = dto.locale;
-    user.phoneNumber = dto.phoneNumber;
-    user.phoneNumberVerified = dto.phoneNumberVerified;
-    user.isActive = dto.isActive;
-    user.isArchived = dto.isArchived;
+    typeof dto.givenName !== 'undefined'
+      ? (user.givenName = dto.givenName)
+      : '$undefined$';
+    typeof dto.familyName !== 'undefined'
+      ? (user.familyName = dto.familyName)
+      : '$undefined$';
+    typeof dto.middleName !== 'undefined'
+      ? (user.middleName = dto.middleName)
+      : '$undefined$';
+    typeof dto.nickname !== 'undefined'
+      ? (user.nickname = dto.nickname)
+      : '$undefined$';
+    typeof dto.preferredUsername !== 'undefined'
+      ? (user.preferredUsername = dto.preferredUsername)
+      : '$undefined$';
+    typeof dto.profile !== 'undefined'
+      ? (user.profile = dto.profile)
+      : '$undefined$';
+    typeof dto.picture !== 'undefined'
+      ? (user.picture = dto.picture)
+      : '$undefined$';
+    typeof dto.website !== 'undefined'
+      ? (user.website = dto.website)
+      : '$undefined$';
+    typeof dto.email !== 'undefined' ? (user.email = dto.email) : '$undefined$';
+    typeof dto.emailVerified !== 'undefined'
+      ? (user.emailVerified = dto.emailVerified)
+      : '$undefined$';
+    typeof dto.gender !== 'undefined'
+      ? (user.gender = dto.gender)
+      : '$undefined$';
+    typeof dto.birthdate !== 'undefined'
+      ? (user.birthdate = dto.birthdate)
+      : '$undefined$';
+    typeof dto.zoneinfo !== 'undefined'
+      ? (user.zoneinfo = dto.zoneinfo)
+      : '$undefined$';
+    typeof dto.locale !== 'undefined'
+      ? (user.locale = dto.locale)
+      : '$undefined$';
+    typeof dto.phoneNumber !== 'undefined'
+      ? (user.phoneNumber = dto.phoneNumber)
+      : '$undefined$';
+    typeof dto.phoneNumberVerified !== 'undefined'
+      ? (user.phoneNumberVerified = dto.phoneNumberVerified)
+      : '$undefined$';
+    typeof dto.addresses !== 'undefined'
+      ? (user.addresses = dto.addresses)
+      : '$undefined$';
+    typeof dto.isActive !== 'undefined'
+      ? (user.isActive = dto.isActive)
+      : '$undefined$';
+    typeof dto.isArchived !== 'undefined'
+      ? (user.isArchived = dto.isArchived)
+      : '$undefined$';
     return user;
   }
 
-  public static fromEntity(entity: User) {
+  public static checking(value: any, defaultValue = '$undefined$'): any {
+    return typeof value !== 'undefined' ? value : defaultValue;
+  }
+
+  public static format(userDTO: Partial<UsersTCPUpsertDTO>): any[] {
+    const user = [];
+    user.push(this.checking(userDTO.uniqueId));
+    user.push(this.checking(userDTO.id, null));
+    user.push(this.checking(userDTO.login));
+    user.push(this.checking(userDTO.password));
+    user.push(this.checking(userDTO.name));
+    user.push(this.checking(userDTO.givenName));
+    user.push(this.checking(userDTO.familyName));
+    user.push(this.checking(userDTO.middleName));
+    user.push(this.checking(userDTO.nickname));
+    user.push(this.checking(userDTO.preferredUsername));
+    user.push(this.checking(userDTO.profile));
+    user.push(this.checking(userDTO.picture));
+    user.push(this.checking(userDTO.website));
+    user.push(this.checking(userDTO.email));
+    user.push(this.checking(userDTO.emailVerified));
+    user.push(this.checking(userDTO.gender));
+    user.push(this.checking(userDTO.birthdate));
+    user.push(this.checking(userDTO.zoneinfo));
+    user.push(this.checking(userDTO.locale));
+    user.push(this.checking(userDTO.phoneNumber));
+    user.push(this.checking(userDTO.phoneNumberVerified));
+    user.push(this.checking(userDTO.isActive));
+    user.push(this.checking(userDTO.isArchived));
+    return user;
+  }
+
+  /**
+   * Generate a dictionnary of 3 keys:
+   * - usersDTO the user formatted array
+   * - ids an array of all user subjectId (not all users has a subjectId)
+   * - logins an object {login: count} that count the repetition of each login
+   * @param dto array of object to format to UsersTCPUpsertDTO
+   * @returns dictionnary of 3 keys
+   */
+  public static fromMultiple(dto: Partial<UsersTCPUpsertDTO[]>): {
+    usersArray: any[];
+    addressesArray: any[];
+  } {
+    return dto.reduce(
+      (accu, { password, ...rest }) => {
+        // Formatting the user
+        const user = this.from({
+          ...(password ? { password: hashPassword(password) } : {}),
+          ...rest,
+        });
+        const uAdresses =
+          Array.isArray(user?.addresses) && user?.addresses?.length > 0
+            ? user?.addresses
+            : [];
+        // store all users
+        const usersArray = [...accu?.usersArray, this.format(user)];
+        // retrieve all ids
+        const addressesArray = [
+          ...accu?.addressesArray,
+          ...uAdresses.map((a) => addressesArray.format(a)),
+        ];
+        return { usersArray, addressesArray };
+      },
+      {
+        usersArray: [],
+        addressesArray: [
+          [null, null, null, null, null, null, null, null, null, null, null],
+        ],
+      },
+    );
+  }
+
+  public static fromEntity(entity: User, uniqueId) {
     return this.from({
+      uniqueId,
       login:
         entity.login ||
         noTildes([entity?.givenName, entity.familyName]) // no special char
@@ -248,14 +387,15 @@ export class UsersCreateFullDTO implements Readonly<UsersCreateFullDTO> {
       profile: entity.profile,
       picture: entity.picture,
       website: entity.website,
-      email: entity.email,
+      email: entity.email || null,
       emailVerified: entity.emailVerified,
       gender: entity.gender,
       birthdate: entity.birthdate,
       zoneinfo: entity.zoneinfo,
       locale: entity.locale,
-      phoneNumber: entity.phoneNumber,
+      phoneNumber: entity.phoneNumber || null,
       phoneNumberVerified: entity.phoneNumberVerified,
+      addresses: AddressesDTO.fromEntities(entity.addresses),
       isActive: entity.isActive,
       isArchived: entity.isArchived,
     });

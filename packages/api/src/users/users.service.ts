@@ -18,6 +18,7 @@ import {
   UsersCreateFullDTO,
   UsersStatesDataDTO,
   UsersPermissionsDTO,
+  UsersTCPUpsertDTO,
 } from './dto';
 import { SubjectDTO } from './subject.dto';
 import { disableUsers, upsertUsers } from './queries';
@@ -242,20 +243,20 @@ export class UsersService {
 
   // Upsert all users link to the subject_id and the client_id
   async upsertBySubIds(
-    // TODO
-    users: any[],
-    addresses: any[],
+    users: {
+      usersArray: any[];
+      addressesArray: any[];
+    },
     clientId: string,
-  ): Promise<UsersDTO[] | undefined> {
+  ): Promise<UsersTCPUpsertDTO[] | undefined> {
     // Generate the sql query
     const sql = format(
       upsertUsers,
-      users,
-      addresses,
+      users?.usersArray,
+      users?.addressesArray,
       clientId,
       oidcConstants.clientLauncherId,
     );
-
     const usersData = await this.entityManager.query(sql);
     return usersData;
   }
@@ -454,7 +455,6 @@ export class UsersService {
       .getRawOne();
 
     // updating the admin with a unique auto increment number at the end
-    console.log('loginNumber?.max', loginNumber?.max);
     dto.login = !loginNumber?.max
       ? dto.login
       : dto.login + (loginNumber?.max + 1);

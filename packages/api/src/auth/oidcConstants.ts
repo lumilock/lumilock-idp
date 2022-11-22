@@ -16,5 +16,6 @@ export const oidcConstants = {
   idTokenDuration: process.env.ID_TOKEN_DURATION || 3600, // 3600 seconds = 1h
   idTokenSecret: process.env.ID_TOKEN_SECRET,
   secretCodeGenerator: process.env.SECRET_CODE_GENERATOR,
+  secretHashKey: process.env.SECRET_HASH_KEY,
   clientLauncherId: process.env.CLIENT_LAUNCHER_ID,
 };

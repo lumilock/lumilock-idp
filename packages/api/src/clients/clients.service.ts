@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 
-import { getRandomString } from '../utils';
-import { Client } from '../model/clients.entity';
-import fileStorageSystem from '../config/fileStorageSystem';
 import { ClientsDTO } from './dto/clients.dto';
 import {
   ClientsCreateDTO,
@@ -14,7 +10,11 @@ import {
   ClientsPermissionsDTO,
   ClientsUpdateDTO,
 } from './dto';
+import { encrypt, getRandomString } from '../utils';
+import fileStorageSystem from '../config/fileStorageSystem';
+import { oidcConstants } from '../auth/oidcConstants';
 import { UserRole } from '../model/users_clients.entity';
+import { Client } from '../model/clients.entity';
 
 @Injectable()
 export class ClientsService {
@@ -171,12 +171,12 @@ export class ClientsService {
     const secret = getRandomString(30);
 
     // Hashing secret
-    const saltRounds = 10;
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(secret, salt);
-
+    const hash = encrypt(secret, 'aes-256-ctr', oidcConstants.secretHashKey);
     // adding the hashing secret
-    const client = ClientsCreateDTO.from({ ...dto, secret: hash });
+    const client = ClientsCreateDTO.from({
+      ...dto,
+      secret: JSON.stringify(hash),
+    });
 
     return this.repo
       .save(client.toEntity())

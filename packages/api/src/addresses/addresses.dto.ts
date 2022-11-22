@@ -87,6 +87,26 @@ export class AddressesDTO implements Readonly<AddressesDTO> {
   @ApiProperty({ required: false })
   lastChangedDateTime: Date;
 
+  public static checking(value: any): any {
+    return typeof value !== 'undefined' ? value : '$undefined$';
+  }
+
+  public static format(addressDTO): any[] {
+    const address = [];
+    address.push(this.checking(addressDTO.uniqueId));
+    address.push(this.checking(addressDTO.userUniqueId));
+    address.push(this.checking(addressDTO.id));
+    address.push(this.checking(addressDTO.streetAddress));
+    address.push(this.checking(addressDTO.locality));
+    address.push(this.checking(addressDTO.region));
+    address.push(this.checking(addressDTO.postalCode));
+    address.push(this.checking(addressDTO.country));
+    address.push(this.checking(addressDTO.userId));
+    address.push(this.checking(addressDTO.isActive));
+    address.push(this.checking(addressDTO.isArchived));
+    return address;
+  }
+
   public static from(dto: Partial<AddressesDTO>) {
     const address = new AddressesDTO();
     address.id = dto.id;

@@ -5,7 +5,9 @@ export default `
       row_number() OVER (ORDER BY unique_id ASC) as rn,
       unique_id,
       id::uuid,
+      login,
       password,
+      name,
       given_name,
       family_name,
       middle_name,
@@ -27,7 +29,9 @@ export default `
     FROM (VALUES %1$L) AS v (
       unique_id,
       id,
+      login,
       password,
+      name,
       given_name,
       family_name,
       middle_name,
@@ -89,7 +93,9 @@ export default `
       ls.rn,
       NULLIF(ls.unique_id, '$undefined$') as unique_id,
       ls.id,
+      NULLIF(ls.login, '$undefined$') as base_login,
       NULLIF(ls.password, '$undefined$') as password,
+      NULLIF(ls.name, '$undefined$') as name,
       NULLIF(ls.given_name, '$undefined$') as given_name,
       NULLIF(ls.family_name, '$undefined$') as family_name,
       NULLIF(ls.middle_name, '$undefined$') as middle_name,
@@ -117,23 +123,14 @@ export default `
     SELECT
       u.rn,
       u.unique_id,
-      lc_gn,
-      lc_fn,
-      CONCAT(lc_gn, '.', lc_fn) AS base_login
+      u.base_login
     FROM to_insert_users_v1 u
-    JOIN (
-      SELECT
-      REGEXP_REPLACE(unaccent(LOWER(u2.given_name)), '([^\\w]+| |-|_|\\.)+', '-', 'gi') as lc_gn,
-      REGEXP_REPLACE(unaccent(LOWER(u2.family_name)), '([^\\w]+| |-|_|\\.)+', '-', 'gi') as lc_fn,
-      u2.unique_id
-      FROM to_insert_users_v1 u2
-      ) u3 ON u3.unique_id = u.unique_id
   ),
   login_to_insert_number AS (
     SELECT
       l.*,
       (
-        SELECT MAX(COALESCE(NULLIF(REPLACE(u4.login, l.base_login, ''), '')::integer, 0))
+        SELECT MAX(COALESCE(NULLIF(REPLACE(u4.login, l.base_login, ''), '')::integer, 1))
         FROM users u4
         WHERE u4.login ~ CONCAT('^', l.base_login, '[0-9]*')
       ) AS login_number_in_db,

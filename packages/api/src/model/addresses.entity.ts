@@ -45,7 +45,7 @@ export class Address extends BaseEntity {
   @Column({ type: 'varchar', length: 100 })
   public country: string;
 
-  @ManyToOne(() => User, (user) => user.codes, {
+  @ManyToOne(() => User, (user) => user.addresses, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })

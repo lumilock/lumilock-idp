@@ -61,8 +61,9 @@ function LoginForm({ setConsent }) {
       .then(async (response) => {
         if ([200, 201, 202, 301, 302].includes(response?.status)) {
           if (response.redirected && response.url) {
+            const res = await response?.json();
             // data.redirect contains the string URL to redirect to
-            window.history.back();
+            window.location.replace(res?.frontUri || response.url);
             return null;
           }
           return response?.json();

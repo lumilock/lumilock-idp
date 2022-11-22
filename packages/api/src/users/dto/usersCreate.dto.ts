@@ -1,5 +1,6 @@
 // usersCreate.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsEmail,
@@ -107,6 +108,7 @@ export class UsersCreateDTO implements Readonly<UsersCreateDTO> {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   birthdate: Date;
 
   /**

@@ -9,7 +9,7 @@ import { CodesService } from '../codes/codes.service';
 import getRandomString from '../utils/getRandomString';
 import fileStorageSystem from '../config/fileStorageSystem';
 import { CodesDTO } from '../codes/codes.dto';
-import { bin2hex, randomBytes } from '../utils';
+import { bin2hex, decrypt, randomBytes } from '../utils';
 import { oidcConstants } from './oidcConstants';
 import { UsersDTO } from '../users/dto/users.dto';
 import { ClientsDTO } from '../clients/dto/clients.dto';
@@ -250,7 +250,7 @@ export class AuthService {
     const clientId = code?.client?.id;
     const authTime = code?.createDateTime;
     const clientOrigin = new URL(code?.client?.redirectUris?.[0])?.origin; // TODO could be better ([0]) ? yes filter by redirect_uri from controller
-    const clientSecret = code?.client?.secret;
+    const clientSecret = JSON.parse(code?.client?.secret);
 
     // the subject is the usersClients relation id
     const sub = await this.usersService.getUserClientId(userId, clientId);
@@ -293,8 +293,14 @@ export class AuthService {
       auth_time: Math.floor(new Date(authTime).getTime() / 1000),
       iat: Math.floor(Date.now() / 1000),
     };
+
+    const decryptedCS = decrypt(
+      clientSecret,
+      'aes-256-ctr',
+      oidcConstants?.secretHashKey,
+    );
     const idToken = this.jwtService.sign(idTokenPayload, {
-      secret: clientSecret,
+      secret: decryptedCS,
       expiresIn: oidcConstants.idTokenDuration + 's',
     });
 
@@ -313,7 +319,7 @@ export class AuthService {
    */
   async login(user: any) {
     const payload = { login: user.login, sub: user.id };
-    console.log('2');
+    console.log('login deprecated 2');
     return {
       access_token: this.jwtService.sign(payload),
     };

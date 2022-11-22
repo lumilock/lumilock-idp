@@ -6,7 +6,7 @@ import { Carousel, CarouselItem } from '../../Molecules';
 import {
   ConsentForm, LoginForm, PasswordForm, ResetPassword,
 } from '../../Cells';
-import { If } from '../../Electrons';
+import { ErrorBoundary, If } from '../../Electrons';
 import styles from './LoginForms.module.scss';
 
 function LoginForms() {
@@ -68,16 +68,24 @@ function LoginForms() {
       <If condition={isMounted}>
         <Carousel selected={index}>
           <CarouselItem enter={calcEnter()} leave={calcLeave()}>
-            <LoginForm setConsent={setConsent} />
+            <ErrorBoundary>
+              <LoginForm setConsent={setConsent} />
+            </ErrorBoundary>
           </CarouselItem>
           <CarouselItem enter={calcEnter()} leave={calcLeave()}>
-            <ConsentForm values={consent} setConsent={setConsent} />
+            <ErrorBoundary>
+              <ConsentForm values={consent} setConsent={setConsent} />
+            </ErrorBoundary>
           </CarouselItem>
           <CarouselItem enter={calcEnter()} leave={calcLeave()}>
-            <ResetPassword />
+            <ErrorBoundary>
+              <ResetPassword />
+            </ErrorBoundary>
           </CarouselItem>
           <CarouselItem enter={calcEnter()} leave={calcLeave()}>
-            <PasswordForm />
+            <ErrorBoundary>
+              <PasswordForm />
+            </ErrorBoundary>
           </CarouselItem>
         </Carousel>
       </If>

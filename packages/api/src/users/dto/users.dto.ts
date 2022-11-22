@@ -234,6 +234,8 @@ export class UsersDTO implements Readonly<UsersDTO> {
 
   public static from(dto: Partial<UsersDTO>, validate = false): UsersDTO {
     const user = new UsersDTO();
+    const midName =
+      dto.middleName && dto.middleName !== '$undefined$' ? dto.middleName : '';
     user.id = dto.id;
     user.login =
       dto.login ??
@@ -245,10 +247,7 @@ export class UsersDTO implements Readonly<UsersDTO> {
     user.password = dto.password;
     user.name =
       dto.name ||
-      `${dto.givenName} ${dto.middleName ?? ''} ${dto.familyName}`.replace(
-        / +(?= )/g,
-        '',
-      );
+      `${dto.givenName} ${midName} ${dto.familyName}`.replace(/ +(?= )/g, '');
     user.givenName = dto.givenName;
     user.familyName = dto.familyName;
     user.middleName = dto.middleName;

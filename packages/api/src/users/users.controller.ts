@@ -22,9 +22,9 @@ import {
   UsersPatchPersoInfoDTO,
   UsersPermissionsDTO,
   UsersStatesDataDTO,
+  UsersTCPUpsertDTO,
 } from './dto';
 import { AuthenticatedGuard, PermissionsGuard } from '../common/guards';
-import { formattedUpsertUsers } from './helpers';
 import { UsersClientsService } from '../users-clients/users-clients.service';
 import { ClientsService } from '../clients/clients.service';
 import { UsersService } from './users.service';
@@ -304,21 +304,16 @@ export class UsersController {
 
   @MessagePattern({ role: 'user', cmd: 'upsert-multiple' })
   public async upsertUsers({
-    // TODO
     data,
     clientId,
   }: {
-    data: any[];
+    data: UsersTCPUpsertDTO[];
     clientId: string;
-  }) {
+  }): Promise<UsersTCPUpsertDTO[]> {
     // formatting data
-    const [upsertUsers, addresses] = await formattedUpsertUsers(data);
+    const updsertUsers = UsersTCPUpsertDTO.fromMultiple(data);
     // calling the services in order to upsert data
-    const users = await this.serv.upsertBySubIds(
-      upsertUsers,
-      addresses,
-      clientId,
-    );
+    const users = await this.serv.upsertBySubIds(updsertUsers, clientId);
     return users;
   }
 
