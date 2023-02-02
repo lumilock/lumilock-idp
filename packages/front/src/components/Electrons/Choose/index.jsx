@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
  * Component that allow you to create tertionary conditions properly and readable
  * https://tech.trell.co/cleaner-way-to-write-conditionals-in-jsx-b13fb60b5792
  */
-const Choose = ({ children }) => {
+function Choose({ children }) {
   const toReturn = null;
   // check if multiple childs
   if (Array.isArray(children)) {
@@ -29,7 +29,7 @@ const Choose = ({ children }) => {
   }
 
   return toReturn;
-};
+}
 
 Choose.propTypes = {
   children: PropTypes.oneOfType([

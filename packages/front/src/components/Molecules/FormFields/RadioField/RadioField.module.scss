@@ -31,7 +31,7 @@
         position: relative;
         display: flex;
         align-items: center;
-        justify-content: start;
+        justify-content: flex-start;
         left: rem-calc(1);
 
         & .RadioIcon {
