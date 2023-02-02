@@ -16,6 +16,7 @@ import { exceptionFactoryDto } from './common/exceptions';
 
 const pgSession = connectPg(session);
 
+// Postgresql DB config
 const pgPool = new pg.Pool({
   host: process.env.POSTGRES_HOST,
   port: parseInt(process.env.POSTGRES_PORT, 10),
@@ -25,32 +26,31 @@ const pgPool = new pg.Pool({
 });
 
 async function bootstrap() {
+  // ! deprecated
   // loading ssl cert and key
   const key = fs.readFileSync(
     __dirname + '/cert/CA/localhost/localhost.decrypted.key',
   );
   const cert = fs.readFileSync(__dirname + '/cert/CA/localhost/localhost.crt');
 
+  // Initialisation of the nest app
   const app = await NestFactory.create(AppModule, {
     httpsOptions: {
       key: key,
       cert: cert,
     },
   });
+
+  // Adding microservice to the nest app
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {
-      host: '192.168.99.1',
-      port: 3011,
+      host: process.env.MICROSERVICE_HOST,
+      port: process.env.MICROSERVICE_PORT,
     },
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      exceptionFactory: exceptionFactoryDto,
-    }),
-  );
+  // Cors configuration
   app.enableCors({
     origin: '*',
     credentials: true,
@@ -58,9 +58,18 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'Cache'],
     exposedHeaders: ['*', 'Authorization'],
   });
-  app.setGlobalPrefix('api');
+
+  // Global pip to check all field and display exceptions
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      exceptionFactory: exceptionFactoryDto,
+    }),
+  );
+
+  // Adding cookieParser package to Nest app
   app.use(cookieParser());
-  // session
+  // Adding and configuring session package to Nest App
   app.use(
     session({
       name: process.env.SESSION_ID_NAME,
@@ -76,25 +85,32 @@ async function bootstrap() {
       store: new pgSession({
         pool: pgPool, // Connection pool
         tableName: 'user_sessions', // Use another table-name than the default "session" one
-        // Insert connect-pg-simple options here
       }),
     }),
   );
+
+  // Adding passport and link session to the Nest app
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // Create a global prefix for the Nest app '/api' before all routes
+  app.setGlobalPrefix('api');
+
+  // Generate swagger doc only in dev mode
   if (!configService.isProduction()) {
     const document = SwaggerModule.createDocument(
       app,
       new DocumentBuilder()
-        .setTitle('Item API')
-        .setDescription('My Item API')
+        .setTitle('Lumilock API')
+        .setDescription('All lumilock routes and Items API')
         .build(),
     );
-
+    // Define the route
     SwaggerModule.setup('docs', app, document);
   }
+
+  // Starting the microservice and the Nest app
   await app.startAllMicroservices();
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
