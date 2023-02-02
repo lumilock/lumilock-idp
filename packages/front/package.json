@@ -1,7 +1,8 @@
 {
-  "name": "front",
-  "version": "0.1.0",
+  "name": "lumilock-idp-front",
+  "version": "1.0.0-alpha1",
   "private": true,
+  "description": "NestJs Front side of lumilock Identity provider",
   "dependencies": {
     "@hookform/resolvers": "^2.9.8",
     "@testing-library/jest-dom": "^5.16.5",

@@ -1,7 +1,7 @@
 {
-  "name": "api",
-  "version": "0.0.1",
-  "description": "",
+  "name": "lumilock-idp-api",
+  "version": "1.0.0-alpha1",
+  "description": "NestJs Api side of lumilock Identity provider",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

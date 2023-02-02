@@ -230,7 +230,6 @@ export class AuthController {
   ): Promise<any | undefined> {
     // Destructurate body
     const { client_id, grant_type, code, redirect_uri } = body;
-
     // TODO 1.
     // (2) Ensure the Authorization Code was issued to the authenticated Client.
     // And (3) Verify that the Authorization Code is valid.
