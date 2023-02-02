@@ -18,6 +18,7 @@ function AppLink({
   return (
     <Component
       href={!ghost ? pathname : '/#'}
+      to={!ghost ? pathname : '/#'}
       disabled={ghost ? 'disabled' : ''}
       className={[
         styles?.Base,
