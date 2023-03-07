@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 
-import * as fs from 'fs';
+// import * as fs from 'fs';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
@@ -28,17 +28,17 @@ const pgPool = new pg.Pool({
 async function bootstrap() {
   // ! deprecated
   // loading ssl cert and key
-  const key = fs.readFileSync(
-    __dirname + '/cert/CA/localhost/localhost.decrypted.key',
-  );
-  const cert = fs.readFileSync(__dirname + '/cert/CA/localhost/localhost.crt');
+  // const key = fs.readFileSync(
+  //   __dirname + '/cert/CA/localhost/localhost.decrypted.key',
+  // );
+  // const cert = fs.readFileSync(__dirname + '/cert/CA/localhost/localhost.crt');
 
   // Initialisation of the nest app
   const app = await NestFactory.create(AppModule, {
-    httpsOptions: {
-      key: key,
-      cert: cert,
-    },
+    // httpsOptions: {
+    // key: key,
+    // cert: cert,
+    // },
   });
 
   // Adding microservice to the nest app
@@ -106,7 +106,7 @@ async function bootstrap() {
         .build(),
     );
     // Define the route
-    SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup('api/docs', app, document);
   }
 
   // Starting the microservice and the Nest app

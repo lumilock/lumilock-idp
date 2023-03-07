@@ -1,6 +1,6 @@
 {
   "name": "lumilock-idp-api",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha2",
   "description": "NestJs Api side of lumilock Identity provider",
   "author": "",
   "private": true,
@@ -25,8 +25,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "pretypeorm": "(rm ormconfig.json || true) && ts-node -r tsconfig-paths/register src/scripts/write-type-orm-config.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm:migration:generate": "yarn run typeorm -- migration:generate -n",
-    "typeorm:migration:run": "yarn run typeorm -- migration:run"
+    "typeorm:migration:generate": "yarn run typeorm migration:generate -n",
+    "typeorm:migration:run": "yarn run typeorm migration:run"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",
