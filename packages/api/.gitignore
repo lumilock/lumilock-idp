@@ -40,4 +40,4 @@ lerna-debug.log*
 
 # migration
 ormconfig.json
-./src/migration/*.ts
+src/migration/*.ts
