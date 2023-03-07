@@ -15,7 +15,7 @@ yarn run start:dev
 ```
 ### 2. Creating a migration
 ```
-yarn run typeorm:migration:generate -- my_init
+yarn run typeorm:migration:generate my_init
 ```
 ### 3. Run a migration
 ```
