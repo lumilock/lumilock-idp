@@ -26,7 +26,7 @@
     "pretypeorm": "(rm ormconfig.json || true) && ts-node -r tsconfig-paths/register src/scripts/write-type-orm-config.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:migration:generate": "yarn run typeorm migration:generate -n",
-    "typeorm:migration:run": "yarn run typeorm migration:run"
+    "typeorm:migration:run": "yarn run typeorm migration:run "
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",
