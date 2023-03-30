@@ -62,7 +62,7 @@ class ConfigService {
         migrationsDir: this.isProduction() ? 'dist/migration' : 'src/migration',
       },
 
-      ssl: Boolean(this.getValue('POSTGRES_SSL')),
+      ssl: this.getValue('POSTGRES_SSL').toLowerCase?.() === 'true',
     };
   }
 
