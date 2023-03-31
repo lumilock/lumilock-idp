@@ -55,11 +55,13 @@ class ConfigService {
       migrationsTableName: 'migration',
 
       migrations: [
-        this.isProduction() ? 'dist/migration/*.ts' : 'src/migration/*.ts',
+        this.isProduction()
+          ? 'dist/migration/*{.ts,.js}'
+          : 'src/migration/*.ts',
       ],
 
       cli: {
-        migrationsDir: this.isProduction() ? 'dist/migration' : 'src/migration',
+        migrationsDir: 'src/migration',
       },
 
       ssl: this.getValue('POSTGRES_SSL').toLowerCase?.() === 'true',
