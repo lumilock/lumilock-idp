@@ -10,7 +10,7 @@
 
     opacity: 0;
     transform: scale(0.98);
-    transition: opacity .25s $transitionInOut .5s, transform .25s $transitionInOut .25s;
+    transition: opacity .25s $transitionInOut .25s, transform .25s $transitionInOut .25s;
 
     &.Display {
         opacity: 1;

@@ -198,6 +198,7 @@ export class AuthService {
         }
       }
     } catch (error) {
+      console.log('error', error);
       return {
         status: 'FORBIDDEN',
         message: 'The token is invalid or has expired',

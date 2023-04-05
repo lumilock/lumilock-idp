@@ -90,7 +90,7 @@ class ConfigService {
       defaults: {
         from: this.getValue('MAILING_DEFAULT_FROM'),
       },
-      preview: true,
+      preview: !this.isProduction(),
       template: {
         dir: __dirname + '/../mail/templates',
         adapter: new HandlebarsAdapter(/* helpers */ undefined, {

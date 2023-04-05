@@ -73,19 +73,19 @@ export class UsersService {
   // Find user by identity
   async findByIdentity(identity: string): Promise<UsersInfosDTO | undefined> {
     return this.repo
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.usersClients', 'uc') // select the pivot relation usersClients and add alias
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.usersClients', 'uc') // select the pivot relation usersClients and add alias
       .where(
         `
-        ((user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
-        OR (user.login IS NOT NULL AND NULLIF(user.login, '') IS NOT NULL AND user.login = TRIM(:identity))
-        OR (user.phone_number IS NOT NULL AND NULLIF(user.phone_number, '') IS NOT NULL AND user.phone_number = TRIM(:identity))
+        ((u.email IS NOT NULL AND NULLIF(u.email, '') IS NOT NULL AND u.email = TRIM(:identity))
+        OR (u.login IS NOT NULL AND NULLIF(u.login, '') IS NOT NULL AND u.login = TRIM(:identity))
+        OR (u.phone_number IS NOT NULL AND NULLIF(u.phone_number, '') IS NOT NULL AND u.phone_number = TRIM(:identity))
         )`,
         {
           identity,
         },
       )
-      .andWhere('user.is_active = true AND user.is_archived = false')
+      .andWhere('u.is_active = true AND u.is_archived = false')
       .andWhere('uc.client_id = :clientId', {
         clientId: oidcConstants.clientLauncherId,
       })
@@ -112,19 +112,21 @@ export class UsersService {
     const hash = bcrypt.hashSync(password.trim(), salt);
 
     const uptd = await this.repo
-      .createQueryBuilder('user')
+      .createQueryBuilder()
       .update(User)
       .set({ password: hash })
       .where(
         `
-        ((user.email IS NOT NULL AND NULLIF(user.email, '') IS NOT NULL AND user.email = TRIM(:identity))
-        OR (user.login IS NOT NULL AND NULLIF(user.login, '') IS NOT NULL AND user.login = TRIM(:identity))
-        OR (user.phone_number IS NOT NULL AND NULLIF(user.phone_number, '') IS NOT NULL AND user.phone_number = TRIM(:identity))
+        ((email IS NOT NULL AND NULLIF(email, '') IS NOT NULL AND email = TRIM(:identity))
+        OR (login IS NOT NULL AND NULLIF(login, '') IS NOT NULL AND login = TRIM(:identity))
+        OR (phone_number IS NOT NULL AND NULLIF(phone_number, '') IS NOT NULL AND phone_number = TRIM(:identity))
         )`,
-        { identity },
+        {
+          identity,
+        },
       )
       // Used to check if data has already been updated
-      .andWhere('LEFT(last_changed_date_time::text, 23) = :lcdt', {
+      .andWhere('LEFT(last_changed_date_time::TEXT, 23) = :lcdt', {
         lcdt: new Date(lastChangedDateTime)
           .toISOString()
           .slice(0, 23)
