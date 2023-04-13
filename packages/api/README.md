@@ -48,7 +48,6 @@ MODE="DEV"
 Then execute:
 ```
 yarn run start:dev:db
-yarn run start:dev
 yarn run typeorm:migration:generate my_init
 yarn run typeorm:migration:run
 yarn run start:dev:db:seed
