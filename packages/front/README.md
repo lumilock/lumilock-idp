@@ -29,3 +29,13 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+
+https://dev.to/maymeow/static-sites-with-minio-and-s3www-3feh
+https://dev.to/mikeyglitz/deploying-a-react-app-using-min-io-3gdc
+https://kaleo.blog/2017/09/static-website-with-minio/
+https://gist.github.com/harshavardhana/f05b60fe6f96803743f38bea4b565bbf
+
+
+mc mirror --overwrite ./build myminio/fronts/lumilock-idp
+
+
