@@ -31,6 +31,11 @@ class ConfigService {
     return mode != 'DEV';
   }
 
+  public isNotLocal() {
+    const env = this.getValue('ENV', false);
+    return env != 'LOCAL';
+  }
+
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
@@ -41,17 +46,25 @@ class ConfigService {
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DATABASE'),
 
-      entities: ['**/*.entity{.ts,.js}'],
+      entities: [
+        this.isProduction()
+          ? 'dist/**/*.entity{.ts,.js}'
+          : '**/*.entity{.ts,.js}',
+      ],
 
       migrationsTableName: 'migration',
 
-      migrations: ['src/migration/*.ts'],
+      migrations: [
+        this.isProduction()
+          ? 'dist/migration/*{.ts,.js}'
+          : 'src/migration/*.ts',
+      ],
 
       cli: {
         migrationsDir: 'src/migration',
       },
 
-      ssl: this.isProduction(),
+      ssl: this.getValue('POSTGRES_SSL').toLowerCase?.() === 'true',
     };
   }
 
@@ -77,7 +90,7 @@ class ConfigService {
       defaults: {
         from: this.getValue('MAILING_DEFAULT_FROM'),
       },
-      preview: true,
+      preview: !this.isProduction(),
       template: {
         dir: __dirname + '/../mail/templates',
         adapter: new HandlebarsAdapter(/* helpers */ undefined, {

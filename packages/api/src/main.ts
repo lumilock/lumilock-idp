@@ -23,6 +23,7 @@ const pgPool = new pg.Pool({
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
+  ssl: process.env.POSTGRES_SSL?.toLowerCase?.() === 'true',
 });
 
 async function bootstrap() {

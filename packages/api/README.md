@@ -7,7 +7,6 @@
 
 ## tuto
 [tuto](https://medium.com/@gausmann.simon/nestjs-typeorm-and-postgresql-full-example-development-and-project-setup-working-with-database-c1a2b1b11b8f)
-
 ### 1. Party time — Let’s start our API and see if it works.
 ```
 yarn run start:dev:db
@@ -41,6 +40,27 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+### Full deployement from scratch
+in .env
+```
+MODE="DEV"
+```
+Then execute:
+```
+yarn run start:dev:db
+yarn run typeorm:migration:generate my_init
+yarn run typeorm:migration:run
+yarn run start:dev:db:seed
+```
+in .env change the MODE ENV VAR
+```
+MODE="PROD"
+```
+Then execute:
+```
+yarn build
+pm2 start dist/main.js --name Lumilock
+```
 ## Test
 
 ```bash

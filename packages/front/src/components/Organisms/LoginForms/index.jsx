@@ -56,7 +56,7 @@ function LoginForms() {
         break;
       }
     }
-  }, [page]);
+  }, [page, isMounted]);
 
   // Waiting the mounted state
   useEffectOnce(() => {
